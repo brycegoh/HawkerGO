@@ -22,7 +22,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference docRef = FirebaseCollectionRef.getReference(FirebaseConstants.DocumentIds.HAWKER_CENTRES);
 
+        docRef
+        .get()
+        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("TAG", document.getId() + " => " + document.getData());
+                    }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.getException());
+                }
+            }
+        });
 
 
 
