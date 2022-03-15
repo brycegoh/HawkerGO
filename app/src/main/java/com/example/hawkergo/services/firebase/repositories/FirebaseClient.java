@@ -1,8 +1,10 @@
 package com.example.hawkergo.services.firebase.repositories;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.example.hawkergo.services.firebase.interfaces.QueryCollectionEventHandler;
+import com.example.hawkergo.services.firebase.interfaces.DataChangeEventHandler;
+import com.example.hawkergo.services.firebase.interfaces.QueryMultiDocumentsEventHandler;
 import com.example.hawkergo.services.firebase.interfaces.QueryDocumentEventHandler;
 import com.example.hawkergo.services.firebase.interfaces.WriteEventHandler;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
@@ -10,15 +12,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.Map;
 
-class FirebaseQueryClient {
+class FirebaseClient {
 
 
     /**
@@ -30,6 +36,27 @@ class FirebaseQueryClient {
      */
     protected void insertOrOverwrite(DocumentReference documentReference, Object dataModel, WriteEventHandler eventHandler) {
         documentReference.set(dataModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                eventHandler.onSuccess(FirebaseConstants.QueryResponse.SUCCESS);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
+
+    /**
+     * FireStore Create or Merge
+     *
+     * @param documentReference Ref of document in which data is to added into
+     * @param dataModel         Model of data to insert into Document
+     * @param eventHandler      Event handler containing callbacks
+     */
+    protected final void insertOrMerge(final DocumentReference documentReference, final Object dataModel, final WriteEventHandler eventHandler) {
+        documentReference.set(dataModel, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 eventHandler.onSuccess(FirebaseConstants.QueryResponse.SUCCESS);
@@ -65,34 +92,12 @@ class FirebaseQueryClient {
 
 
     /**
-     * FireStore Create or Merge
-     *
-     * @param documentReference Ref of document in which data is to added into
-     * @param dataModel         Model of data to insert into Document
-     * @param eventHandler      Event handler containing callbacks
-     */
-    protected final void insertOrMerge(final DocumentReference documentReference, final Object dataModel, final WriteEventHandler eventHandler) {
-        documentReference.set(dataModel, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseConstants.QueryResponse.SUCCESS);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                eventHandler.onFailure(e);
-            }
-        });
-    }
-
-
-    /**
      * Delete data from FireStore
      *
      * @param documentReference Ref of document in which data is to added into
      * @param eventHandler      Event handler containing callbacks
      */
-    protected final void delete(final DocumentReference documentReference, final WriteEventHandler eventHandler) {
+    protected final void delete(DocumentReference documentReference, WriteEventHandler eventHandler) {
         documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -113,7 +118,7 @@ class FirebaseQueryClient {
      * @param documentReference query of Document reference to fetch data
      * @param eventHandler          callback for event handling
      */
-    protected final void getDocument(final DocumentReference documentReference, final QueryDocumentEventHandler eventHandler) {
+    protected final void getDocument(DocumentReference documentReference, QueryDocumentEventHandler eventHandler) {
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -138,7 +143,7 @@ class FirebaseQueryClient {
      * @param query         query reference to fetch data
      * @param eventHandler  callback for event handling
      */
-    protected final void filterDocuments(final Query query, final QueryCollectionEventHandler eventHandler) {
+    protected final void filterDocuments( Query query, QueryMultiDocumentsEventHandler eventHandler) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -167,7 +172,7 @@ class FirebaseQueryClient {
      * @param query         query reference to fetch data
      * @param eventHandler  callback for event handling
      */
-    protected final void getDocuments(final Query query, final QueryCollectionEventHandler eventHandler) {
+    protected final void getDocuments(Query query, QueryMultiDocumentsEventHandler eventHandler) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -186,6 +191,73 @@ class FirebaseQueryClient {
             @Override
             public void onFailure(@NonNull Exception e) {
                 eventHandler.onFailure(e);
+            }
+        });
+    }
+
+
+    /*
+    *
+    *
+    *                       REAL TIME LISTENERS
+    *
+    */
+
+
+
+    /**
+     * Listen to multiple documents in a collection
+     *
+     * @param query         query reference to fetch data
+     * @param eventHandler  callback for event handling
+     *
+     * @return listener object so that can remove once exit activity
+     */
+    protected ListenerRegistration addDocumentListener (Query query, QueryMultiDocumentsEventHandler eventHandler) {
+        return query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    eventHandler.onFailure(e);
+                }
+                eventHandler.onSuccess(value);
+            }
+        });
+    }
+
+
+
+    /**
+     * View changes between snapshots
+     *
+     * @param query    to add childEvent listener
+     * @param eventHandler callback for event handling
+     *
+     * @return listener object so that can remove once exit activity
+     */
+    protected ListenerRegistration addFilterDocumentsListener(final Query query, final DataChangeEventHandler eventHandler) {
+        return query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null || snapshots == null || snapshots.isEmpty()) {
+                    eventHandler.onError(e);
+                    return;
+                }
+                for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
+                    switch (documentChange.getType()) {
+                        case ADDED:
+                            eventHandler.onInsert(documentChange.getDocument());
+                            break;
+                        case MODIFIED:
+                            eventHandler.onUpdate(documentChange.getDocument());
+                            break;
+                        case REMOVED:
+                            eventHandler.onDelete(documentChange.getDocument());
+                            break;
+                    }
+                }
             }
         });
     }
