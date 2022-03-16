@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HawkerCentre {
-    String address, name;
+    String address, name, id;
     HashMap<String, String> openingHours;
     List<String> stallsID;
 
-    public HawkerCentre(){}
+    public HawkerCentre() {
+    }
 
-    public HawkerCentre(String address, String name, HashMap<String,String> openingHours, List<String> stallsID){
+    public HawkerCentre(String address, String name, HashMap<String, String> openingHours, List<String> stallsID) {
         this.address = address;
         this.name = name;
         this.openingHours = openingHours;
@@ -31,6 +32,19 @@ public class HawkerCentre {
 
     public List<String> getStallsID() {
         return stallsID;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public HashMap<String, Object> toMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("address", getAddress());
+        map.put("openingHours", getOpeningHours());
+        map.put("name", getName());
+        map.put("stallsID", getStallsID());
+        return map;
     }
 
 

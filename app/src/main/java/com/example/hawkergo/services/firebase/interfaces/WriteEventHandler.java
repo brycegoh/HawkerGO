@@ -1,6 +1,6 @@
 package com.example.hawkergo.services.firebase.interfaces;
 
-import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
+import com.google.firebase.firestore.DocumentReference;
 
 public interface WriteEventHandler {
     void onSuccess(String o);
