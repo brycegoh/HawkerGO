@@ -22,8 +22,6 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,15 +31,85 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
     private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private HawkerCentresRepository (){};
+    private HawkerCentresRepository() {
+    }
 
-    public static HawkerCentresRepository getInstance(){
-        if(instance == null){
+    ;
+
+    public static HawkerCentresRepository getInstance() {
+        if (instance == null) {
             instance = new HawkerCentresRepository();
         }
         return instance;
     }
 
+
+    /**
+     * Gets all hawker centres
+     *
+     * @param eventHandler      Callback to handle on success or failure events
+     */
+    @Override
+    public void getAllHawkerCentres(QueryHawkerCentreEventHandler eventHandler) {
+        collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
+                        eventHandler.onSuccess(hawkerCentreList);
+                    } else {
+                        eventHandler.onSuccess(null);
+                    }
+                } else {
+                    eventHandler.onFailure(task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
+
+
+    /**
+     * Get a hawker centres by its ID
+     *
+     * @param hawkerCentreID    ID of the hawker centre document
+     * @param eventHandler      Callback to handle on success or failure events
+     */
+    public void getHawkerCentreByID(String hawkerCentreID, QueryHawkerCentreEventHandler eventHandler) {
+        DocumentReference docRef = collectionRef.document(hawkerCentreID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        HawkerCentre hawkerCentre = document.toObject(HawkerCentre.class);
+                        ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
+                        hawkerCentreList.add(hawkerCentre);
+                        eventHandler.onSuccess(hawkerCentreList);
+                    } else {
+                        eventHandler.onSuccess(null);
+                    }
+                } else {
+                    eventHandler.onFailure(task.getException());
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Adds hawker centre into hawkerCentre collection then gets the inserted hawker centre
+     *
+     * @param newHawkerCenterData       New hawker centre data to be inserted
+     * @param eventHandler              Callback to handle on success or failure events
+     */
     public void addHawkerCentre(HawkerCentre newHawkerCenterData, QueryHawkerCentreEventHandler eventHandler) {
         collectionRef
                 .add(newHawkerCenterData)
@@ -72,6 +140,15 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
                 });
     }
 
+
+    /**
+     * Adds hawker centre into hawkerStall collection then
+     * updates the hawker centre stalls field with the new hawker stall ID
+     *
+     * @param hawkerCentreID       ID of the hawker centre document
+     * @param newHawkerStall       New hawker stall to be inserted in hawkerStalls collection
+     * @param eventHandler         Callback to handle on success or failure events
+     */
     public void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, WriteEventHandler eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
         // TODO: add inserting of stall into hawkerstall collection
@@ -92,32 +169,13 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
                 });
     }
 
-    @Override
-    public void getAllHawkerCentres(QueryHawkerCentreEventHandler eventHandler) {
-        collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
-                        eventHandler.onSuccess(hawkerCentreList);
-                    } else {
-                        eventHandler.onSuccess(null);
-                    }
-                } else {
-                    eventHandler.onFailure(task.getException());
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                eventHandler.onFailure(e);
-            }
-        });
-    }
-
-
+    /**
+     * Update a hawker centre by its ID
+     *
+     * @param hawkerCentreID       ID of the hawker centre document
+     * @param fieldsToUpdate       Map of fields to be updated
+     * @param eventHandler         Callback to handle on success or failure events
+     */
     public void updateHawkerCentreById(String hawkerCentreID, Map<String, Object> fieldsToUpdate, WriteEventHandler eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
         documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -134,6 +192,12 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
     }
 
 
+    /**
+     * Delete a hawker centre
+     *
+     * @param hawkerCentreID       ID of the hawker centre document
+     * @param eventHandler         Callback to handle on success or failure events
+     */
     public void deleteHawkerCentre(String hawkerCentreID, WriteEventHandler eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
 
@@ -149,32 +213,6 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
             }
         });
     }
-
-
-
-    public void getHawkerCentreByID(String hawkerCentreID, QueryHawkerCentreEventHandler eventHandler) {
-        DocumentReference docRef = collectionRef.document(hawkerCentreID);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists()) {
-                        HawkerCentre hawkerCentre = document.toObject(HawkerCentre.class);
-                        ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
-                        hawkerCentreList.add(hawkerCentre);
-                        eventHandler.onSuccess(hawkerCentreList);
-                    }else{
-                        eventHandler.onSuccess(null);
-                    }
-                } else {
-                    eventHandler.onFailure(task.getException());
-                }
-            }
-        });
-    }
-
-
 
 
     public ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler) {
