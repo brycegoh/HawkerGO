@@ -18,39 +18,45 @@ public class HawkerCentre {
         this.stallsID = stallsID;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public HashMap<String, String> getOpeningHours() {
-        return openingHours;
-    }
-
-    public List<String> getStallsID() {
-        return stallsID;
-    }
-
-    public String getId() {
-        return id;
-    }
-
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("id", this.id);
-        map.put("address", getAddress());
-        map.put("openingHours", getOpeningHours());
-        map.put("name", getName());
-        map.put("stallsID", getStallsID());
-
+        if(this.id != null) map.put("id", this.id);
+        if(this.address != null) map.put("address", this.address);
+        if(this.openingHours != null) map.put("openingHours", this.openingHours);
+        if(this.name != null) map.put("name", this.name);
+        if(this.stallsID != null) map.put("stallsID", this.stallsID);
         return map;
     }
 
     public void attachID(String id){
         this.id = id;
+    }
+
+    public static class Builder {
+        private String address, name = null;
+        private HashMap<String, String> openingHours = null;
+        private List<String> stallsID = null;
+
+        public Builder addAddress(String address) {
+            this.address = address;
+            return this;
+        }
+        public Builder addName(String name) {
+            this.name = name;
+            return this;
+        }
+        public Builder addOpeningHours(HashMap<String, String> openingHours) {
+            this.openingHours = openingHours;
+            return this;
+        }
+        public Builder addStallsID(List<String> stallsID) {
+            this.stallsID = stallsID;
+            return this;
+        }
+
+        public HawkerCentre build() {
+            return new HawkerCentre(address,  name, openingHours,  stallsID);
+        }
     }
 
 }
