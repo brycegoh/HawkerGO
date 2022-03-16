@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
-import com.example.hawkergo.services.firebase.interfaces.hawkerCentreQueryable;
+import com.example.hawkergo.services.firebase.interfaces.HawkerCentreQueryable;
 import com.example.hawkergo.services.firebase.interfaces.QueryHawkerCentreEventHandler;
 import com.example.hawkergo.services.firebase.interfaces.WriteEventHandler;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HawkerCentresRepository implements hawkerCentreQueryable {
+public class HawkerCentresRepository implements HawkerCentreQueryable {
     private static HawkerCentresRepository instance;
     private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_CENTRES;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
@@ -57,7 +57,7 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
+                        List<HawkerCentre> hawkerCentreList = deserializeData(querySnapshot);
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {
                         eventHandler.onSuccess(null);
@@ -89,7 +89,7 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
-                        HawkerCentre hawkerCentre = document.toObject(HawkerCentre.class);
+                        HawkerCentre hawkerCentre = deserializeData(document);
                         ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
                         hawkerCentreList.add(hawkerCentre);
                         eventHandler.onSuccess(hawkerCentreList);
@@ -120,7 +120,7 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document != null && document.exists()) {
-                                HawkerCentre insertedHawkerCentre = document.toObject(HawkerCentre.class);
+                                HawkerCentre insertedHawkerCentre = deserializeData(document);
                                 ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
                                 hawkerCentreList.add(insertedHawkerCentre);
                                 eventHandler.onSuccess(hawkerCentreList);
@@ -217,5 +217,23 @@ public class HawkerCentresRepository implements hawkerCentreQueryable {
 
     public ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler) {
         return null;
+    }
+
+
+    private HawkerCentre deserializeData(DocumentSnapshot document){
+        HawkerCentre insertedHawkerCentre = document.toObject(HawkerCentre.class);
+        if (insertedHawkerCentre != null) {
+            insertedHawkerCentre.attachID(document.getId());
+        }
+        return insertedHawkerCentre;
+    }
+
+    private List<HawkerCentre> deserializeData(QuerySnapshot querySnap){
+        ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
+        List<DocumentSnapshot> documents = querySnap.getDocuments();
+        for(DocumentSnapshot x : documents){
+            hawkerCentreList.add( deserializeData(x) );
+        }
+        return hawkerCentreList;
     }
 }

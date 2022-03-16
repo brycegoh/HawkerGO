@@ -40,12 +40,17 @@ public class HawkerCentre {
 
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
+        map.put("id", this.id);
         map.put("address", getAddress());
         map.put("openingHours", getOpeningHours());
         map.put("name", getName());
         map.put("stallsID", getStallsID());
+
         return map;
     }
 
+    public void attachID(String id){
+        this.id = id;
+    }
 
 }

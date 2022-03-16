@@ -7,8 +7,8 @@ import com.google.firebase.firestore.ListenerRegistration;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface hawkerCentreQueryable {
-    void addHawkerCentre(HawkerCentre hawkerStall, QueryHawkerCentreEventHandler eventHandler );
+public interface HawkerCentreQueryable {
+    void addHawkerCentre(HawkerCentre hawkerCentre, QueryHawkerCentreEventHandler eventHandler );
     void updateHawkerCentreById(String hawkerCentreID, Map<String, Object> fieldToUpdate, WriteEventHandler eventHandler);
     void deleteHawkerCentre(String hawkerCentreID,WriteEventHandler callBack);
     void getHawkerCentreByID(String hawkerCentreID, QueryHawkerCentreEventHandler eventHandler);

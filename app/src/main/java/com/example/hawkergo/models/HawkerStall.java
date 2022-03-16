@@ -11,8 +11,8 @@ public class HawkerStall {
 
     public HawkerStall(){};
 
-    public HawkerStall(String id, String address, String name, HashMap<String,String> openingHours, String hawkerCentre, List<String> reviewsIds){
-        this.id = id;
+    public HawkerStall(String address, String name, HashMap<String,String> openingHours, String hawkerCentre, List<String> reviewsIds){
+
         this.address = address;
         this.name = name;
         this.openingHours = openingHours;
