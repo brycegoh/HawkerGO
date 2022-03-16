@@ -18,6 +18,10 @@ public class HawkerCentre {
         this.stallsID = stallsID;
     }
 
+    /**
+     * Transform object to a map for firestore to update from
+     *
+     * */
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
         if(this.id != null) map.put("id", this.id);
@@ -32,6 +36,11 @@ public class HawkerCentre {
         this.id = id;
     }
 
+    /**
+     * Builder pattern for building of HawkerCentre object
+     * to be used to selectively update hawker centre documents
+     *
+     * */
     public static class Builder {
         private String address, name = null;
         private HashMap<String, String> openingHours = null;
