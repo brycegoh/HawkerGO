@@ -146,11 +146,12 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      * Update a hawker centre by its ID
      *
      * @param hawkerCentreID       ID of the hawker centre document
-     * @param fieldsToUpdate       Map of fields to be updated
+     * @param hawkerCentreFields   HawkerCentre builder object that contains selected fields to update
      * @param eventHandler         Callback to handle on success or failure events
      */
-    public static void updateHawkerCentreById(String hawkerCentreID, Map<String, Object> fieldsToUpdate, DbEventHandler<String> eventHandler) {
+    public static void updateHawkerCentreById(String hawkerCentreID, HawkerCentre.Builder hawkerCentreFields, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
+        Map<String, Object> fieldsToUpdate = hawkerCentreFields.build().toMap();
         fieldsToUpdate.put("dateUpdated", new Date());
         documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
