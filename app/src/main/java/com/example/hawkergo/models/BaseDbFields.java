@@ -1,6 +1,7 @@
 package com.example.hawkergo.models;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Date;
 
@@ -20,9 +21,7 @@ public class BaseDbFields {
         updateDateCreated();
     }
 
-    public String getAndAttachId(CollectionReference collectionRef){
-        String id = collectionRef.document().getId();
-        this.id = id;
-        return id;
+    public void attachId(DocumentReference docRef){
+        this.id = docRef.getId();
     }
 }

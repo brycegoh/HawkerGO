@@ -30,7 +30,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     /**
      * Gets all hawker centres
      *
-     * @param eventHandler      Callback to handle on success or failure events
+     * @param eventHandler Callback to handle on success or failure events
      */
     public static void getAllHawkerCentres(DbEventHandler<List<HawkerCentre>> eventHandler) {
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -39,7 +39,8 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);;
+                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
+                        ;
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {
                         eventHandler.onSuccess(null);
@@ -60,8 +61,8 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     /**
      * Get a hawker centres by its ID
      *
-     * @param hawkerCentreID    ID of the hawker centre document
-     * @param eventHandler      Callback to handle on success or failure events
+     * @param hawkerCentreID ID of the hawker centre document
+     * @param eventHandler   Callback to handle on success or failure events
      */
     public static void getHawkerCentreByID(String hawkerCentreID, DbEventHandler<HawkerCentre> eventHandler) {
         DocumentReference docRef = collectionRef.document(hawkerCentreID);
@@ -87,14 +88,14 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     /**
      * Adds hawker centre into hawkerCentre collection then gets the inserted hawker centre
      *
-     * @param newHawkerCenterData       New hawker centre data to be inserted
-     * @param eventHandler              Callback to handle on success or failure events
+     * @param newHawkerCenterData New hawker centre data to be inserted
+     * @param eventHandler        Callback to handle on success or failure events
      */
     public static void addHawkerCentre(HawkerCentre newHawkerCenterData, DbEventHandler<String> eventHandler) {
-        String id = newHawkerCenterData.getAndAttachId(collectionRef);
+        DocumentReference docRef = collectionRef.document();
+        newHawkerCenterData.attachId(docRef);
         newHawkerCenterData.updateDates();
-        collectionRef.document(id)
-                .set(newHawkerCenterData)
+        docRef.set(newHawkerCenterData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -114,9 +115,9 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      * Adds hawker centre into hawkerStall collection then
      * updates the hawker centre stalls field with the new hawker stall ID
      *
-     * @param hawkerCentreID       ID of the hawker centre document
-     * @param newHawkerStall       New hawker stall to be inserted in hawkerStalls collection
-     * @param eventHandler         Callback to handle on success or failure events
+     * @param hawkerCentreID ID of the hawker centre document
+     * @param newHawkerStall New hawker stall to be inserted in hawkerStalls collection
+     * @param eventHandler   Callback to handle on success or failure events
      */
     public static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
@@ -142,9 +143,9 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     /**
      * Update a hawker centre by its ID
      *
-     * @param hawkerCentreID       ID of the hawker centre document
-     * @param hawkerCentreFields   HawkerCentre builder object that contains selected fields to update
-     * @param eventHandler         Callback to handle on success or failure events
+     * @param hawkerCentreID     ID of the hawker centre document
+     * @param hawkerCentreFields HawkerCentre builder object that contains selected fields to update
+     * @param eventHandler       Callback to handle on success or failure events
      */
     public static void updateHawkerCentreById(String hawkerCentreID, HawkerCentre.Builder hawkerCentreFields, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
@@ -166,8 +167,8 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     /**
      * Delete a hawker centre
      *
-     * @param hawkerCentreID       ID of the hawker centre document
-     * @param eventHandler         Callback to handle on success or failure events
+     * @param hawkerCentreID ID of the hawker centre document
+     * @param eventHandler   Callback to handle on success or failure events
      */
     public static void deleteHawkerCentre(String hawkerCentreID, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
