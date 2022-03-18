@@ -25,7 +25,6 @@ public class HawkerCentre extends BaseDbFields {
      * */
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
-        if(this.id != null) map.put("id", this.id);
         if(this.dateCreated != null) map.put("dateCreated", dateCreated);
         if(this.dateUpdated != null) map.put("dateUpdated", dateUpdated);
         if(this.address != null) map.put("address", this.address);
@@ -45,7 +44,7 @@ public class HawkerCentre extends BaseDbFields {
      *
      * */
     public static class Builder {
-        private String address, name = null;
+        private String address, name, id = null;
         private OpeningHours openingHours = null;
         private List<String> stallsID = null;
 

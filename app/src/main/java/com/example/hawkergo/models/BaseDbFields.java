@@ -1,14 +1,17 @@
 package com.example.hawkergo.models;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Date;
 
 public class BaseDbFields {
+    @DocumentId
+    public String id;
+
     public Date dateCreated; ;
     public Date dateUpdated;
-    public String id;
 
     public void updateDateUpdated(){
         this.dateUpdated = new Date();
@@ -19,9 +22,5 @@ public class BaseDbFields {
     public void updateDates(){
         updateDateUpdated();
         updateDateCreated();
-    }
-
-    public void attachId(DocumentReference docRef){
-        this.id = docRef.getId();
     }
 }

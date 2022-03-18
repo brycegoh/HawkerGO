@@ -86,14 +86,13 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
 
 
     /**
-     * Adds hawker centre into hawkerCentre collection then gets the inserted hawker centre
+     * Adds hawker centre into hawkerCentre collection
      *
      * @param newHawkerCenterData New hawker centre data to be inserted
      * @param eventHandler        Callback to handle on success or failure events
      */
     public static void addHawkerCentre(HawkerCentre newHawkerCenterData, DbEventHandler<String> eventHandler) {
         DocumentReference docRef = collectionRef.document();
-        newHawkerCenterData.attachId(docRef);
         newHawkerCenterData.updateDates();
         docRef.set(newHawkerCenterData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
