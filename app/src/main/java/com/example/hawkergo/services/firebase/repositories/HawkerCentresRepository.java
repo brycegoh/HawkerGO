@@ -91,8 +91,8 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      * @param eventHandler              Callback to handle on success or failure events
      */
     public static void addHawkerCentre(HawkerCentre newHawkerCenterData, DbEventHandler<String> eventHandler) {
-        String id = FirebaseHelper.getAndAttachId(newHawkerCenterData, collectionRef);
-        FirebaseHelper.updateDates(newHawkerCenterData);
+        String id = newHawkerCenterData.getAndAttachId(collectionRef);
+        newHawkerCenterData.updateDates();
         collectionRef.document(id)
                 .set(newHawkerCenterData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -149,7 +149,6 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     public static void updateHawkerCentreById(String hawkerCentreID, HawkerCentre.Builder hawkerCentreFields, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
         Map<String, Object> fieldsToUpdate = hawkerCentreFields.build().toMap();
-        fieldsToUpdate.put("dateUpdated", new Date());
         documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

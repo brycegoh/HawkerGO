@@ -20,7 +20,7 @@ public class HawkerCentre extends BaseDbFields {
     }
 
     /**
-     * Transform HawkerCentre object to a map for firestore to update from
+     * Transform HawkerCentre object to a Map for firestore to update from
      *
      * */
     public HashMap<String, Object> toMap() {
@@ -32,6 +32,7 @@ public class HawkerCentre extends BaseDbFields {
         if(this.openingHours != null) map.put("openingHours", this.openingHours);
         if(this.name != null) map.put("name", this.name);
         if(this.stallsID != null) map.put("stallsID", this.stallsID);
+        map.put("dateUpdated", new Date());
         return map;
     }
 
