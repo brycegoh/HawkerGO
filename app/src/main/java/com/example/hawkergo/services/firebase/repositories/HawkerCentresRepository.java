@@ -27,9 +27,6 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_CENTRES;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
 
-    private HawkerCentresRepository() {};
-
-
     /**
      * Gets all hawker centres
      *
