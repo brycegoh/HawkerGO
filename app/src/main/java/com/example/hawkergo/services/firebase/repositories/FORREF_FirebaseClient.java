@@ -6,7 +6,7 @@
 //import com.example.hawkergo.services.firebase.interfaces.DataChangeEventHandler;
 //import com.example.hawkergo.services.firebase.interfaces.QueryMultiDocumentsEventHandler;
 //import com.example.hawkergo.services.firebase.interfaces.QueryDocumentEventHandler;
-//import com.example.hawkergo.services.firebase.interfaces.WriteEventHandler;
+//import com.example.hawkergo.FOR_REFERENCE.WriteEventHandler;
 //import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
 //import com.google.android.gms.tasks.OnCompleteListener;
 //import com.google.android.gms.tasks.OnFailureListener;

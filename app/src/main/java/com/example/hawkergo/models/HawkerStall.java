@@ -3,7 +3,7 @@ package com.example.hawkergo.models;
 import java.util.HashMap;
 import java.util.List;
 
-public class HawkerStall {
+public class HawkerStall extends BaseDbFields {
     String id, address, hawkerCentre, name;
     HashMap<String, String> openingHours;
     List<Review> reviews;

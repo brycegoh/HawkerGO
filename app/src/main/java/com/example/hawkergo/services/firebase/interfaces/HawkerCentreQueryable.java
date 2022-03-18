@@ -2,17 +2,22 @@ package com.example.hawkergo.services.firebase.interfaces;
 
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
-import com.google.firebase.firestore.ListenerRegistration;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface HawkerCentreQueryable {
-    void addHawkerCentre(HawkerCentre hawkerCentre, QueryHawkerCentreEventHandler eventHandler );
-    void updateHawkerCentreById(String hawkerCentreID, Map<String, Object> fieldToUpdate, WriteEventHandler eventHandler);
-    void deleteHawkerCentre(String hawkerCentreID,WriteEventHandler callBack);
-    void getHawkerCentreByID(String hawkerCentreID, QueryHawkerCentreEventHandler eventHandler);
-    void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, WriteEventHandler eventHandler);
-    void getAllHawkerCentres(QueryHawkerCentreEventHandler eventHandler);
-    ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler);
+    static void addHawkerCentre(HawkerCentre hawkerCentre, DbEventHandler<String> eventHandler ){};
+    static void updateHawkerCentreById(String hawkerCentreID, Map<String, Object> fieldToUpdate, DbEventHandler<String> eventHandler){};
+    static void deleteHawkerCentre(String hawkerCentreID,DbEventHandler<String> callBack){};
+    static void getHawkerCentreByID(String hawkerCentreID, DbEventHandler<HawkerCentre> eventHandler){};
+    static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler){};
+    static void getAllHawkerCentres(DbEventHandler<List<HawkerCentre>> eventHandler){};
+//    static ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler){return null;};
+//
+//    static HawkerCentre deserializeData(DocumentSnapshot document){return null;};
+//
+//    static List<HawkerCentre> deserializeData(QuerySnapshot querySnap) {
+//        return null;
+//    }
 }

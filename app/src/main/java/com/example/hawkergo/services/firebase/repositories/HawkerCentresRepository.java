@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
+import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.interfaces.HawkerCentreQueryable;
-import com.example.hawkergo.services.firebase.interfaces.QueryHawkerCentreEventHandler;
-import com.example.hawkergo.services.firebase.interfaces.WriteEventHandler;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
+import com.example.hawkergo.services.firebase.utils.FirebaseHelper;
 import com.example.hawkergo.services.firebase.utils.FirebaseRef;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,31 +17,17 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class HawkerCentresRepository implements HawkerCentreQueryable {
-    private static HawkerCentresRepository instance;
     private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_CENTRES;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
-    private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private HawkerCentresRepository() {
-    }
-
-    ;
-
-    public static HawkerCentresRepository getInstance() {
-        if (instance == null) {
-            instance = new HawkerCentresRepository();
-        }
-        return instance;
-    }
+    private HawkerCentresRepository() {};
 
 
     /**
@@ -49,15 +35,14 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      *
      * @param eventHandler      Callback to handle on success or failure events
      */
-    @Override
-    public void getAllHawkerCentres(QueryHawkerCentreEventHandler eventHandler) {
+    public static void getAllHawkerCentres(DbEventHandler<List<HawkerCentre>> eventHandler) {
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                        List<HawkerCentre> hawkerCentreList = deserializeData(querySnapshot);
+                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);;
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {
                         eventHandler.onSuccess(null);
@@ -81,7 +66,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      * @param hawkerCentreID    ID of the hawker centre document
      * @param eventHandler      Callback to handle on success or failure events
      */
-    public void getHawkerCentreByID(String hawkerCentreID, QueryHawkerCentreEventHandler eventHandler) {
+    public static void getHawkerCentreByID(String hawkerCentreID, DbEventHandler<HawkerCentre> eventHandler) {
         DocumentReference docRef = collectionRef.document(hawkerCentreID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -89,10 +74,8 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
-                        HawkerCentre hawkerCentre = deserializeData(document);
-                        ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
-                        hawkerCentreList.add(hawkerCentre);
-                        eventHandler.onSuccess(hawkerCentreList);
+                        HawkerCentre hawkerCentre = document.toObject(HawkerCentre.class);
+                        eventHandler.onSuccess(hawkerCentre);
                     } else {
                         eventHandler.onSuccess(null);
                     }
@@ -110,26 +93,15 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      * @param newHawkerCenterData       New hawker centre data to be inserted
      * @param eventHandler              Callback to handle on success or failure events
      */
-    public void addHawkerCentre(HawkerCentre newHawkerCenterData, QueryHawkerCentreEventHandler eventHandler) {
-        collectionRef
-                .add(newHawkerCenterData)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+    public static void addHawkerCentre(HawkerCentre newHawkerCenterData, DbEventHandler<String> eventHandler) {
+        String id = FirebaseHelper.getAndAttachId(newHawkerCenterData, collectionRef);
+        FirebaseHelper.updateDates(newHawkerCenterData);
+        collectionRef.document(id)
+                .set(newHawkerCenterData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Task<DocumentSnapshot> task = documentReference.get();
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document != null && document.exists()) {
-                                HawkerCentre insertedHawkerCentre = deserializeData(document);
-                                ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
-                                hawkerCentreList.add(insertedHawkerCentre);
-                                eventHandler.onSuccess(hawkerCentreList);
-                            } else {
-                                eventHandler.onSuccess(null);
-                            }
-                        } else {
-                            eventHandler.onFailure(task.getException());
-                        }
+                    public void onSuccess(Void aVoid) {
+                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -149,10 +121,11 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      * @param newHawkerStall       New hawker stall to be inserted in hawkerStalls collection
      * @param eventHandler         Callback to handle on success or failure events
      */
-    public void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, WriteEventHandler eventHandler) {
+    public static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
-        // TODO: add inserting of stall into hawkerstall collection
+        // TODO: add inserting of stall into hawkerstall collection and update dateUpdated
         String hawkerStallId = "test addStallIntoHawkerCentre";
+
         documentReference
                 .update("stallsID", FieldValue.arrayUnion(hawkerStallId))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -176,8 +149,9 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      * @param fieldsToUpdate       Map of fields to be updated
      * @param eventHandler         Callback to handle on success or failure events
      */
-    public void updateHawkerCentreById(String hawkerCentreID, Map<String, Object> fieldsToUpdate, WriteEventHandler eventHandler) {
+    public static void updateHawkerCentreById(String hawkerCentreID, Map<String, Object> fieldsToUpdate, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
+        fieldsToUpdate.put("dateUpdated", new Date());
         documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -198,7 +172,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      * @param hawkerCentreID       ID of the hawker centre document
      * @param eventHandler         Callback to handle on success or failure events
      */
-    public void deleteHawkerCentre(String hawkerCentreID, WriteEventHandler eventHandler) {
+    public static void deleteHawkerCentre(String hawkerCentreID, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
 
         documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -214,26 +188,27 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
         });
     }
 
+//    public static ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler) {
+//        return null;
+//    }
+//
 
-    public ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler) {
-        return null;
-    }
 
-
-    private HawkerCentre deserializeData(DocumentSnapshot document){
-        HawkerCentre insertedHawkerCentre = document.toObject(HawkerCentre.class);
-        if (insertedHawkerCentre != null) {
-            insertedHawkerCentre.attachID(document.getId());
-        }
-        return insertedHawkerCentre;
-    }
-
-    private List<HawkerCentre> deserializeData(QuerySnapshot querySnap){
-        ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
-        List<DocumentSnapshot> documents = querySnap.getDocuments();
-        for(DocumentSnapshot x : documents){
-            hawkerCentreList.add( deserializeData(x) );
-        }
-        return hawkerCentreList;
-    }
+//    private static HawkerCentre deserializeData(DocumentSnapshot document){
+//        HawkerCentre insertedHawkerCentre = document.toObject(HawkerCentre.class);
+//        if (insertedHawkerCentre != null) {
+//            insertedHawkerCentre.attachID(document.getId());
+//        }
+//        return insertedHawkerCentre;
+//    }
+//
+//    private static List<HawkerCentre> deserializeData(QuerySnapshot querySnap){
+//        ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
+//        List<DocumentSnapshot> documents = querySnap.getDocuments();
+//        for(DocumentSnapshot x : documents){
+//
+//            hawkerCentreList.add( deserializeData(x) );
+//        }
+//        return hawkerCentreList;
+//    }
 }

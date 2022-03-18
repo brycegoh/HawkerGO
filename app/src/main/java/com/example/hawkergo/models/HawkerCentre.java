@@ -1,17 +1,18 @@
 package com.example.hawkergo.models;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class HawkerCentre {
-    String address, name, id;
-    HashMap<String, String> openingHours;
-    List<String> stallsID;
+public class HawkerCentre extends BaseDbFields {
+    public String address, name;
+    public OpeningHours openingHours;
+    public  List<String> stallsID;
 
     public HawkerCentre() {
     }
 
-    public HawkerCentre(String address, String name, HashMap<String, String> openingHours, List<String> stallsID) {
+    public HawkerCentre(String address, String name, OpeningHours openingHours, List<String> stallsID) {
         this.address = address;
         this.name = name;
         this.openingHours = openingHours;
@@ -19,12 +20,14 @@ public class HawkerCentre {
     }
 
     /**
-     * Transform object to a map for firestore to update from
+     * Transform HawkerCentre object to a map for firestore to update from
      *
      * */
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
         if(this.id != null) map.put("id", this.id);
+        if(this.dateCreated != null) map.put("dateCreated", dateCreated);
+        if(this.dateUpdated != null) map.put("dateUpdated", dateUpdated);
         if(this.address != null) map.put("address", this.address);
         if(this.openingHours != null) map.put("openingHours", this.openingHours);
         if(this.name != null) map.put("name", this.name);
@@ -32,18 +35,17 @@ public class HawkerCentre {
         return map;
     }
 
-    public void attachID(String id){
-        this.id = id;
-    }
-
     /**
-     * Builder pattern for building of HawkerCentre object
-     * to be used to selectively update hawker centre documents
+     * Builder pattern for selectively building of HawkerCentre object
+     *
+     * To be used in conjunction with toMap method
+     * to transform HawkerCentre object to a Map
+     * which is then passed to Firebase's update method.
      *
      * */
     public static class Builder {
         private String address, name = null;
-        private HashMap<String, String> openingHours = null;
+        private OpeningHours openingHours = null;
         private List<String> stallsID = null;
 
         public Builder addAddress(String address) {
@@ -54,7 +56,7 @@ public class HawkerCentre {
             this.name = name;
             return this;
         }
-        public Builder addOpeningHours(HashMap<String, String> openingHours) {
+        public Builder addOpeningHours(OpeningHours openingHours) {
             this.openingHours = openingHours;
             return this;
         }
