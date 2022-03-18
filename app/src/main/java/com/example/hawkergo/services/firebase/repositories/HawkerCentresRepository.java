@@ -93,7 +93,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      */
     public static void addHawkerCentre(HawkerCentre newHawkerCenterData, DbEventHandler<String> eventHandler) {
         DocumentReference docRef = collectionRef.document();
-        newHawkerCenterData.updateDates();
+//        newHawkerCenterData.updateDates();
         docRef.set(newHawkerCenterData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
