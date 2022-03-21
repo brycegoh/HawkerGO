@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
-import com.example.hawkergo.services.firebase.utils.FirebaseCollectionRef;
+import com.example.hawkergo.services.firebase.utils.FirebaseRef;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -20,10 +20,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.hawker_stall_list);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference docRef = FirebaseCollectionRef.getReference(FirebaseConstants.DocumentIds.HAWKER_CENTRES);
+        CollectionReference docRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_CENTRES);
 
         docRef
         .get()
