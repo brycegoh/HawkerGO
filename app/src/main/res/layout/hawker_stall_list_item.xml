@@ -7,65 +7,65 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/stall_image"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="64dp"
+        android:layout_marginEnd="32dp"
         android:contentDescription="Picture of a hawker stall"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/test_stall_one" />
 
     <TextView
-        android:id="@+id/stallTitle"
+        android:id="@+id/stall_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Stall Title"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintStart_toStartOf="@+id/stall_image"
+        app:layout_constraintTop_toBottomOf="@+id/stall_image" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/star_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:contentDescription="A gold star to represent the rating of the stall"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/stallTitle"
+        app:layout_constraintStart_toStartOf="@+id/stall_image"
+        app:layout_constraintTop_toBottomOf="@+id/stall_name"
         app:srcCompat="@drawable/star_icon" />
 
     <TextView
-        android:id="@+id/ratingNumber"
+        android:id="@+id/rating_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/star_icon"
+        app:layout_constraintTop_toTopOf="@+id/star_icon" />
+
+    <TextView
+        android:id="@+id/review_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintStart_toEndOf="@+id/rating_number"
+        app:layout_constraintTop_toTopOf="@+id/star_icon" />
 
     <TextView
-        android:id="@+id/reviewNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/ratingNumber"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
-
-    <TextView
-        android:id="@+id/stallAddress"
+        android:id="@+id/stall_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Stall Address"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintEnd_toEndOf="@+id/stall_image"
+        app:layout_constraintStart_toStartOf="@+id/stall_image"
+        app:layout_constraintTop_toBottomOf="@+id/star_icon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

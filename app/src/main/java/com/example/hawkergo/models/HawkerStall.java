@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HawkerStall extends BaseDbFields {
+    // TODO: Need to add in imageUrl for the hawker stall
+    // TODO: Do we want a field to track numReviews only? Thinking of storage space concerns
     String id, address, hawkerCentre, name;
     HashMap<String, String> openingHours;
     List<Review> reviews;
@@ -22,6 +24,34 @@ public class HawkerStall extends BaseDbFields {
 
     public void attachReviews(List<Review> reviews){
         this.reviews = reviews;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getHawkerCentre() {
+        return hawkerCentre;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public HashMap<String, String> getOpeningHours() {
+        return openingHours;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public List<String> getReviewsIds() {
+        return reviewsIds;
     }
 
     public HashMap<String, Object> toMap(){
