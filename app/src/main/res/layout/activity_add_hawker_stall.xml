@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/image_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="Hawker Stall Photo"
+            android:scaleType="center"
+            android:src="@drawable/text" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="10dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_baseline_add_a_photo_24" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/image_view_container">
+
+        <RelativeLayout
+            android:layout_margin="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <EditText
+                android:id="@+id/name_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="20dp"
+                android:autofillHints="Name"
+                android:hint="@string/name_field"
+                android:inputType="text" />
+
+
+            <LinearLayout
+                android:id="@+id/address_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name_field"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/hash_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/hash_tag"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/floor_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autofillHints="Name"
+                    android:hint="@string/floor_field"
+                    android:inputType="text" />
+
+                <TextView
+                    android:id="@+id/address_delimiter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/unit_number_delimiter"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/unit_num_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autofillHints="Name"
+                    android:hint="@string/unit_number_field"
+                    android:inputType="text" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/opening_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/address_field"
+                android:layout_marginBottom="5dp"
+                android:text="@string/opening_hours" />
+
+            <TextView
+                android:id="@+id/opening_hours_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/opening_hours"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/error_red" />
+
+            <LinearLayout
+                android:id="@+id/chip_grp_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/opening_hours_error"
+                android:layout_marginBottom="12dp"
+                android:gravity="center">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/select_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/chip_grp_container"
+                android:layout_marginBottom="5dp"
+                android:text="@string/select_time" />
+
+            <LinearLayout
+                android:id="@+id/time_selection_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/select_time"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/opening_time_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:text="@string/time_picker_button_title_opening_time" />
+
+                <TextView
+                    android:id="@+id/select_time_delimiter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/select_time_delimiter" />
+
+                <Button
+                    android:id="@+id/closing_time_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:text="@string/time_picker_button_title_closing_time" />
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/submit_button_title" />
+
+</RelativeLayout>

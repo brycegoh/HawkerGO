@@ -1,12 +1,11 @@
 package com.example.hawkergo;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.hawkergo.activities.AddHawkerCentre;
+import com.example.hawkergo.activities.AddHawkerStall;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, AddHawkerCentre.class);
+        Intent intent = new Intent(this, AddHawkerStall.class);
         startActivity(intent);
 
     }

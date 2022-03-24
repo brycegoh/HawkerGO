@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HawkerGO">
         <activity
-            android:name=".activities.AddHawkerCentre"
+            android:name=".activities.AddHawkerStall"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

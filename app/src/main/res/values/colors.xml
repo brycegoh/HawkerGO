@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="white_opacity10">#10FFFFFF</color>
     <color name="grey">#DEDEDE</color>
+    <color name="error_red">#cc0000</color>
 </resources>
