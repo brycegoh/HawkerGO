@@ -8,18 +8,18 @@ import java.util.regex.Pattern;
 
 public class TextValidatorHelper {
 
-    public boolean isNumeric(String string){
+    public static boolean isNumeric(String string){
         return TextUtils.isDigitsOnly(string);
     }
 
-    public boolean isValidEmail(String string){
+    public static boolean isValidEmail(String string){
         final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(string);
         return matcher.matches();
     }
 
-    public boolean isNullOrEmpty(String string){
+    public static boolean isNullOrEmpty(String string){
         return TextUtils.isEmpty(string);
     }
 }
