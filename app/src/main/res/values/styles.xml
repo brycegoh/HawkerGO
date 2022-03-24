@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height"> wrap_content</item>
+        <item name="android:minWidth">100dp</item>
+        <item name="android:minHeight">55dp</item>
+
+        <item name="android:padding">150dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:textAlignment"> center</item>
+        <item name="android:checkable"> true</item>
+
+        <item name="chipBackgroundColor">@color/bg_color_chip_state_list</item>
+        <item name="android:textColor">@color/text_color_chip_state_list</item>
+
+        <item name="checkedIconTint">@color/white</item>
+        <item name="rippleColor">@color/white_opacity10</item>
+    </style>
+
+</resources>
