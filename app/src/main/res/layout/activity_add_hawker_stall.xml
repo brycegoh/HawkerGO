@@ -62,7 +62,6 @@
                 android:hint="@string/name_field"
                 android:inputType="text" />
 
-
             <LinearLayout
                 android:id="@+id/address_field"
                 android:layout_width="match_parent"

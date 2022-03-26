@@ -9,6 +9,7 @@ import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,6 +49,9 @@ public class AddHawkerStall extends AppCompatActivity {
     TextView openingHoursErrorTextController, selectCategoryErrorTextController, mainTitleController;
     Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButton;
 
+    // chip selection tracker
+    ArrayList<String> selectedOpeningDays = new ArrayList<>();
+    ArrayList<String> selectedCategories = new ArrayList<>();
 
     /**
      * Dynamic edit text
@@ -115,9 +119,26 @@ public class AddHawkerStall extends AppCompatActivity {
         for (int i = 0; i < openingDaysChipsOptions.length; i++) {
             Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, openingHoursChipGrpController, false);
             chip.setText(openingDaysChipsOptions[i]);
-            chip.setId(i);
+            chip.setId(View.generateViewId());
             openingHoursChipGrpController.addView(chip);
+            addChipSelectionTracker(chip, selectedOpeningDays);
         }
+    }
+
+    private void addChipSelectionTracker(Chip chip, List<String> arr){
+        chip.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                        String option = compoundButton.getText().toString();
+                        if (checked) {
+                            arr.add(option);
+                        } else {
+                            arr.remove(option);
+                        }
+                    }
+                }
+        );
     }
 
     private void getAllTagsAndInflateChips() {
@@ -129,7 +150,8 @@ public class AddHawkerStall extends AppCompatActivity {
                         for (int i = 0; i < categories.size(); i++) {
                             Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, categoriesChipGrpController, false);
                             chip.setText(categories.get(i));
-                            chip.setId(i);
+                            chip.setId(View.generateViewId());
+                            addChipSelectionTracker(chip, selectedCategories);
                             categoriesChipGrpController.addView(chip);
                         }
 
@@ -287,23 +309,21 @@ public class AddHawkerStall extends AppCompatActivity {
         boolean isAllValid = !Arrays.asList(validationArray).contains(false);
 
         if (isAllValid) {
-            List<Integer> checkedOpeningDays = openingHoursChipGrpController.getCheckedChipIds();
-            List<Integer> checkedCategories = categoriesChipGrpController.getCheckedChipIds();
+
             // init fields needed to be saved to firestore
             String stallName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
             ArrayList<String> selectedCategories = new ArrayList<>();
 
             stallName = nameFieldController.getText().toString();
             formattedAddress = "#" + floorFieldController.getText().toString() + "-" + unitNumFieldController.getText().toString();
-            if (checkedOpeningDays.size() == openingDaysChipsOptions.length) {
+            if (selectedOpeningDays.size() == openingDaysChipsOptions.length) {
                 formattedOpeningDays = "Daily";
             } else {
-                int lastElement = checkedOpeningDays.get(checkedOpeningDays.size() - 1);
+                String lastElement = selectedOpeningDays.get(selectedOpeningDays.size() - 1);
                 StringBuilder formattedOpeningDaysBuilder = new StringBuilder("Opens every");
-                for (int i : checkedOpeningDays) {
-                    String day = openingDaysChipsOptions[i];
-                    formattedOpeningDaysBuilder.append(" ").append(day);
-                    if (i != lastElement) formattedOpeningDaysBuilder.append(",");
+                for (String i : selectedOpeningDays) {
+                    formattedOpeningDaysBuilder.append(" ").append(i);
+                    if (!i.equals(lastElement)) formattedOpeningDaysBuilder.append(",");
                 }
                 formattedOpeningDays = formattedOpeningDaysBuilder.toString();
             }
@@ -311,11 +331,6 @@ public class AddHawkerStall extends AppCompatActivity {
             formattedOpeningTime = Integer.toString(openingHour) + ":" + Integer.toString(openingMinute) +
                     " - " +
                     Integer.toString(closingHour) + ":" + Integer.toString(closingMinute);
-
-            for (int i : checkedCategories) {
-                selectedCategories.add(categories.get(i));
-            }
-
 
             OpeningHours newOpeningHours = new OpeningHours(
                     formattedOpeningDays,

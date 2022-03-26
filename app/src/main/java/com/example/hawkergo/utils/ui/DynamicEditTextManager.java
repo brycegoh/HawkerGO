@@ -71,7 +71,6 @@ public class DynamicEditTextManager {
         for(EditText controller : favouriteFoodsEditTextControllers.values()){
             list.add(controller.getText().toString());
         }
-        System.out.println(list);
         return list;
     }
 }
