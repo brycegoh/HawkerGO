@@ -5,13 +5,15 @@ import java.util.List;
 
 public class HawkerStall extends BaseDbFields {
     String id, address, hawkerCentre, name;
-    HashMap<String, String> openingHours;
+    OpeningHours openingHours;
     List<Review> reviews;
     List<String> reviewsIds;
+    List<String> popularitems;
+    List<String> tags;
 
     public HawkerStall(){};
 
-    public HawkerStall(String address, String name, HashMap<String,String> openingHours, String hawkerCentre, List<String> reviewsIds){
+    public HawkerStall(String address, String name, OpeningHours openingHours, String hawkerCentre, List<String> reviewsIds, List<String> popularitems, List<String> tags){
 
         this.address = address;
         this.name = name;
@@ -33,6 +35,4 @@ public class HawkerStall extends BaseDbFields {
         map.put("hawkerCentre", this.hawkerCentre);
         return map;
     }
-
-
 }

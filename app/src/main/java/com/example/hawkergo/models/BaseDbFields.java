@@ -10,19 +10,19 @@ import java.util.Date;
 public class BaseDbFields {
     @DocumentId
     public String id;
-    @ServerTimestamp
-    public Date dateCreated;
-    @ServerTimestamp
-    public Date dateUpdated;
-
-    public void updateDateUpdated(){
-        this.dateUpdated = new Date();
-    }
-    public void updateDateCreated(){
-        this.dateCreated = new Date();
-    }
-    public void updateDates(){
-        updateDateUpdated();
-        updateDateCreated();
-    }
+//    @ServerTimestamp
+//    public Date dateCreated;
+//    @ServerTimestamp
+//    public Date dateUpdated;
+//
+//    public void updateDateUpdated(){
+//        this.dateUpdated = new Date();
+//    }
+//    public void updateDateCreated(){
+//        this.dateCreated = new Date();
+//    }
+//    public void updateDates(){
+//        updateDateUpdated();
+//        updateDateCreated();
+//    }
 }

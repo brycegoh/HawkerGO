@@ -3,84 +3,158 @@ package com.example.hawkergo.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Layout;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.hawkergo.R;
-import com.example.hawkergo.utils.textValidator.BaseTextValidator;
+import com.example.hawkergo.models.HawkerCentre;
+import com.example.hawkergo.models.HawkerStall;
+import com.example.hawkergo.models.OpeningHours;
+import com.example.hawkergo.models.Tags;
+import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
+import com.example.hawkergo.services.firebase.repositories.HawkerCentresRepository;
+import com.example.hawkergo.services.firebase.repositories.TagsRepository;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
+import com.example.hawkergo.utils.ui.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class AddHawkerStall extends AppCompatActivity {
-    ChipGroup chipGrp;
-    String[] chipOptions;
-    EditText nameField, floorField, unitNumField;
-    TextView openingHoursErrorText;
-    Button openingTimeButton, closingTimeButton, submitbutton;
+    String[] openingDaysChipsOptions;
+    List<String> categories;
+    HawkerCentre hawkerCentre;
 
     // default opening and closing time
     int openingHour = 8, openingMinute = 30;
     int closingHour = 21, closingMinute = 30;
+
+    // view controllers
+    ChipGroup openingHoursChipGrpController, categoriesChipGrpController;
+    EditText nameFieldController, floorFieldController, unitNumFieldController;
+    TextView openingHoursErrorTextController, selectCategoryErrorTextController, mainTitleController;
+    Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButton;
+
+
+    /**
+     * Dynamic edit text
+     * This manager abstracts out logic required to programmatically add EditText views into the form
+     * Enables user to add as many favourite foods as they want to
+     */
+    DynamicEditTextManager dynamicEditTextManager = new DynamicEditTextManager();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hawker_stall);
         this.initViews();
-        this.generateChipViews();
-//        this.attachEditTextListeners();
+        this.handleIntent();
+        this.inflateOpeningDaysChips();
+        this.getAllTagsAndInflateChips();
         this.attachButtonEventListeners();
+        dynamicEditTextManager.init(this, findViewById(R.id.favourite_food_container));
+        dynamicEditTextManager.addEditTextField();
+    }
+
+
+    private void handleIntent() {
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
+        HawkerCentresRepository.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
+            @Override
+            public void onSuccess(HawkerCentre o) {
+                hawkerCentre = o;
+                mainTitleController.setText("Adding a stall to " + hawkerCentre.name);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 
     private void initViews() {
-        chipGrp = findViewById(R.id.chip_group);
-        nameField = findViewById(R.id.name_field);
-        floorField = findViewById(R.id.floor_field);
-        unitNumField = findViewById(R.id.unit_num_field);
-        openingTimeButton = findViewById(R.id.opening_time_button);
-        closingTimeButton = findViewById(R.id.closing_time_button);
-        openingHoursErrorText = findViewById(R.id.opening_hours_error);
-        submitbutton = findViewById(R.id.submit_button);
-        openingHoursErrorText.setText("");
+        openingHoursChipGrpController = findViewById(R.id.opening_days_chip_group);
+        categoriesChipGrpController = findViewById(R.id.categories_chip_group);
+        mainTitleController = findViewById(R.id.hawker_centre_title);
+        nameFieldController = findViewById(R.id.name_field);
+        floorFieldController = findViewById(R.id.floor_field);
+        unitNumFieldController = findViewById(R.id.unit_num_field);
+        openingTimeButtonController = findViewById(R.id.opening_time_button);
+        closingTimeButtonController = findViewById(R.id.closing_time_button);
+        openingHoursErrorTextController = findViewById(R.id.opening_hours_error);
+        selectCategoryErrorTextController = findViewById(R.id.select_category_error);
+        addMoreFavFoodButton = findViewById(R.id.add_more_button);
+        submitButtonController = findViewById(R.id.submit_button);
+        openingHoursErrorTextController.setText("");
         if (openingHour != 0 && openingMinute != 0) {
-            openingTimeButton.setText(String.format(Locale.getDefault(), "%02d:%02d", openingHour, openingMinute));
+            openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", openingHour, openingMinute));
         }
         if (closingHour != 0 && closingMinute != 0) {
-            closingTimeButton.setText(String.format(Locale.getDefault(), "%02d:%02d", closingHour, closingMinute));
+            closingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", closingHour, closingMinute));
         }
     }
 
-    private void generateChipViews() {
-        chipOptions = getResources().getStringArray(R.array.chip_options);
-        for (int i = 0; i < chipOptions.length; i++) {
-            Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, chipGrp, false);
-            chip.setText(chipOptions[i]);
+    private void inflateOpeningDaysChips() {
+        openingDaysChipsOptions = getResources().getStringArray(R.array.chip_options);
+        for (int i = 0; i < openingDaysChipsOptions.length; i++) {
+            Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, openingHoursChipGrpController, false);
+            chip.setText(openingDaysChipsOptions[i]);
             chip.setId(i);
-            chip.setOnCheckedChangeListener(
-                    new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                            validateChips();
-                        }
-                    }
-            );
-            chipGrp.addView(chip);
+            openingHoursChipGrpController.addView(chip);
         }
+    }
+
+    private void getAllTagsAndInflateChips() {
+        TagsRepository.getAllTags(
+                new DbEventHandler<Tags>() {
+                    @Override
+                    public void onSuccess(Tags o) {
+                        categories = o.getCategories();
+                        for (int i = 0; i < categories.size(); i++) {
+                            Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, categoriesChipGrpController, false);
+                            chip.setText(categories.get(i));
+                            chip.setId(i);
+                            categoriesChipGrpController.addView(chip);
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+                }
+        );
     }
 
     private void attachButtonEventListeners() {
-        submitbutton.setOnClickListener(
+        addMoreFavFoodButton.setOnClickListener(
+                new View.OnClickListener(
+
+                ) {
+                    @Override
+                    public void onClick(View view) {
+                        dynamicEditTextManager.addEditTextField();
+                    }
+                }
+        );
+        submitButtonController.setOnClickListener(
                 new View.OnClickListener(
                 ) {
                     @Override
@@ -89,7 +163,7 @@ public class AddHawkerStall extends AppCompatActivity {
                     }
                 }
         );
-        openingTimeButton.setOnClickListener(
+        openingTimeButtonController.setOnClickListener(
                 new View.OnClickListener(
                 ) {
                     @Override
@@ -98,7 +172,7 @@ public class AddHawkerStall extends AppCompatActivity {
                     }
                 }
         );
-        closingTimeButton.setOnClickListener(
+        closingTimeButtonController.setOnClickListener(
                 new View.OnClickListener(
                 ) {
                     @Override
@@ -109,79 +183,64 @@ public class AddHawkerStall extends AppCompatActivity {
         );
     }
 
-//    private void attachEditTextListeners() {
-//        floorField.addTextChangedListener(
-//                new BaseTextValidator(floorField) {
-//                    @Override
-//                    public void validate(TextView textView, String text) {
-//                        validateFloorField(textView, text);
-//                    }
-//                }
-//        );
-//        unitNumField.addTextChangedListener(
-//                new BaseTextValidator(unitNumField) {
-//                    @Override
-//                    public void validate(TextView textView, String text) {
-//                        validateUnitNumField(textView, text);
-//                    }
-//                }
-//        );
-//        nameField.addTextChangedListener(
-//                new BaseTextValidator(nameField) {
-//                    @Override
-//                    public void validate(TextView textView, String text) {
-//                        validateNameField(textView, text);
-//                    }
-//                }
-//        );
-//    }
-
     private boolean validateFloorField() {
         boolean isValid = true;
-        String text = floorField.getText().toString();
+        String text = floorFieldController.getText().toString();
         if (TextValidatorHelper.isNullOrEmpty(text)) {
             isValid = false;
-            floorField.setError("Please fill in the floor number");
+            floorFieldController.setError("Please fill in the floor number");
         }
         if (!TextValidatorHelper.isNumeric(text)) {
             isValid = false;
-            floorField.setError("Please fill in only numeric values");
+            floorFieldController.setError("Please fill in only numeric values");
         }
         return isValid;
     }
 
     private boolean validateUnitNumField() {
         boolean isValid = true;
-        String text = unitNumField.getText().toString();
+        String text = unitNumFieldController.getText().toString();
         if (TextValidatorHelper.isNullOrEmpty(text)) {
             isValid = false;
-            unitNumField.setError("Please fill in the unit number");
+            unitNumFieldController.setError("Please fill in the unit number");
         }
         if (!TextValidatorHelper.isNumeric(text)) {
             isValid = false;
-            unitNumField.setError("Please fill in only numeric values");
+            unitNumFieldController.setError("Please fill in only numeric values");
         }
         return isValid;
     }
 
     private boolean validateNameField() {
         boolean isValid = true;
-        String text = nameField.getText().toString();
+        String text = nameFieldController.getText().toString();
         if (TextValidatorHelper.isNullOrEmpty(text)) {
             isValid = false;
-            nameField.setError("Please fill in the name");
+            nameFieldController.setError("Please fill in the name");
         }
         return isValid;
     }
 
-    private boolean validateChips() {
+    private boolean validateOpeningHoursChips() {
         boolean isValid = true;
-        List<Integer> x = chipGrp.getCheckedChipIds();
+        List<Integer> x = openingHoursChipGrpController.getCheckedChipIds();
         if (x.size() > 0) {
-            openingHoursErrorText.setText("");
+            openingHoursErrorTextController.setText("");
         } else {
             isValid = false;
-            openingHoursErrorText.setText("Please select at least 1 day");
+            openingHoursErrorTextController.setText("Please select at least 1 day");
+        }
+        return isValid;
+    }
+
+    private boolean validateCategoriesChips() {
+        boolean isValid = true;
+        List<Integer> x = categoriesChipGrpController.getCheckedChipIds();
+        if (x.size() > 0) {
+            selectCategoryErrorTextController.setText("");
+        } else {
+            isValid = false;
+            selectCategoryErrorTextController.setText("Please select at least 1 category");
         }
         return isValid;
     }
@@ -192,7 +251,7 @@ public class AddHawkerStall extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 openingHour = selectedHour;
                 openingMinute = selectedMinute;
-                openingTimeButton.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
+                openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
             }
         };
 
@@ -207,7 +266,7 @@ public class AddHawkerStall extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 closingHour = selectedHour;
                 closingMinute = selectedMinute;
-                closingTimeButton.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
+                closingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
             }
         };
 
@@ -217,12 +276,55 @@ public class AddHawkerStall extends AppCompatActivity {
     }
 
     private void onClickSubmitButton() {
+        dynamicEditTextManager.getAllFavFoodItems();
         Boolean[] validationArray = {
-                validateChips(),
+                validateOpeningHoursChips(),
                 validateFloorField(),
                 validateUnitNumField(),
-                validateNameField()
+                validateNameField(),
+                validateCategoriesChips()
         };
         boolean isAllValid = !Arrays.asList(validationArray).contains(false);
+
+        if (isAllValid) {
+            List<Integer> checkedOpeningDays = openingHoursChipGrpController.getCheckedChipIds();
+            List<Integer> checkedCategories = categoriesChipGrpController.getCheckedChipIds();
+            // init fields needed to be saved to firestore
+            String stallName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
+            ArrayList<String> selectedCategories = new ArrayList<>();
+
+            stallName = nameFieldController.getText().toString();
+            formattedAddress = "#" + floorFieldController.getText().toString() + "-" + unitNumFieldController.getText().toString();
+            if (checkedOpeningDays.size() == openingDaysChipsOptions.length) {
+                formattedOpeningDays = "Daily";
+            } else {
+                int lastElement = checkedOpeningDays.get(checkedOpeningDays.size() - 1);
+                StringBuilder formattedOpeningDaysBuilder = new StringBuilder("Opens every");
+                for (int i : checkedOpeningDays) {
+                    String day = openingDaysChipsOptions[i];
+                    formattedOpeningDaysBuilder.append(" ").append(day);
+                    if (i != lastElement) formattedOpeningDaysBuilder.append(",");
+                }
+                formattedOpeningDays = formattedOpeningDaysBuilder.toString();
+            }
+
+            formattedOpeningTime = Integer.toString(openingHour) + ":" + Integer.toString(openingMinute) +
+                    " - " +
+                    Integer.toString(closingHour) + ":" + Integer.toString(closingMinute);
+
+            for (int i : checkedCategories) {
+                selectedCategories.add(categories.get(i));
+            }
+
+
+            OpeningHours newOpeningHours = new OpeningHours(
+                    formattedOpeningDays,
+                    formattedOpeningTime
+            );
+            HawkerStall newHawkerStall = new HawkerStall(
+                    formattedAddress, stallName, newOpeningHours, "", new ArrayList<>(), new ArrayList<>(), selectedCategories
+            );
+        }
+
     }
 }

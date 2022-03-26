@@ -3,7 +3,7 @@
     <string name="name_field">Stall name</string>
     <string name="floor_field">Floor</string>
     <string name="unit_number_field">Unit number</string>
-    <string name="opening_hours">Opening Hours</string>
+    <string name="opening_hours">Opening Days</string>
     <string name="submit_button_title">Submit</string>
     <string-array name="chip_options">
         <item>Monday</item>
