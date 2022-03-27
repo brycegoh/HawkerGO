@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -27,52 +28,16 @@ import java.util.Map;
 // TODO: Do proper routing
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private List<HawkerStall> hawkerCentreList = new ArrayList<>();
-    private HawkerStallAdapter mHawkerStallAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: starts");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.hawker_list);
+        Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
+        startActivity(toHawkerCentreIntent);
+        setContentView(R.layout.activity_main);
 
 
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference docRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_CENTRES);
-        CollectionReference stallColRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_STALLS);
-
-        stallColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                        {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("TAG", document.getId() + " => " + document.getData());
-                            Map<String, Object> docData = document.getData();
-                            String address = (String) docData.get("address");
-                            String name = (String) docData.get("name");
-                            HashMap<String,String> openingHours = (HashMap<String, String>) docData.get("openingHours");
-                            String hawkerCentre = (String) docData.get("hawkerCentre");
-
-                            HawkerStall newHawkerStall = new HawkerStall(address, name, openingHours, hawkerCentre, null);
-                            hawkerCentreList.add(newHawkerStall);
-                        }
-
-                        Log.d(TAG, "onComplete: " + hawkerCentreList);
-
-                        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.hawker_stall_recycler_view);
-
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-                        mHawkerStallAdapter = new HawkerStallAdapter(getApplicationContext(), hawkerCentreList);
-                        recyclerView.setAdapter(mHawkerStallAdapter);
-
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
-                    }
-                }
-            }
-        );
 
 
     }

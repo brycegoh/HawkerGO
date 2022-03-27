@@ -1,4 +1,4 @@
-package com.example.hawkergo;
+package com.example.hawkergo.utils.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,12 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerStall;
 
 import java.util.List;
 
 public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.HawkerStallViewHolder> {
     private static final String TAG = "HawkerStallAdapter";
+
     private List<HawkerStall> mHawkerStalls;
     private Context mContext;
 
@@ -37,8 +39,8 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
 
         public HawkerStallViewHolder(@NonNull View itemView) {
             super(itemView);
-            Log.d(TAG, "HawkerStallViewHolder: starts");
 
+            Log.d(TAG, "HawkerStallViewHolder: starts");
             this.stallName = itemView.findViewById(R.id.stall_name);
             this.stallAddress = itemView.findViewById(R.id.stall_address);
             this.stallRating = itemView.findViewById(R.id.rating_number);
@@ -57,26 +59,32 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
         return new HawkerStallViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull HawkerStallViewHolder holder, int position) {
         HawkerStall stallItem = mHawkerStalls.get(position);
 
-        holder.stallName.setText(stallItem.getName());
-        holder.stallAddress.setText(stallItem.getAddress());
+
+        holder.stallName.setText(stallItem.name);
+        holder.stallAddress.setText(stallItem.address);
         holder.stallRating.setText("5");
 
-        if (stallItem.getReviews() != null) {
-            int numReviews = stallItem.getReviews().size();
+
+
+        if (stallItem.reviews != null) {
+            int numReviews = stallItem.reviews.size();
             if (numReviews == 1) {
-                holder.stallReviews.setText(numReviews + R.string.review);
+                holder.stallReviews.setText("(" + numReviews + R.string.review  + ")");
             } else {
-                holder.stallReviews.setText(numReviews + R.string.reviews);
+                holder.stallReviews.setText("("  + numReviews + R.string.reviews +")");
             }
         } else {
             holder.stallReviews.setText(R.string.no_reviews);
         }
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -85,19 +93,6 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
             return 0;
         } else {
             return mHawkerStalls.size();
-        }
-    }
-
-    void loadNewData(List<HawkerStall> newHawkerStalls) {
-        mHawkerStalls = newHawkerStalls;
-        notifyDataSetChanged();
-    }
-
-    public HawkerStall getStall(int position) {
-        if (mHawkerStalls == null )  {
-            return null;
-        } else {
-            return mHawkerStalls.get(position);
         }
     }
 
