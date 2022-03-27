@@ -1,12 +1,12 @@
 package com.example.hawkergo;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.util.Log;
 
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
@@ -23,11 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// TODO: Grab a new activity to link to main
-// TODO: Do proper routing
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
-    private List<HawkerStall> hawkerCentreList = new ArrayList<>();
+public class HawkerStallActivity extends AppCompatActivity {
+    private static final String TAG = "HawkerStallActivity";
+    private List<HawkerStall> hawkerStallList = new ArrayList<>();
     private HawkerStallAdapter mHawkerStallAdapter;
 
     @Override
@@ -55,16 +53,16 @@ public class MainActivity extends AppCompatActivity {
                             String hawkerCentre = (String) docData.get("hawkerCentre");
 
                             HawkerStall newHawkerStall = new HawkerStall(address, name, openingHours, hawkerCentre, null);
-                            hawkerCentreList.add(newHawkerStall);
+                            hawkerStallList.add(newHawkerStall);
                         }
 
-                        Log.d(TAG, "onComplete: " + hawkerCentreList);
+                        Log.d(TAG, "onComplete: " + hawkerStallList);
 
                         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.hawker_stall_recycler_view);
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-                        mHawkerStallAdapter = new HawkerStallAdapter(getApplicationContext(), hawkerCentreList);
+                        mHawkerStallAdapter = new HawkerStallAdapter(getApplicationContext(), hawkerStallList);
                         recyclerView.setAdapter(mHawkerStallAdapter);
 
                     } else {
@@ -73,6 +71,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         );
+
+//        docRef
+//        .get()
+//        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Log.d("TAG", document.getId() + " => " + document.getData());
+//                    }
+//                } else {
+//                    Log.d("TAG", "Error getting documents: ", task.getException());
+//                }
+//            }
+//        });
+
 
 
     }

@@ -53,7 +53,7 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
     @Override
     public HawkerStallViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: new view requested");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hawker_stall_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hawker_list_item, parent, false);
         return new HawkerStallViewHolder(view);
     }
 
