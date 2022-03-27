@@ -18,31 +18,37 @@
             android:layout_margin="15dp"
             android:orientation="vertical">
 
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/image_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical">
+                android:name="com.example.hawkergo.fragments.ImageViewWithCamera"/>
 
-                <ImageView
-                    android:id="@+id/image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="Hawker Stall Photo"
-                    android:src="@drawable/ic_baseline_insert_photo_24"
-                    />
+<!--            <androidx.coordinatorlayout.widget.CoordinatorLayout-->
+<!--                android:id="@+id/image_view_container"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="10dp"-->
+<!--                android:orientation="vertical">-->
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/add_photo_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="10dp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/ic_baseline_add_a_photo_24" />
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+<!--                <ImageView-->
+<!--                    android:id="@+id/image_view"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="300dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:contentDescription="Hawker Stall Photo"-->
+<!--                    android:src="@drawable/ic_baseline_insert_photo_24"-->
+<!--                    />-->
+
+<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                    android:id="@+id/add_photo_button"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="bottom|end"-->
+<!--                    android:layout_margin="10dp"-->
+<!--                    android:adjustViewBounds="true"-->
+<!--                    android:src="@drawable/ic_baseline_add_a_photo_24" />-->
+<!--            </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
 
             <TextView
                 android:id="@+id/hawker_centre_title"

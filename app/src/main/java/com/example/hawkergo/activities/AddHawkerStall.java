@@ -8,9 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.Manifest;
 import android.app.Activity;
+
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +37,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.fragments.ImageViewWithCamera;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
@@ -56,7 +60,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class AddHawkerStall extends AppCompatActivity {
+public class AddHawkerStall extends AppCompatActivity implements ImageViewWithCamera.OnImageSelected {
     private final int CAMERA_REQUEST_CODE = 1;
     private final int SELECT_PICTURE = 2;
     private String hawkerCentreId;
@@ -71,22 +75,21 @@ public class AddHawkerStall extends AppCompatActivity {
     int openingHour = 8, openingMinute = 30;
     int closingHour = 21, closingMinute = 30;
 
+    Uri selectedImage;
+
     // view controllers
-    ImageView imageViewController;
+    ImageViewWithCamera imageSelectorFragment;
     Chip addMoreCategoryChip;
     ChipGroup openingHoursChipGrpController, categoriesChipGrpController;
     EditText nameFieldController, floorFieldController, unitNumFieldController, addMoreCategoryTextFieldController;
     TextView openingHoursErrorTextController, selectCategoryErrorTextController, mainTitleController;
     Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButtonController, addMoreCategoryButtonController;
-    FloatingActionButton addPhotoButtonController;
     LinearLayout addMoreCategoryController;
 
     // chip selection tracker
     ArrayList<String> selectedOpeningDays = new ArrayList<>();
     ArrayList<String> selectedCategories = new ArrayList<>();
 
-    // selected Image Uri
-    Uri selectedImage;
 
     /**
      * Dynamic edit text
@@ -94,7 +97,6 @@ public class AddHawkerStall extends AppCompatActivity {
      * Enables user to add as many favourite foods as they want to
      */
     DynamicEditTextManager dynamicEditTextManager;
-
     ActivityResultLauncher<Intent> cameraActivityLauncher, galleryActivityLauncher;
 
 
@@ -109,55 +111,24 @@ public class AddHawkerStall extends AppCompatActivity {
         this.getAllTagsAndInflateChips();
         this.initDynamicEditTextManager();
         this.attachButtonEventListeners();
-        this.createActivityLaunchersForCameraAndGallery();
+        imageSelectorFragment = new ImageViewWithCamera();
+
+        getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                // We use a String here, but any type that can be put in a Bundle is supported
+                String result = bundle.getString("bundleKey");
+                // Do something with the result
+            }
+        });
+
     }
 
-    private void initDynamicEditTextManager(){
+
+    private void initDynamicEditTextManager() {
         dynamicEditTextManager = new DynamicEditTextManager();
         dynamicEditTextManager.init(this, findViewById(R.id.favourite_food_container));
         dynamicEditTextManager.addEditTextField();
-    }
-
-    private void createActivityLaunchersForCameraAndGallery(){
-        cameraActivityLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = result.getData();
-                            Bitmap image = (Bitmap) data.getExtras().get("data");
-                            Uri tempUri = getImageUri(getApplicationContext(), image);
-                            imageViewController.setImageURI(tempUri);
-                            selectedImage = tempUri;
-                        }
-                    }
-                });
-
-        galleryActivityLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = result.getData();
-                            Uri selectedImageUri = data.getData();
-                            imageViewController.setImageURI(selectedImageUri);
-                            selectedImage = selectedImageUri;
-                        }
-                    }
-                });
-    }
-
-    /**
-     * Bitmap to image URI through a temp storage is done with reference to
-     *      https://stackoverflow.com/questions/20327213/getting-path-of-captured-image-in-android-using-camera-intent
-     * */
-    private Uri getImageUri(Context inContext, Bitmap bitImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), bitImage, Long.toString(System.currentTimeMillis()), null);
-        return Uri.parse(path);
     }
 
 
@@ -165,7 +136,7 @@ public class AddHawkerStall extends AppCompatActivity {
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         hawkerCentreId = id;
-        if(id != null){
+        if (id != null) {
             HawkerCentresRepository.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
                 @Override
                 public void onSuccess(HawkerCentre o) {
@@ -183,7 +154,6 @@ public class AddHawkerStall extends AppCompatActivity {
     }
 
     private void initViews() {
-        imageViewController = findViewById(R.id.image_view);
         openingHoursChipGrpController = findViewById(R.id.opening_days_chip_group);
         categoriesChipGrpController = findViewById(R.id.categories_chip_group);
         addMoreCategoryChip = findViewById(R.id.add_more_category_chip);
@@ -197,7 +167,6 @@ public class AddHawkerStall extends AppCompatActivity {
         selectCategoryErrorTextController = findViewById(R.id.select_category_error);
         addMoreFavFoodButtonController = findViewById(R.id.add_more_button);
         submitButtonController = findViewById(R.id.submit_button);
-        addPhotoButtonController = findViewById(R.id.add_photo_button);
         addMoreCategoryTextFieldController = findViewById(R.id.add_more_categories_text_field);
         addMoreCategoryButtonController = findViewById(R.id.add_more_categories_button);
         addMoreCategoryController = findViewById(R.id.add_more_categories);
@@ -221,7 +190,7 @@ public class AddHawkerStall extends AppCompatActivity {
         }
     }
 
-    private void addChipOnSelectListener(Chip chip, List<String> arr){
+    private void addChipOnSelectListener(Chip chip, List<String> arr) {
         chip.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -256,7 +225,7 @@ public class AddHawkerStall extends AppCompatActivity {
         );
     }
 
-    private void addChipToCategory(String text){
+    private void addChipToCategory(String text) {
         Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, categoriesChipGrpController, false);
         chip.setText(text);
         chip.setId(View.generateViewId());
@@ -264,80 +233,7 @@ public class AddHawkerStall extends AppCompatActivity {
         categoriesChipGrpController.addView(chip);
     }
 
-
-    private void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(
-                new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        Integer id = menuItem.getItemId();
-                        if( id.equals(R.id.gallery) ){
-                            askForGalleryPermission();
-                        } else if ( id.equals(R.id.camera) ){
-                            askForCameraPermission();
-                        }
-                        return true;
-                    }
-                }
-        );
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.choose_photo_menu, popup.getMenu());
-        popup.show();
-    }
-
-    private void askForCameraPermission(){
-        System.out.println(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA));
-        System.out.println(PackageManager.PERMISSION_GRANTED);
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-        }else{
-            openCamera();
-        }
-    }
-
-    private void askForGalleryPermission(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, SELECT_PICTURE);
-        } else {
-            openGallery();
-        }
-    }
-
-    private void openGallery(){
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-        galleryActivityLauncher.launch(i);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        System.out.println(Arrays.toString(permissions));
-        System.out.println(Arrays.toString(grantResults));
-        if(requestCode == CAMERA_REQUEST_CODE){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED){
-                Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show();
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                openCamera();
-            }
-        }
-        if(requestCode == SELECT_PICTURE){
-            if(grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_DENIED || grantResults[1] == PackageManager.PERMISSION_DENIED){
-                Toast.makeText(this, "Read and Write permission is required", Toast.LENGTH_SHORT).show();
-            } else if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                openGallery();
-            }
-        }
-    }
-
-    private void openCamera(){
-        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraActivityLauncher.launch(camera);
-    }
-
-    private void showAddCategoryErrorToast(){
+    private void showAddCategoryErrorToast() {
         Toast.makeText(this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
     }
 
@@ -355,7 +251,7 @@ public class AddHawkerStall extends AppCompatActivity {
                     @Override
                     public void onDebouncedClick(View view) {
                         String text = addMoreCategoryTextFieldController.getText().toString().toLowerCase().trim();
-                        if(!TextValidatorHelper.isNullOrEmpty(text) && !newCategories.contains(text) && !categories.contains(text)){
+                        if (!TextValidatorHelper.isNullOrEmpty(text) && !newCategories.contains(text) && !categories.contains(text)) {
                             TagsRepository.addTag(text, new DbEventHandler<String>() {
                                 @Override
                                 public void onSuccess(String o) {
@@ -373,14 +269,7 @@ public class AddHawkerStall extends AppCompatActivity {
                     }
                 }
         );
-        addPhotoButtonController.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showPopup(view);
-                    }
-                }
-        );
+
         addMoreFavFoodButtonController.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -522,7 +411,8 @@ public class AddHawkerStall extends AppCompatActivity {
         if (isAllValid) {
             // init fields needed to be saved to firestore
             String stallName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
-            List<String> favouriteFoods = dynamicEditTextManager.getAllFavFoodItems();;
+            List<String> favouriteFoods = dynamicEditTextManager.getAllFavFoodItems();
+            ;
 
             stallName = nameFieldController.getText().toString();
             formattedAddress = "#" + floorFieldController.getText().toString() + "-" + unitNumFieldController.getText().toString();
@@ -555,7 +445,7 @@ public class AddHawkerStall extends AppCompatActivity {
                     favouriteFoods,
                     selectedCategories
             );
-        System.out.println(newHawkerStall.tags);
+
 
             StorageRepository.uploadImageUri(selectedImage,
                     new UploadImageEventHandler() {
@@ -586,6 +476,7 @@ public class AddHawkerStall extends AppCompatActivity {
                                     }
                             );
                         }
+
                         @Override
                         public void onFailure(Exception e) {
                             System.out.println(e.toString());
@@ -597,5 +488,10 @@ public class AddHawkerStall extends AppCompatActivity {
         }
 
         submitButtonController.setEnabled(true);
+    }
+
+    @Override
+    public void onSelectImage(Uri uri) {
+        selectedImage = uri;
     }
 }
