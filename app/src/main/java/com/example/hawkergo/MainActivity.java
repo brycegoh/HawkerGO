@@ -1,9 +1,12 @@
 package com.example.hawkergo;
 
+import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
+
+
+
+        Log.d(TAG, "username"+ user.getDisplayName());
+
         if (user == null){
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
