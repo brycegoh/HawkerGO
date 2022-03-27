@@ -2,5 +2,6 @@
     <string name="app_name">HawkerGO</string>
     <string name="select_a_category">Select a category</string>
     <string name="adding_a_stall_title">Adding a stall</string>
+    <string name="add_your_favourite_food_items">Add your favourite food items</string>
 
 </resources>

@@ -6,34 +6,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/image_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="Hawker Stall Photo"
-            android:scaleType="center"
-            android:src="@drawable/text" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="10dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_baseline_add_a_photo_24" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/image_view_container">
+        android:layout_alignParentTop="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,11 +18,37 @@
             android:layout_margin="15dp"
             android:orientation="vertical">
 
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/image_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Hawker Stall Photo"
+                    android:src="@drawable/ic_baseline_image_60"
+                    />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/add_photo_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="10dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_baseline_add_a_photo_24" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
             <TextView
                 android:id="@+id/hawker_centre_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/image_view_container"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
@@ -229,11 +232,21 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/fav_food_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="@string/add_your_favourite_food_items"
+                android:textAlignment="center"
+                android:layout_below="@+id/categories_chip_grp_container"/>
+
             <LinearLayout
                 android:id="@+id/favourite_food_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/categories_chip_grp_container"
+                android:layout_below="@+id/fav_food_title"
                 android:layout_marginBottom="2dp"
                 android:gravity="center"
                 android:orientation="vertical" />
@@ -252,7 +265,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:text="+"
+                    android:text="Add more Food Items"
                     android:textAlignment="center"
                     />
             </FrameLayout>

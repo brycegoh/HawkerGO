@@ -1,19 +1,37 @@
 package com.example.hawkergo.activities;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.Layout;
+import android.provider.MediaStore;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerCentre;
@@ -24,17 +42,23 @@ import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.HawkerCentresRepository;
 import com.example.hawkergo.services.firebase.repositories.TagsRepository;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
+import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.example.hawkergo.utils.ui.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class AddHawkerStall extends AppCompatActivity {
+    private final int CAMERA_REQUEST_CODE = 1;
+    private final int SELECT_PICTURE = 2;
+
+
     String[] openingDaysChipsOptions;
     List<String> categories;
     HawkerCentre hawkerCentre;
@@ -44,21 +68,28 @@ public class AddHawkerStall extends AppCompatActivity {
     int closingHour = 21, closingMinute = 30;
 
     // view controllers
+    ImageView imageViewController;
     ChipGroup openingHoursChipGrpController, categoriesChipGrpController;
     EditText nameFieldController, floorFieldController, unitNumFieldController;
     TextView openingHoursErrorTextController, selectCategoryErrorTextController, mainTitleController;
-    Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButton;
+    Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButtonController;
+    FloatingActionButton addPhotoButtonController;
 
     // chip selection tracker
     ArrayList<String> selectedOpeningDays = new ArrayList<>();
     ArrayList<String> selectedCategories = new ArrayList<>();
+
+    // selected Image Uri
+    Uri selectedImage;
 
     /**
      * Dynamic edit text
      * This manager abstracts out logic required to programmatically add EditText views into the form
      * Enables user to add as many favourite foods as they want to
      */
-    DynamicEditTextManager dynamicEditTextManager = new DynamicEditTextManager();
+    DynamicEditTextManager dynamicEditTextManager;
+
+    ActivityResultLauncher<Intent> cameraActivityLauncher, galleryActivityLauncher;
 
 
     @Override
@@ -69,9 +100,57 @@ public class AddHawkerStall extends AppCompatActivity {
         this.handleIntent();
         this.inflateOpeningDaysChips();
         this.getAllTagsAndInflateChips();
+        this.initDynamicEditTextManager();
         this.attachButtonEventListeners();
+        this.createActivityLaunchersForCameraAndGallery();
+    }
+
+    private void initDynamicEditTextManager(){
+        dynamicEditTextManager = new DynamicEditTextManager();
         dynamicEditTextManager.init(this, findViewById(R.id.favourite_food_container));
         dynamicEditTextManager.addEditTextField();
+    }
+
+    private void createActivityLaunchersForCameraAndGallery(){
+        cameraActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            Bitmap image = (Bitmap) data.getExtras().get("data");
+                            Uri tempUri = getImageUri(getApplicationContext(), image);
+                            imageViewController.setImageURI(tempUri);
+                            selectedImage = tempUri;
+                        }
+                    }
+                });
+
+        galleryActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            Uri selectedImageUri = data.getData();
+                            imageViewController.setImageURI(selectedImageUri);
+                            selectedImage = selectedImageUri;
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Bitmap to image URI through a temp storage is done with reference to
+     *      https://stackoverflow.com/questions/20327213/getting-path-of-captured-image-in-android-using-camera-intent
+     * */
+    private Uri getImageUri(Context inContext, Bitmap bitImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), bitImage, Long.toString(System.currentTimeMillis()), null);
+        return Uri.parse(path);
     }
 
 
@@ -93,6 +172,7 @@ public class AddHawkerStall extends AppCompatActivity {
     }
 
     private void initViews() {
+        imageViewController = findViewById(R.id.image_view);
         openingHoursChipGrpController = findViewById(R.id.opening_days_chip_group);
         categoriesChipGrpController = findViewById(R.id.categories_chip_group);
         mainTitleController = findViewById(R.id.hawker_centre_title);
@@ -103,8 +183,9 @@ public class AddHawkerStall extends AppCompatActivity {
         closingTimeButtonController = findViewById(R.id.closing_time_button);
         openingHoursErrorTextController = findViewById(R.id.opening_hours_error);
         selectCategoryErrorTextController = findViewById(R.id.select_category_error);
-        addMoreFavFoodButton = findViewById(R.id.add_more_button);
+        addMoreFavFoodButtonController = findViewById(R.id.add_more_button);
         submitButtonController = findViewById(R.id.submit_button);
+        addPhotoButtonController = findViewById(R.id.add_photo_button);
         openingHoursErrorTextController.setText("");
         if (openingHour != 0 && openingMinute != 0) {
             openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", openingHour, openingMinute));
@@ -165,11 +246,91 @@ public class AddHawkerStall extends AppCompatActivity {
         );
     }
 
-    private void attachButtonEventListeners() {
-        addMoreFavFoodButton.setOnClickListener(
-                new View.OnClickListener(
 
-                ) {
+
+    private void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(
+                new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        Integer id = menuItem.getItemId();
+                        if( id.equals(R.id.gallery) ){
+                            askForGalleryPermission();
+                        } else if ( id.equals(R.id.camera) ){
+                            askForCameraPermission();
+                        }
+                        return true;
+                    }
+                }
+        );
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.choose_photo_menu, popup.getMenu());
+        popup.show();
+    }
+
+    private void askForCameraPermission(){
+        System.out.println(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA));
+        System.out.println(PackageManager.PERMISSION_GRANTED);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+        }else{
+            openCamera();
+        }
+    }
+
+    private void askForGalleryPermission(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, SELECT_PICTURE);
+        } else {
+            openGallery();
+        }
+    }
+
+    private void openGallery(){
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+        galleryActivityLauncher.launch(i);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.println(Arrays.toString(permissions));
+        System.out.println(Arrays.toString(grantResults));
+        if(requestCode == CAMERA_REQUEST_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED){
+                Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show();
+            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                openCamera();
+            }
+        }
+        if(requestCode == SELECT_PICTURE){
+            if(grantResults.length > 2 && grantResults[0] == PackageManager.PERMISSION_DENIED || grantResults[1] == PackageManager.PERMISSION_DENIED){
+                Toast.makeText(this, "Read and Write permission is required", Toast.LENGTH_SHORT).show();
+            } else if (grantResults.length > 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                openCamera();
+            }
+        }
+    }
+
+    private void openCamera(){
+        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraActivityLauncher.launch(camera);
+    }
+
+    private void attachButtonEventListeners() {
+        addPhotoButtonController.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showPopup(view);
+                    }
+                }
+        );
+        addMoreFavFoodButtonController.setOnClickListener(
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dynamicEditTextManager.addEditTextField();
@@ -177,17 +338,15 @@ public class AddHawkerStall extends AppCompatActivity {
                 }
         );
         submitButtonController.setOnClickListener(
-                new View.OnClickListener(
-                ) {
+                new DebouncedOnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onDebouncedClick(View view) {
                         onClickSubmitButton();
                     }
                 }
         );
         openingTimeButtonController.setOnClickListener(
-                new View.OnClickListener(
-                ) {
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         onOpeningTimeButtonClick();
@@ -195,8 +354,7 @@ public class AddHawkerStall extends AppCompatActivity {
                 }
         );
         closingTimeButtonController.setOnClickListener(
-                new View.OnClickListener(
-                ) {
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         onClosingTimeButtonClick();
@@ -298,6 +456,7 @@ public class AddHawkerStall extends AppCompatActivity {
     }
 
     private void onClickSubmitButton() {
+        submitButtonController.setEnabled(false);
         dynamicEditTextManager.getAllFavFoodItems();
         Boolean[] validationArray = {
                 validateOpeningHoursChips(),
@@ -306,6 +465,7 @@ public class AddHawkerStall extends AppCompatActivity {
                 validateNameField(),
                 validateCategoriesChips()
         };
+        dynamicEditTextManager.getAllFavFoodItems();
         boolean isAllValid = !Arrays.asList(validationArray).contains(false);
 
         if (isAllValid) {
@@ -339,6 +499,8 @@ public class AddHawkerStall extends AppCompatActivity {
             HawkerStall newHawkerStall = new HawkerStall(
                     formattedAddress, stallName, newOpeningHours, "", new ArrayList<>(), new ArrayList<>(), selectedCategories
             );
+        }else{
+            submitButtonController.setEnabled(true);
         }
 
     }
