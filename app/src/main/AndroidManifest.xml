@@ -18,11 +18,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity android:name=".ReviewSubmissionActivity"
             android:parentActivityName=".MainActivity"
             android:label="@string/reviewSubmitTitle">
 
         </activity>
+        <activity
+            android:name=".HawkerCentreActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".HawkerStallActivity"
+            android:parentActivityName=".HawkerCentreActivity" />
+
     </application>
 
 </manifest>
