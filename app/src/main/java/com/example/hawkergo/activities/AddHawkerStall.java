@@ -310,7 +310,7 @@ public class AddHawkerStall extends AppCompatActivity {
             if(grantResults.length > 2 && grantResults[0] == PackageManager.PERMISSION_DENIED || grantResults[1] == PackageManager.PERMISSION_DENIED){
                 Toast.makeText(this, "Read and Write permission is required", Toast.LENGTH_SHORT).show();
             } else if (grantResults.length > 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                openCamera();
+                openGallery();
             }
         }
     }
