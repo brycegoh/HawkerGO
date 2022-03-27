@@ -40,7 +40,6 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
                     QuerySnapshot querySnapshot = task.getResult();
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
                         List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
-                        ;
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {
                         eventHandler.onSuccess(null);
