@@ -9,10 +9,12 @@ import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
 import com.example.hawkergo.services.firebase.utils.FirebaseRef;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
@@ -45,5 +47,23 @@ public class TagsRepository {
                 }
             }
         });
+    }
+
+    public static void addTag(String tag, DbEventHandler<String> eventHandler){
+        DocumentReference docRef = collectionRef.document(tagDocumentId);
+        docRef
+                .update("categories", FieldValue.arrayUnion(tag))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        eventHandler.onFailure(e);
+                    }
+                });
     }
 }

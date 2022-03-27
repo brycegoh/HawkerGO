@@ -14,13 +14,12 @@ import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -61,6 +61,7 @@ public class AddHawkerStall extends AppCompatActivity {
 
     String[] openingDaysChipsOptions;
     List<String> categories;
+    List<String> newCategories;
     HawkerCentre hawkerCentre;
 
     // default opening and closing time
@@ -69,11 +70,13 @@ public class AddHawkerStall extends AppCompatActivity {
 
     // view controllers
     ImageView imageViewController;
+    Chip addMoreCategoryChip;
     ChipGroup openingHoursChipGrpController, categoriesChipGrpController;
-    EditText nameFieldController, floorFieldController, unitNumFieldController;
+    EditText nameFieldController, floorFieldController, unitNumFieldController, addMoreCategoryTextFieldController;
     TextView openingHoursErrorTextController, selectCategoryErrorTextController, mainTitleController;
-    Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButtonController;
+    Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButtonController, addMoreCategoryButtonController;
     FloatingActionButton addPhotoButtonController;
+    LinearLayout addMoreCategoryController;
 
     // chip selection tracker
     ArrayList<String> selectedOpeningDays = new ArrayList<>();
@@ -96,6 +99,7 @@ public class AddHawkerStall extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hawker_stall);
+        newCategories = new ArrayList<>();
         this.initViews();
         this.handleIntent();
         this.inflateOpeningDaysChips();
@@ -175,6 +179,7 @@ public class AddHawkerStall extends AppCompatActivity {
         imageViewController = findViewById(R.id.image_view);
         openingHoursChipGrpController = findViewById(R.id.opening_days_chip_group);
         categoriesChipGrpController = findViewById(R.id.categories_chip_group);
+        addMoreCategoryChip = findViewById(R.id.add_more_category_chip);
         mainTitleController = findViewById(R.id.hawker_centre_title);
         nameFieldController = findViewById(R.id.name_field);
         floorFieldController = findViewById(R.id.floor_field);
@@ -186,6 +191,9 @@ public class AddHawkerStall extends AppCompatActivity {
         addMoreFavFoodButtonController = findViewById(R.id.add_more_button);
         submitButtonController = findViewById(R.id.submit_button);
         addPhotoButtonController = findViewById(R.id.add_photo_button);
+        addMoreCategoryTextFieldController = findViewById(R.id.add_more_categories_text_field);
+        addMoreCategoryButtonController = findViewById(R.id.add_more_categories_button);
+        addMoreCategoryController = findViewById(R.id.add_more_categories);
         openingHoursErrorTextController.setText("");
         if (openingHour != 0 && openingMinute != 0) {
             openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", openingHour, openingMinute));
@@ -202,11 +210,11 @@ public class AddHawkerStall extends AppCompatActivity {
             chip.setText(openingDaysChipsOptions[i]);
             chip.setId(View.generateViewId());
             openingHoursChipGrpController.addView(chip);
-            addChipSelectionTracker(chip, selectedOpeningDays);
+            addChipOnSelectListener(chip, selectedOpeningDays);
         }
     }
 
-    private void addChipSelectionTracker(Chip chip, List<String> arr){
+    private void addChipOnSelectListener(Chip chip, List<String> arr){
         chip.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -229,13 +237,8 @@ public class AddHawkerStall extends AppCompatActivity {
                     public void onSuccess(Tags o) {
                         categories = o.getCategories();
                         for (int i = 0; i < categories.size(); i++) {
-                            Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, categoriesChipGrpController, false);
-                            chip.setText(categories.get(i));
-                            chip.setId(View.generateViewId());
-                            addChipSelectionTracker(chip, selectedCategories);
-                            categoriesChipGrpController.addView(chip);
+                            addChipToCategory(categories.get(i));
                         }
-
                     }
 
                     @Override
@@ -246,6 +249,13 @@ public class AddHawkerStall extends AppCompatActivity {
         );
     }
 
+    private void addChipToCategory(String text){
+        Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, categoriesChipGrpController, false);
+        chip.setText(text);
+        chip.setId(View.generateViewId());
+        addChipOnSelectListener(chip, selectedCategories);
+        categoriesChipGrpController.addView(chip);
+    }
 
 
     private void showPopup(View v) {
@@ -307,9 +317,9 @@ public class AddHawkerStall extends AppCompatActivity {
             }
         }
         if(requestCode == SELECT_PICTURE){
-            if(grantResults.length > 2 && grantResults[0] == PackageManager.PERMISSION_DENIED || grantResults[1] == PackageManager.PERMISSION_DENIED){
+            if(grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_DENIED || grantResults[1] == PackageManager.PERMISSION_DENIED){
                 Toast.makeText(this, "Read and Write permission is required", Toast.LENGTH_SHORT).show();
-            } else if (grantResults.length > 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+            } else if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
                 openGallery();
             }
         }
@@ -320,7 +330,42 @@ public class AddHawkerStall extends AppCompatActivity {
         cameraActivityLauncher.launch(camera);
     }
 
+    private void showAddCategoryErrorToast(){
+        Toast.makeText(this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
+    }
+
     private void attachButtonEventListeners() {
+        addMoreCategoryChip.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addMoreCategoryController.setVisibility(View.VISIBLE);
+                    }
+                }
+        );
+        addMoreCategoryButtonController.setOnClickListener(
+                new DebouncedOnClickListener() {
+                    @Override
+                    public void onDebouncedClick(View view) {
+                        String text = addMoreCategoryTextFieldController.getText().toString().toLowerCase().trim();
+                        if(!TextValidatorHelper.isNullOrEmpty(text) && !newCategories.contains(text) && !categories.contains(text)){
+                            TagsRepository.addTag(text, new DbEventHandler<String>() {
+                                @Override
+                                public void onSuccess(String o) {
+                                    newCategories.add(text);
+                                    addChipToCategory(text);
+                                    addMoreCategoryTextFieldController.setText(null);
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    showAddCategoryErrorToast();
+                                }
+                            });
+                        }
+                    }
+                }
+        );
         addPhotoButtonController.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -456,6 +501,8 @@ public class AddHawkerStall extends AppCompatActivity {
     }
 
     private void onClickSubmitButton() {
+        System.out.println(selectedCategories.toString());
+        System.out.println(newCategories.toString());
         submitButtonController.setEnabled(false);
         dynamicEditTextManager.getAllFavFoodItems();
         Boolean[] validationArray = {
@@ -499,6 +546,8 @@ public class AddHawkerStall extends AppCompatActivity {
             HawkerStall newHawkerStall = new HawkerStall(
                     formattedAddress, stallName, newOpeningHours, "", new ArrayList<>(), new ArrayList<>(), selectedCategories
             );
+
+            submitButtonController.setEnabled(false);
         }else{
             submitButtonController.setEnabled(true);
         }

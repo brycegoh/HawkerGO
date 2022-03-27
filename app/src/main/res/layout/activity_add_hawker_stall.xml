@@ -28,10 +28,10 @@
                 <ImageView
                     android:id="@+id/image_view"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="300dp"
                     android:scaleType="centerCrop"
                     android:contentDescription="Hawker Stall Photo"
-                    android:src="@drawable/ic_baseline_image_60"
+                    android:src="@drawable/ic_baseline_insert_photo_24"
                     />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -228,7 +228,39 @@
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/categories_chip_group"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/add_more_category_chip"
+                    style="@style/CustomBoldChipStyle"
+                    android:text="Add more categories"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/add_more_categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/add_more_categories_text_field"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
+                        android:layout_height="wrap_content"
+                        android:hint="Add more categories"
+                        />
+
+                    <Button
+                        android:id="@+id/add_more_categories_button"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:drawableLeft="@drawable/ic_baseline_add_24"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+
 
             </LinearLayout>
 
