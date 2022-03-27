@@ -22,7 +22,6 @@ public class HawkerStall extends BaseDbFields {
         this.hawkerCentre = hawkerCentre;
         this.imageUrl = imageUrl;
         this.reviewsIds = reviewsIds;
-
     }
 
     public void attachReviews(List<Review> reviews){
@@ -32,6 +31,7 @@ public class HawkerStall extends BaseDbFields {
 
     public HashMap<String, Object> toMap(){
         HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
         map.put("address", this.address);
         map.put("openingHours", this.openingHours);
         map.put("name", this.name);
