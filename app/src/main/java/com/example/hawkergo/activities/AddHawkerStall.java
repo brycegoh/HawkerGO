@@ -39,7 +39,9 @@ import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
+import com.example.hawkergo.services.firebase.interfaces.UploadImageEventHandler;
 import com.example.hawkergo.services.firebase.repositories.HawkerCentresRepository;
+import com.example.hawkergo.services.firebase.repositories.StorageRepository;
 import com.example.hawkergo.services.firebase.repositories.TagsRepository;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
@@ -57,6 +59,7 @@ import java.util.Locale;
 public class AddHawkerStall extends AppCompatActivity {
     private final int CAMERA_REQUEST_CODE = 1;
     private final int SELECT_PICTURE = 2;
+    private String hawkerCentreId;
 
 
     String[] openingDaysChipsOptions;
@@ -161,18 +164,22 @@ public class AddHawkerStall extends AppCompatActivity {
     private void handleIntent() {
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
-        HawkerCentresRepository.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
-            @Override
-            public void onSuccess(HawkerCentre o) {
-                hawkerCentre = o;
-                mainTitleController.setText("Adding a stall to " + hawkerCentre.name);
-            }
+        hawkerCentreId = id;
+        if(id != null){
+            HawkerCentresRepository.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
+                @Override
+                public void onSuccess(HawkerCentre o) {
+                    hawkerCentre = o;
+                    mainTitleController.setText("Adding a stall to " + hawkerCentre.name);
+                }
 
-            @Override
-            public void onFailure(Exception e) {
+                @Override
+                public void onFailure(Exception e) {
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
     private void initViews() {
@@ -501,10 +508,7 @@ public class AddHawkerStall extends AppCompatActivity {
     }
 
     private void onClickSubmitButton() {
-        System.out.println(selectedCategories.toString());
-        System.out.println(newCategories.toString());
         submitButtonController.setEnabled(false);
-        dynamicEditTextManager.getAllFavFoodItems();
         Boolean[] validationArray = {
                 validateOpeningHoursChips(),
                 validateFloorField(),
@@ -516,10 +520,9 @@ public class AddHawkerStall extends AppCompatActivity {
         boolean isAllValid = !Arrays.asList(validationArray).contains(false);
 
         if (isAllValid) {
-
             // init fields needed to be saved to firestore
             String stallName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
-            ArrayList<String> selectedCategories = new ArrayList<>();
+            List<String> favouriteFoods = dynamicEditTextManager.getAllFavFoodItems();;
 
             stallName = nameFieldController.getText().toString();
             formattedAddress = "#" + floorFieldController.getText().toString() + "-" + unitNumFieldController.getText().toString();
@@ -543,14 +546,56 @@ public class AddHawkerStall extends AppCompatActivity {
                     formattedOpeningDays,
                     formattedOpeningTime
             );
+
             HawkerStall newHawkerStall = new HawkerStall(
-                    formattedAddress, stallName, newOpeningHours, "", new ArrayList<>(), new ArrayList<>(), selectedCategories
+                    formattedAddress,
+                    stallName,
+                    newOpeningHours,
+                    "downloadUrl",
+                    favouriteFoods,
+                    selectedCategories
+            );
+        System.out.println(newHawkerStall.tags);
+
+            StorageRepository.uploadImageUri(selectedImage,
+                    new UploadImageEventHandler() {
+                        @Override
+                        public void onSuccess(String downloadUrl) {
+                            // String address, String name, HashMap<String,String> openingHours, String imageUrl, List<String> reviewsIds
+                            HawkerStall newHawkerStall = new HawkerStall(
+                                    formattedAddress,
+                                    stallName,
+                                    newOpeningHours,
+                                    downloadUrl,
+                                    favouriteFoods,
+                                    selectedCategories
+                            );
+                            HawkerCentresRepository.addStallIntoHawkerCentre(
+                                    hawkerCentreId,
+                                    newHawkerStall,
+                                    new DbEventHandler<String>() {
+                                        @Override
+                                        public void onSuccess(String o) {
+                                            System.out.println(o);
+                                        }
+
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            System.out.println(e.toString());
+                                        }
+                                    }
+                            );
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            System.out.println(e.toString());
+                        }
+                    }
             );
 
-            submitButtonController.setEnabled(false);
-        }else{
-            submitButtonController.setEnabled(true);
+
         }
 
+        submitButtonController.setEnabled(true);
     }
 }

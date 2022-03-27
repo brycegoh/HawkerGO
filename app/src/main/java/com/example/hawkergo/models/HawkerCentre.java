@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HawkerCentre extends BaseDbFields {
-    public String id, address, name, imageUrl;
+    public String address, name, imageUrl;
     public OpeningHours openingHours;
     public  List<String> stallsID;
 
+
+    public  HawkerCentre(){};
 
     public HawkerCentre(String id, String address, String name, OpeningHours openingHours, String imageUrl, List<String> stallsID) {
         this.id = id;

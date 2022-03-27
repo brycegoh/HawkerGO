@@ -1,27 +1,43 @@
 package com.example.hawkergo.models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class HawkerStall extends BaseDbFields {
     // TODO: Need to add in imageUrl for the hawker stall
     // TODO: Do we want a field to track numReviews only? Thinking of storage space concerns
-    public String id, address, hawkerCentre, name, imageUrl;
-    public HashMap<String, String> openingHours;
+    public String address , name, imageUrl;
+    public OpeningHours openingHours;
     public List<Review> reviews;
     public List<String> reviewsIds;
+    public List<String> popularItems;
+    public List<String> tags;
 
     public HawkerStall(){};
 
     public HawkerStall(String id, String address, String name, HashMap<String,String> openingHours, String hawkerCentre, String imageUrl, List<String> reviewsIds){
-
         this.id = id;
         this.address = address;
         this.name = name;
-        this.openingHours = openingHours;
-        this.hawkerCentre = hawkerCentre;
         this.imageUrl = imageUrl;
         this.reviewsIds = reviewsIds;
+    }
+
+    public HawkerStall(String address, String name, OpeningHours openingHours, String imageUrl, List<String> popularItems, List<String> tags){
+        System.out.println(openingHours.hours);
+        System.out.println(openingHours.remarks);
+        System.out.println(openingHours.days);
+        System.out.println(popularItems.toString());
+        System.out.println(tags.toString());
+
+        this.address = address;
+        this.name = name;
+        this.imageUrl =imageUrl;
+        this.openingHours = openingHours;
+        this.imageUrl = imageUrl;
+        this.popularItems = popularItems;
+        this.tags = tags;
     }
 
     public void attachReviews(List<Review> reviews){
@@ -36,7 +52,6 @@ public class HawkerStall extends BaseDbFields {
         map.put("openingHours", this.openingHours);
         map.put("name", this.name);
         map.put("reviews", this.reviews);
-        map.put("hawkerCentre", this.hawkerCentre);
         return map;
     }
 }

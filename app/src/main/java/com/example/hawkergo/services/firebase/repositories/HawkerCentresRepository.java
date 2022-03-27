@@ -117,23 +117,36 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      */
     public static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
-        // TODO: add inserting of stall into hawkerstall collection and update dateUpdated
-        String hawkerStallId = "test addStallIntoHawkerCentre";
-
-        documentReference
-                .update("stallsID", FieldValue.arrayUnion(hawkerStallId))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+        HawkerStallsRepository.addHawkerStall(
+                newHawkerStall,
+                hawkerCentreID,
+                new DbEventHandler<String>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                    public void onSuccess(String hawkerStallId) {
+                        documentReference
+                                .update("stallsID", FieldValue.arrayUnion(hawkerStallId))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        eventHandler.onFailure(e);
+                                    }
+                                });
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
+                    public void onFailure(Exception e) {
                         eventHandler.onFailure(e);
                     }
-                });
+                }
+        );
+
+
+
     }
 
     /**
