@@ -3,11 +3,14 @@ package com.example.hawkergo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
-import com.example.hawkergo.services.firebase.utils.FirebaseCollectionRef;
+//import com.example.hawkergo.services.firebase.utils.FirebaseCollectionRef;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -17,14 +20,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference docRef = FirebaseCollectionRef.getReference(FirebaseConstants.DocumentIds.HAWKER_CENTRES);
+        // CollectionReference docRef = FirebaseCollectionRef.getReference(FirebaseConstants.DocumentIds.HAWKER_CENTRES);
 
+        /**
         docRef
         .get()
         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -39,7 +44,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+         **/
 
+        Button submitReviewbtn = findViewById(R.id.submitReviewBtn);
+
+        submitReviewbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent submitReviewIntent = new Intent(MainActivity.this, ReviewSubmissionActivity.class);
+                // intent.putExtra(KEY,value); pass in the hawkerStallID of current stall
+                startActivity(submitReviewIntent);
+            }
+        });
 
 
     }
