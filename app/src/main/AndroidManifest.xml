@@ -19,6 +19,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,12 +28,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        
-        <activity android:name=".ReviewSubmissionActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/reviewSubmitTitle">
-
         </activity>
 
         <activity

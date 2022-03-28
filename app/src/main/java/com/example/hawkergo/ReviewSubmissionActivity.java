@@ -65,7 +65,6 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 reviewStars = ratingBar.getRating();
                 reviewContent = editText.getText().toString();
-                Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewSubmitted, Toast.LENGTH_LONG).show();
 
                 // get date reviewed = current date <Date>
                 Date currentDate = new Date();
@@ -77,11 +76,15 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String o) {
                         Log.i(TAG, "Successfully added review into Firestore for: "+ hawkerStallID);
+                        Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewSubmitted, Toast.LENGTH_LONG).show();
+                        Intent reviewSubmittedIntent = new Intent(ReviewSubmissionActivity.this, MainActivity.class);
+                        startActivity(reviewSubmittedIntent);
                     }
 
                     @Override
                     public void onFailure(Exception e) {
                         Log.e(TAG, "Failed to add review into Firestore for: " + hawkerStallID);
+                        Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewFailed, Toast.LENGTH_LONG).show();
                     }
                 });
             }
