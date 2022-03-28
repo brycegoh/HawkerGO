@@ -7,8 +7,8 @@
 
     <LinearLayout
         android:id="@+id/lay_main"
-        android:layout_width="411dp"
-        android:layout_height="729dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:showDividers="middle"
         android:divider="@drawable/empty_tall_divider"
@@ -36,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/gold"
+            android:progressTint="@color/teal_200"
             android:numStars="5"
             android:rating="0"
             tools:layout_conversion_absoluteHeight="57dp"
@@ -92,9 +93,9 @@
             android:textSize="20dp"
             android:textStyle="bold"
             tools:layout_conversion_absoluteHeight="48dp"
-            tools:layout_conversion_absoluteWidth="118dp"
+            tools:layout_editor_absoluteY="664dp"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="664dp">
+            tools:layout_conversion_absoluteWidth="118dp">
 
         </Button>
 
