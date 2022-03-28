@@ -27,9 +27,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: starts");
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+
 
         Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
         startActivity(toHawkerCentreIntent);
+        setContentView(R.layout.activity_main);
     }
 }

@@ -102,36 +102,6 @@ public class HawkerCentreActivity extends AppCompatActivity {
         );
 
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference docRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_CENTRES);
-        CollectionReference stallColRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_CENTRES);
-
-//        stallColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-//                        {
-//                @Override
-//                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            Log.d("TAG", document.getId() + " => " + document.getData());
-//                            Map<String, Object> docData = document.getData();
-//                            String id = document.getId();
-//                            String address = (String) docData.get("address");
-//                            String name = (String) docData.get("name");
-//                            OpeningHours openingHours = (OpeningHours) docData.get("openingHours");
-//                            String hawkerCentre = (String) docData.get("hawkerCentre");
-//                            String imageUrl = (String) docData.get("imageUrl");
-//                            List<String> stallsId = (List<String>) docData.get("stallsId");
-//
-//                            HawkerCentre newHawkerCentre = new HawkerCentre(id, address, name, openingHours, imageUrl, stallsId);
-//                            hawkerCentreList.add(newHawkerCentre);
-//                        }
-//
-//                        Log.d(TAG, "onComplete: " + hawkerCentreList);
-//
-//
-//                }
-//            }
-//        );
 
 
 
