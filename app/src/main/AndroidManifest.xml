@@ -47,7 +47,9 @@
         <activity
             android:name=".HawkerStallActivity"
             android:parentActivityName=".HawkerCentreActivity" />
-
+        <activity
+            android:name=".IndividualStallActivity"
+            android:parentActivityName=".HawkerStallActivity" />
     </application>
 
 </manifest>
