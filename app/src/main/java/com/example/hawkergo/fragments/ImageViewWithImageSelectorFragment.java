@@ -145,7 +145,8 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
-                            setImageAndNotifyActivity();
+                            Uri uri = Uri.fromFile( new File(currentPhotoPath));
+                            setImageAndNotifyActivity(uri);
                             galleryAddPic();
                         }
                     }
@@ -157,16 +158,15 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
-                            setImageAndNotifyActivity();
-                            galleryAddPic();
-
+                            Intent data = result.getData();
+                            Uri selectedImageUri = data.getData();
+                            setImageAndNotifyActivity(selectedImageUri);
                         }
                     }
                 });
     }
 
-    private void setImageAndNotifyActivity(){
-        Uri uri = Uri.fromFile( new File(currentPhotoPath));
+    private void setImageAndNotifyActivity(Uri uri){
         imageViewController.setImageURI(uri);
         Bundle result = new Bundle();
         result.putString("uriString", uri.toString());
