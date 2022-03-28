@@ -9,8 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HawkerGO">
-<<<<<<< HEAD
-=======
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -22,7 +20,6 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
->>>>>>> main
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -31,12 +28,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        
-        <activity android:name=".ReviewSubmissionActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/reviewSubmitTitle">
-
         </activity>
 
         <activity
