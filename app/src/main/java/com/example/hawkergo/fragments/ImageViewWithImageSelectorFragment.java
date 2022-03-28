@@ -13,8 +13,10 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -29,6 +31,10 @@ import com.example.hawkergo.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 
@@ -36,33 +42,18 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
 
     private ImageView imageViewController;
     private Uri selectedImage;
+    private String currentPhotoPath;
     private ActivityResultLauncher<Intent> cameraActivityLauncher, galleryActivityLauncher;
-//    private OnImageSelected listener;
 
 
-    public ImageViewWithImageSelectorFragment() {}
-
-//    public interface OnImageSelected {
-//        public void onSelectImage(Uri uri);
-//    }
+    public ImageViewWithImageSelectorFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-
-    /**
-     * Listener for fragment to communicate with activity
-     * Code done with reference to
-     *          https://guides.codepath.com/android/Creating-and-Using-Fragments#fragment-listener
-     * */
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        // cast to interface
-//        listener = (OnImageSelected) context;
-    }
 
     private void showPopup(View v) {
         PopupMenu popup = new PopupMenu(getActivity(), v);
@@ -103,8 +94,48 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
     }
 
     private void openCamera() {
-        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraActivityLauncher.launch(camera);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            //TODO handle error
+        }
+        // Continue only if the File was successfully created
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(getContext(),
+                    "com.example.android.fileprovider",
+                    photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            cameraActivityLauncher.launch(takePictureIntent);
+        }
+    }
+
+    public File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void galleryAddPic() {
+        System.out.println("adding to gallery");
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        System.out.println(contentUri);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, contentUri);
+        mediaScanIntent.setData(contentUri);
+        getActivity().sendBroadcast(mediaScanIntent);
+        getContext().sendBroadcast(mediaScanIntent);
     }
 
     private void createActivityLaunchersForCameraAndGallery() {
@@ -114,11 +145,8 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = result.getData();
-                            Bitmap image = (Bitmap) data.getExtras().get("data");
-                            Uri tempUri = getImageUri(getContext(), image);
-                            imageViewController.setImageURI(tempUri);
-                            notifyActivity(tempUri);
+                            setImageAndNotifyActivity();
+                            galleryAddPic();
                         }
                     }
                 });
@@ -129,16 +157,17 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = result.getData();
-                            Uri selectedImageUri = data.getData();
-                            imageViewController.setImageURI(selectedImageUri);
-                            notifyActivity(selectedImageUri);
+                            setImageAndNotifyActivity();
+                            galleryAddPic();
+
                         }
                     }
                 });
     }
 
-    private void notifyActivity(Uri uri){
+    private void setImageAndNotifyActivity(){
+        Uri uri = Uri.fromFile( new File(currentPhotoPath));
+        imageViewController.setImageURI(uri);
         Bundle result = new Bundle();
         result.putString("uriString", uri.toString());
         requireActivity().getSupportFragmentManager().setFragmentResult("selectedImageString", result);
