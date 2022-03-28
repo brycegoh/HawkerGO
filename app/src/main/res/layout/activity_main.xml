@@ -16,10 +16,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -41,5 +37,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </Button>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

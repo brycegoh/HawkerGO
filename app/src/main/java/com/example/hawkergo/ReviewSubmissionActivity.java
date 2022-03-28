@@ -31,6 +31,8 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
 
      */
 
+    String hawkerStallID = "woaOm6sNdT11WeJDfi7N";
+
     private RatingBar ratingBar;
     private EditText editText;
     private Button submitButton;
@@ -68,7 +70,7 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
                 // get date reviewed = current date <Date>
                 Date currentDate = new Date();
 
-                /*TODO
+
                 Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID);
 
 
@@ -83,8 +85,6 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
                         Log.e(TAG, "Failed to add review into Firestore for: " + hawkerStallID);
                     }
                 });
-
-                 */
             }
         });
     }
