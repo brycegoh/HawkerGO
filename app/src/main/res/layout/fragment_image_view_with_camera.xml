@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ImageViewWithCamera">
+    tools:context=".fragments.ImageViewWithImageSelectorFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/image_view_container"

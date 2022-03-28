@@ -1,43 +1,25 @@
 package com.example.hawkergo.activities;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
-import android.Manifest;
-import android.app.Activity;
-
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.hawkergo.R;
-import com.example.hawkergo.fragments.ImageViewWithCamera;
+import com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
@@ -52,17 +34,13 @@ import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.example.hawkergo.utils.ui.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class AddHawkerStall extends AppCompatActivity implements ImageViewWithCamera.OnImageSelected {
-    private final int CAMERA_REQUEST_CODE = 1;
-    private final int SELECT_PICTURE = 2;
+public class AddHawkerStall extends AppCompatActivity implements ImageViewWithImageSelectorFragment.OnImageSelected {
     private String hawkerCentreId;
 
 
@@ -78,7 +56,7 @@ public class AddHawkerStall extends AppCompatActivity implements ImageViewWithCa
     Uri selectedImage;
 
     // view controllers
-    ImageViewWithCamera imageSelectorFragment;
+    ImageViewWithImageSelectorFragment imageSelectorFragment;
     Chip addMoreCategoryChip;
     ChipGroup openingHoursChipGrpController, categoriesChipGrpController;
     EditText nameFieldController, floorFieldController, unitNumFieldController, addMoreCategoryTextFieldController;
@@ -111,7 +89,7 @@ public class AddHawkerStall extends AppCompatActivity implements ImageViewWithCa
         this.getAllTagsAndInflateChips();
         this.initDynamicEditTextManager();
         this.attachButtonEventListeners();
-        imageSelectorFragment = new ImageViewWithCamera();
+        imageSelectorFragment = new ImageViewWithImageSelectorFragment();
 
         getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
             @Override

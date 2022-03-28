@@ -32,7 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 
-public class ImageViewWithCamera extends Fragment {
+public class ImageViewWithImageSelectorFragment extends Fragment {
 
     private ImageView imageViewController;
     private Uri selectedImage;
@@ -40,7 +40,7 @@ public class ImageViewWithCamera extends Fragment {
     private OnImageSelected listener;
 
 
-    public ImageViewWithCamera() {}
+    public ImageViewWithImageSelectorFragment() {}
 
     public interface OnImageSelected {
         public void onSelectImage(Uri uri);

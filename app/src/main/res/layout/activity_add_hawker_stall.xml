@@ -22,7 +22,7 @@
                 android:id="@+id/image_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:name="com.example.hawkergo.fragments.ImageViewWithCamera"/>
+                android:name="com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment"/>
 
 <!--            <androidx.coordinatorlayout.widget.CoordinatorLayout-->
 <!--                android:id="@+id/image_view_container"-->
