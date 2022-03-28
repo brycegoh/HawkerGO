@@ -13,4 +13,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gold">#FFEB00</color>
+    <color name="light_grey_editText_bg">#EFEFEF</color>
 </resources>

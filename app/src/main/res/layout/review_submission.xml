@@ -10,9 +10,14 @@
         android:layout_width="411dp"
         android:layout_height="729dp"
         android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="@drawable/empty_tall_divider"
+        android:gravity="center"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,9 +25,9 @@
             android:text="@string/rateInstr"
             android:textSize="20sp"
             tools:layout_conversion_absoluteHeight="19dp"
-            tools:layout_editor_absoluteY="0dp"
+            tools:layout_conversion_absoluteWidth="217dp"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_conversion_absoluteWidth="217dp">
+            tools:layout_editor_absoluteY="0dp">
 
         </TextView>
 
@@ -49,6 +54,7 @@
             tools:layout_conversion_absoluteHeight="19dp"
             tools:layout_editor_absoluteY="77dp"
             tools:layout_editor_absoluteX="0dp"
+            android:textAlignment="center"
             tools:layout_conversion_absoluteWidth="332dp">
 
         </TextView>
@@ -57,22 +63,26 @@
         <EditText
             android:id="@+id/edit_review"
             android:layout_width="400dp"
-            android:layout_height="100dp"
+            android:layout_height="220dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/reviewComment_hint"
-            android:textSize="20sp"
-
             android:inputType="textAutoCorrect"
+            android:background="@color/light_grey_editText_bg"
+
+
+
+
             android:tag="reviewComment"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_conversion_absoluteHeight="150dp"
-            tools:layout_editor_absoluteY="96dp"
+            tools:layout_conversion_absoluteWidth="400dp"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_conversion_absoluteWidth="400dp" />
+            tools:layout_editor_absoluteY="96dp" />
 
         <Button
             android:id="@+id/review_submit_btn"

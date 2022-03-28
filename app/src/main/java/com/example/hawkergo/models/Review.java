@@ -11,9 +11,18 @@ public class Review extends BaseDbFields {
 
     public Review(){};
 
-    public Review(String id, String name, String comment, Double stars, Date dateReviewed, String hawkerStall){
 
-        this.id = id;
+    public Review(String name, String comment, Double stars, Date dateReviewed, String hawkerStall){
+        /**
+         * New review document:
+         *
+         * @param name Name of the person giving the review
+         * @param comment Main text of feedback
+         * @param stars Rating out 5
+         * @param dateReviewed Date of review
+         * @param hawkerStall ID of hawker stall
+         */
+
         this.name = name;
         this.comment = comment;
         this.stars = stars;
