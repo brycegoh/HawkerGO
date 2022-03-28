@@ -8,6 +8,7 @@ public class HawkerCentre extends BaseDbFields {
     public String address, name, imageUrl;
     public OpeningHours openingHours;
     public  List<String> stallsID;
+    public List<String> tags;
 
 
     public  HawkerCentre(){};

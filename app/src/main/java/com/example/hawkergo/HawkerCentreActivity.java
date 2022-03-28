@@ -80,17 +80,12 @@ public class HawkerCentreActivity extends AppCompatActivity {
                                         String centreId = hawkerCentreList.get(position).id;
                                         intent.putExtra("hawkerCentreId", centreId);
                                         startActivity(intent);
-
-
                                     }
 
                                     @Override
                                     public void onLongItemClick(View view, int position) {
-
                                     }
                                 })
-
-
                         );
                     }
 
