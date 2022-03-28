@@ -37,14 +37,14 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
     private ImageView imageViewController;
     private Uri selectedImage;
     private ActivityResultLauncher<Intent> cameraActivityLauncher, galleryActivityLauncher;
-    private OnImageSelected listener;
+//    private OnImageSelected listener;
 
 
     public ImageViewWithImageSelectorFragment() {}
 
-    public interface OnImageSelected {
-        public void onSelectImage(Uri uri);
-    }
+//    public interface OnImageSelected {
+//        public void onSelectImage(Uri uri);
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // cast to interface
-        listener = (OnImageSelected) context;
+//        listener = (OnImageSelected) context;
     }
 
     private void showPopup(View v) {
@@ -118,7 +118,7 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
                             Bitmap image = (Bitmap) data.getExtras().get("data");
                             Uri tempUri = getImageUri(getContext(), image);
                             imageViewController.setImageURI(tempUri);
-                            listener.onSelectImage(tempUri);
+                            notifyActivity(tempUri);
                         }
                     }
                 });
@@ -132,10 +132,16 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
                             Intent data = result.getData();
                             Uri selectedImageUri = data.getData();
                             imageViewController.setImageURI(selectedImageUri);
-                            listener.onSelectImage(selectedImageUri);
+                            notifyActivity(selectedImageUri);
                         }
                     }
                 });
+    }
+
+    private void notifyActivity(Uri uri){
+        Bundle result = new Bundle();
+        result.putString("uriString", uri.toString());
+        requireActivity().getSupportFragmentManager().setFragmentResult("selectedImageString", result);
     }
 
     private Uri getImageUri(Context inContext, Bitmap bitImage) {

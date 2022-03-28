@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class AddHawkerStall extends AppCompatActivity implements ImageViewWithImageSelectorFragment.OnImageSelected {
+public class AddHawkerStall extends AppCompatActivity {
     private String hawkerCentreId;
 
 
@@ -56,7 +56,6 @@ public class AddHawkerStall extends AppCompatActivity implements ImageViewWithIm
     Uri selectedImage;
 
     // view controllers
-    ImageViewWithImageSelectorFragment imageSelectorFragment;
     Chip addMoreCategoryChip;
     ChipGroup openingHoursChipGrpController, categoriesChipGrpController;
     EditText nameFieldController, floorFieldController, unitNumFieldController, addMoreCategoryTextFieldController;
@@ -89,17 +88,18 @@ public class AddHawkerStall extends AppCompatActivity implements ImageViewWithIm
         this.getAllTagsAndInflateChips();
         this.initDynamicEditTextManager();
         this.attachButtonEventListeners();
-        imageSelectorFragment = new ImageViewWithImageSelectorFragment();
+        this.addFragmentBundleListener();
+    }
 
-        getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+    private void addFragmentBundleListener(){
+        getSupportFragmentManager().setFragmentResultListener("selectedImageString", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                // We use a String here, but any type that can be put in a Bundle is supported
-                String result = bundle.getString("bundleKey");
-                // Do something with the result
+                String result = bundle.getString("uriString");
+                Uri x = Uri.parse(result);
+                selectedImage = x;
             }
         });
-
     }
 
 
@@ -424,7 +424,6 @@ public class AddHawkerStall extends AppCompatActivity implements ImageViewWithIm
                     selectedCategories
             );
 
-
             StorageRepository.uploadImageUri(selectedImage,
                     new UploadImageEventHandler() {
                         @Override
@@ -468,8 +467,4 @@ public class AddHawkerStall extends AppCompatActivity implements ImageViewWithIm
         submitButtonController.setEnabled(true);
     }
 
-    @Override
-    public void onSelectImage(Uri uri) {
-        selectedImage = uri;
-    }
 }
