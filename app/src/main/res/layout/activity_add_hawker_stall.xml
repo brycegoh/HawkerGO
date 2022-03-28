@@ -18,11 +18,20 @@
             android:layout_margin="15dp"
             android:orientation="vertical">
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/image_view_container"
+            <LinearLayout
+                android:id="@+id/image_view_fragment_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:name="com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment"/>
+                android:layout_height="300dp">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/image_view_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:name="com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment"/>
+
+
+            </LinearLayout>
+
 
 <!--            <androidx.coordinatorlayout.widget.CoordinatorLayout-->
 <!--                android:id="@+id/image_view_container"-->
@@ -54,7 +63,7 @@
                 android:id="@+id/hawker_centre_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/image_view_container"
+                android:layout_below="@+id/image_view_fragment_container"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
