@@ -27,41 +27,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: starts");
         super.onCreate(savedInstanceState);
-        Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
-        startActivity(toHawkerCentreIntent);
+
         setContentView(R.layout.activity_main);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        // CollectionReference docRef = FirebaseCollectionRef.getReference(FirebaseConstants.DocumentIds.HAWKER_CENTRES);
-
-        /**
-        docRef
-        .get()
-        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("TAG", document.getId() + " => " + document.getData());
-                    }
-                } else {
-                    Log.d("TAG", "Error getting documents: ", task.getException());
-                }
-            }
-        });
-         **/
-
-        Button submitReviewbtn = findViewById(R.id.submitReviewBtn);
-
-        submitReviewbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent submitReviewIntent = new Intent(MainActivity.this, ReviewSubmissionActivity.class);
-                // intent.putExtra(KEY,value); pass in the hawkerStallID of current stall
-                startActivity(submitReviewIntent);
-            }
-        });
-
-
+        Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
+        startActivity(toHawkerCentreIntent);
     }
 }
