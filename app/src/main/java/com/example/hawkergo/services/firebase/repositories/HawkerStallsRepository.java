@@ -32,12 +32,12 @@ public class HawkerStallsRepository implements HawkerStallQueryable {
      */
     public static void addHawkerStall(HawkerStall hawkerStall, String hawkerCentreID, DbEventHandler<String> eventHandler ){
         DocumentReference docRef = collectionRef.document();
-//        newHawkerCenterData.updateDates();
+        String docId = docRef.getId();
         docRef.set(hawkerStall)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                        eventHandler.onSuccess(docId);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -46,11 +46,6 @@ public class HawkerStallsRepository implements HawkerStallQueryable {
                         eventHandler.onFailure(e);
                     }
                 });
-        HawkerCentresRepository.addStallIntoHawkerCentre(
-                hawkerCentreID,
-                hawkerStall,
-                eventHandler
-        );
     };
 
     /**
