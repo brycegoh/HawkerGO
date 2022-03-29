@@ -8,6 +8,7 @@ public class HawkerCentre extends BaseDbFields {
     public String address, name, imageUrl;
     public OpeningHours openingHours;
     public  List<String> stallsID;
+    public List<String> tags;
 
 
     public  HawkerCentre(){};
@@ -27,8 +28,8 @@ public class HawkerCentre extends BaseDbFields {
      * */
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
-//        if(this.dateCreated != null) map.put("dateCreated", dateCreated);
-//        if(this.dateUpdated != null) map.put("dateUpdated", dateUpdated);
+        // if(this.dateCreated != null) map.put("dateCreated", dateCreated);
+        // if(this.dateUpdated != null) map.put("dateUpdated", dateUpdated);
         if(this.address != null) map.put("address", this.address);
         if(this.openingHours != null) map.put("openingHours", this.openingHours);
         if(this.name != null) map.put("name", this.name);

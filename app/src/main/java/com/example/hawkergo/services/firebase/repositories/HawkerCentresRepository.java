@@ -16,8 +16,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -123,8 +125,11 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
                 new DbEventHandler<String>() {
                     @Override
                     public void onSuccess(String hawkerStallId) {
-                        documentReference
-                                .update("stallsID", FieldValue.arrayUnion(hawkerStallId))
+                        HashMap<String, Object> updateFields  = new HashMap<>();
+                        updateFields.put("stallsID", FieldValue.arrayUnion(hawkerStallId));
+                        updateFields.put("tags", FieldValue.arrayUnion(newHawkerStall.tags));
+
+                        documentReference.update(updateFields)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -144,9 +149,6 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
                     }
                 }
         );
-
-
-
     }
 
     /**
@@ -195,27 +197,35 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
         });
     }
 
-//    public static ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler) {
-//        return null;
-//    }
-//
+    public void exampleAct(){
+        Query q = HawkerCentresRepository.getCollectionRef().whereEqualTo("field", "vegetarian").whereEqualTo("asdas", "adadsd");
+    }
 
+    public static CollectionReference getCollectionRef() {
+        return collectionRef;
+    }
 
-//    private static HawkerCentre deserializeData(DocumentSnapshot document){
-//        HawkerCentre insertedHawkerCentre = document.toObject(HawkerCentre.class);
-//        if (insertedHawkerCentre != null) {
-//            insertedHawkerCentre.attachID(document.getId());
-//        }
-//        return insertedHawkerCentre;
-//    }
-//
-//    private static List<HawkerCentre> deserializeData(QuerySnapshot querySnap){
-//        ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
-//        List<DocumentSnapshot> documents = querySnap.getDocuments();
-//        for(DocumentSnapshot x : documents){
-//
-//            hawkerCentreList.add( deserializeData(x) );
-//        }
-//        return hawkerCentreList;
-//    }
+    public static void filterHawkerCentre(Query query , DbEventHandler<List<HawkerCentre>> eventHandler) {
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
+                        eventHandler.onSuccess(hawkerCentreList);
+                    } else {
+                        eventHandler.onSuccess(null);
+                    }
+                } else {
+                    eventHandler.onFailure(task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
 }

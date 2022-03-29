@@ -22,5 +22,4 @@ public class TextValidatorHelper {
     public static boolean isNullOrEmpty(String string){
         return TextUtils.isEmpty(string.trim());
     }
-
 }

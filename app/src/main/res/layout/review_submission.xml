@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/lay_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="@drawable/empty_tall_divider"
+        android:gravity="center"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rateInstr"
+            android:textSize="20sp"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="217dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+
+        </TextView>
+
+        <RatingBar
+            android:id="@+id/reviewRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/gold"
+            android:progressTint="@color/teal_200"
+            android:numStars="5"
+            android:rating="0"
+            tools:layout_conversion_absoluteHeight="57dp"
+            tools:layout_editor_absoluteY="19dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_conversion_absoluteWidth="240dp">
+
+        </RatingBar>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reviewCommentInstr"
+            android:textSize="20sp"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_editor_absoluteY="77dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:textAlignment="center"
+            tools:layout_conversion_absoluteWidth="332dp">
+
+        </TextView>
+
+
+        <EditText
+            android:id="@+id/edit_review"
+            android:layout_width="400dp"
+            android:layout_height="220dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/reviewComment_hint"
+            android:inputType="textAutoCorrect"
+            android:background="@color/light_grey_editText_bg"
+
+
+
+
+            android:tag="reviewComment"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_conversion_absoluteHeight="150dp"
+            tools:layout_conversion_absoluteWidth="400dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="96dp" />
+
+        <Button
+            android:id="@+id/review_submit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reviewSubmit_btn"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_editor_absoluteY="664dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_conversion_absoluteWidth="118dp">
+
+        </Button>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

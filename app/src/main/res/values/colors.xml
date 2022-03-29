@@ -15,4 +15,6 @@
     <color name="white_opacity10">#10FFFFFF</color>
     <color name="grey">#DEDEDE</color>
     <color name="error_red">#cc0000</color>
+    <color name="gold">#FFEB00</color>
+    <color name="light_grey_editText_bg">#EFEFEF</color>
 </resources>

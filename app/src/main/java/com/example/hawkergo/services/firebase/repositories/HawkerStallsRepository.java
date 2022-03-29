@@ -33,7 +33,6 @@ public class HawkerStallsRepository implements HawkerStallQueryable {
     public static void addHawkerStall(HawkerStall hawkerStall, String hawkerCentreID, DbEventHandler<String> eventHandler ){
         DocumentReference docRef = collectionRef.document();
         String docId = docRef.getId();
-//        newHawkerCenterData.updateDates();
         docRef.set(hawkerStall)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -47,11 +46,6 @@ public class HawkerStallsRepository implements HawkerStallQueryable {
                         eventHandler.onFailure(e);
                     }
                 });
-//        HawkerCentresRepository.addStallIntoHawkerCentre(
-//                hawkerCentreID,
-//                hawkerStall,
-//                eventHandler
-//        );
     };
 
     /**
