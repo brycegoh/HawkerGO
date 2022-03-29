@@ -2,48 +2,39 @@ package com.example.hawkergo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.hawkergo.activities.AddHawkerStall;
+import com.example.hawkergo.services.firebase.repositories.AuthRepository;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
-
-
-    Button btnLogOut;
-    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: starts");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        btnLogOut = findViewById(R.id.btnLogout);
-        mAuth = FirebaseAuth.getInstance();
-
-        btnLogOut.setOnClickListener(view ->{
-            mAuth.signOut();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        });
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null){
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        }else{
+        FirebaseUser user = AuthRepository.getAuthenticatedUser();
+        if (user != null){
             Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
             startActivity(toHawkerCentreIntent);
-            setContentView(R.layout.activity_main);
-        }
 
+            // bryce uses this to redirect to his screen for testing
+//            Intent toHawkerCentreIntent = new Intent(MainActivity.this, AddHawkerStall.class);
+//            toHawkerCentreIntent.putExtra("id", "8Esh2FzcoCwxNJPmjdYB");
+//            startActivity(toHawkerCentreIntent);
+
+        } else {
+            Intent toLoginScreen = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(toLoginScreen);
+        }
     }
+
+
 }

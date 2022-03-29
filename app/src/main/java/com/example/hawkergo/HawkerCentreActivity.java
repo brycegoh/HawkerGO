@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hawkergo.activities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
@@ -32,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HawkerCentreActivity extends AppCompatActivity {
+public class HawkerCentreActivity extends AuthenticatedActivity {
     private static final String TAG = "HawkerCentreActivity";
     private List<HawkerCentre> hawkerCentreList = new ArrayList<>();
     private HawkerCentreAdapter mHawkerCentreAdapter;

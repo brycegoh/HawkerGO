@@ -41,7 +41,6 @@ import java.util.Map;
 public class ImageViewWithImageSelectorFragment extends Fragment {
 
     private ImageView imageViewController;
-    private Uri selectedImage;
     private String currentPhotoPath;
     private ActivityResultLauncher<Intent> cameraActivityLauncher, galleryActivityLauncher;
 
@@ -87,27 +86,30 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
     }
 
     private void openGallery() {
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-        galleryActivityLauncher.launch(i);
+        Intent getContentIntent = new Intent();
+        getContentIntent.setType("image/*");
+        getContentIntent.setAction(Intent.ACTION_GET_CONTENT);
+        if (getContentIntent.resolveActivity(getActivity().getPackageManager()) != null){
+            galleryActivityLauncher.launch(getContentIntent);
+        }
     }
 
     private void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File photoFile = null;
-        try {
-            photoFile = createImageFile();
-        } catch (IOException ex) {
-            //TODO handle error
-        }
-        // Continue only if the File was successfully created
-        if (photoFile != null) {
-            Uri photoURI = FileProvider.getUriForFile(getContext(),
-                    "com.example.android.fileprovider",
-                    photoFile);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            cameraActivityLauncher.launch(takePictureIntent);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null){
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Toast.makeText(getContext(), "Error accessing your files", Toast.LENGTH_SHORT).show();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                cameraActivityLauncher.launch(takePictureIntent);
+            }
         }
     }
 
@@ -135,7 +137,6 @@ public class ImageViewWithImageSelectorFragment extends Fragment {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, contentUri);
         mediaScanIntent.setData(contentUri);
         getActivity().sendBroadcast(mediaScanIntent);
-        getContext().sendBroadcast(mediaScanIntent);
     }
 
     private void createActivityLaunchersForCameraAndGallery() {
