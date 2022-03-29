@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
             Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
             startActivity(toHawkerCentreIntent);
 
+
+
 //            bryce uses this to redirect to his screen for testing
 //            Intent toHawkerCentreIntent = new Intent(MainActivity.this, AddHawkerStall.class);
 //            toHawkerCentreIntent.putExtra("id", "8Esh2FzcoCwxNJPmjdYB");

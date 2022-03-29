@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hawkergo.activities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.OpeningHours;
+import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.HawkerCentresRepository;
+import com.example.hawkergo.services.firebase.repositories.TagsRepository;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
 import com.example.hawkergo.services.firebase.utils.FirebaseRef;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,18 +47,9 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
 
-        // Set FilterButton
-
+        // Remove FilterButton for now
         this.filterButton = findViewById(R.id.filter_button);
-        this.filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // create a FragmentManager
-                FragmentManager fm = getSupportFragmentManager();
-                new FilterDialogFragment().show(fm, FilterDialogFragment.TAG);
-
-            }
-        });
+        this.filterButton.setVisibility(View.GONE);
 
 
         HawkerCentresRepository.getAllHawkerCentres(
@@ -79,6 +73,8 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                                         String centreId = hawkerCentreList.get(position).id;
                                         intent.putExtra("hawkerCentreId", centreId);
                                         startActivity(intent);
+
+
                                     }
 
                                     @Override

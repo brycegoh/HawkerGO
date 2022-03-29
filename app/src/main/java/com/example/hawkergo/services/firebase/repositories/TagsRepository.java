@@ -1,5 +1,7 @@
 package com.example.hawkergo.services.firebase.repositories;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.hawkergo.models.HawkerCentre;
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 public class TagsRepository {
+    private static final String TAG = "TagsRepository";
     private static final String collectionId = FirebaseConstants.CollectionIds.TAGS;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
     private static final String tagDocumentId = "PZQY0RGoRhiGvSSQsnFP";
@@ -38,6 +41,7 @@ public class TagsRepository {
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
                         Tags tags = document.toObject(Tags.class);
+                        Log.d(TAG, "onComplete: " + tags.getCategories());
                         eventHandler.onSuccess(tags);
                     } else {
                         eventHandler.onSuccess(null);

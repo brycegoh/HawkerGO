@@ -55,7 +55,6 @@ public class HawkerStallsRepository implements HawkerStallQueryable {
      * @param eventHandler      Callback to handle on success or failure events
      */
     public static void updateHawkerStallById(String hawkerStallID, HawkerStall hawkerStallFields, DbEventHandler<String> eventHandler){
-        // TODO: check if builder pattern is necessary for update function
         DocumentReference documentReference = collectionRef.document(hawkerStallID);
         Map<String, Object> fieldsToUpdate = hawkerStallFields.toMap();
         documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {

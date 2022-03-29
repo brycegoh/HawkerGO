@@ -144,7 +144,6 @@ public class ReviewRepository implements ReviewQueryable {
      * @param eventHandler  Callback to handle on success or failure events
      */
     public static void editReview(String hawkerStallID, String reviewID, Review newReview, DbEventHandler<String> eventHandler){
-        // TODO: check if builder pattern is necessary for update function
         DocumentReference reviewReference = collectionRef.document(hawkerStallID).collection("reviews").document(reviewID);
         reviewReference.set(newReview).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
