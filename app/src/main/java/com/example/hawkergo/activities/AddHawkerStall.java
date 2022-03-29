@@ -75,7 +75,6 @@ public class AddHawkerStall extends AppCompatActivity {
      * Enables user to add as many favourite foods as they want to
      */
     DynamicEditTextManager dynamicEditTextManager;
-    ActivityResultLauncher<Intent> cameraActivityLauncher, galleryActivityLauncher;
 
 
     @Override
@@ -426,10 +425,9 @@ public class AddHawkerStall extends AppCompatActivity {
             );
 
             StorageRepository.uploadImageUri(selectedImage,
-                    new UploadImageEventHandler() {
+                    new DbEventHandler<String>() {
                         @Override
                         public void onSuccess(String downloadUrl) {
-                            // String address, String name, HashMap<String,String> openingHours, String imageUrl, List<String> reviewsIds
                             HawkerStall newHawkerStall = new HawkerStall(
                                     formattedAddress,
                                     stallName,
