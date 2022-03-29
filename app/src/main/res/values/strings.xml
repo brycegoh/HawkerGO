@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">HawkerGO</string>
+    <string name="select_a_category">Select a category</string>
+    <string name="adding_a_stall_title">Adding a stall</string>
+    <string name="add_your_favourite_food_items">Add your favourite food items</string>
+    <string name="no_reviews">(0 reviews)</string>
+    <string name="review">review</string>
+    <string name="reviews">reviews</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="categories">Categories</string>
+    <string name="ok">Okay</string>
+    <string name="cancel">Cancel</string>
+    <string-array name="default_filters">
+        <item>Vegetarian</item>
+        <item>Halal</item>
+        <item>Gluten-Free</item>
+    </string-array>
+    <string name="reviewSubmitTitle">Submit a review...</string>
+    <string name="reviewComment_hint">Write your review here!</string>
+    <string name="reviewSubmit_btn">Submit</string>
+    <string name="reviewSubmitted">Thank you for your precious review!</string>
+    <string name="rateInstr">Please rate this stall out of 5 stars!</string>
+    <string name="reviewCommentInstr">Please tell our community what you think of this stall!</string>
+    <string name="reviewFailed">Sorry, your review failed to submit :( Please try again! </string>
 </resources>

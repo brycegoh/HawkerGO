@@ -1,24 +1,25 @@
 package com.example.hawkergo;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+
 
     Button btnLogOut;
     FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: starts");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -36,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-
-
-
-        Log.d(TAG, "username"+ user.getDisplayName());
-
         if (user == null){
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }else{
+            Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
+            startActivity(toHawkerCentreIntent);
+            setContentView(R.layout.activity_main);
         }
+
     }
 }

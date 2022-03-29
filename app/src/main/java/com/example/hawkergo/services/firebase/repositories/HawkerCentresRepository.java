@@ -7,7 +7,6 @@ import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.interfaces.HawkerCentreQueryable;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
-import com.example.hawkergo.services.firebase.utils.FirebaseHelper;
 import com.example.hawkergo.services.firebase.utils.FirebaseRef;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,9 +16,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +40,6 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
                     QuerySnapshot querySnapshot = task.getResult();
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
                         List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
-                        ;
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {
                         eventHandler.onSuccess(null);
@@ -120,23 +119,36 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      */
     public static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
-        // TODO: add inserting of stall into hawkerstall collection and update dateUpdated
-        String hawkerStallId = "test addStallIntoHawkerCentre";
+        HawkerStallsRepository.addHawkerStall(
+                newHawkerStall,
+                hawkerCentreID,
+                new DbEventHandler<String>() {
+                    @Override
+                    public void onSuccess(String hawkerStallId) {
+                        HashMap<String, Object> updateFields  = new HashMap<>();
+                        updateFields.put("stallsID", FieldValue.arrayUnion(hawkerStallId));
+                        updateFields.put("tags", FieldValue.arrayUnion(newHawkerStall.tags));
 
-        documentReference
-                .update("stallsID", FieldValue.arrayUnion(hawkerStallId))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                        documentReference.update(updateFields)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        eventHandler.onFailure(e);
+                                    }
+                                });
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
+                    public void onFailure(Exception e) {
                         eventHandler.onFailure(e);
                     }
-                });
+                }
+        );
     }
 
     /**
@@ -185,27 +197,35 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
         });
     }
 
-//    public static ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler) {
-//        return null;
-//    }
-//
+    public void exampleAct(){
+        Query q = HawkerCentresRepository.getCollectionRef().whereEqualTo("field", "vegetarian").whereEqualTo("asdas", "adadsd");
+    }
 
+    public static CollectionReference getCollectionRef() {
+        return collectionRef;
+    }
 
-//    private static HawkerCentre deserializeData(DocumentSnapshot document){
-//        HawkerCentre insertedHawkerCentre = document.toObject(HawkerCentre.class);
-//        if (insertedHawkerCentre != null) {
-//            insertedHawkerCentre.attachID(document.getId());
-//        }
-//        return insertedHawkerCentre;
-//    }
-//
-//    private static List<HawkerCentre> deserializeData(QuerySnapshot querySnap){
-//        ArrayList<HawkerCentre> hawkerCentreList = new ArrayList<>();
-//        List<DocumentSnapshot> documents = querySnap.getDocuments();
-//        for(DocumentSnapshot x : documents){
-//
-//            hawkerCentreList.add( deserializeData(x) );
-//        }
-//        return hawkerCentreList;
-//    }
+    public static void filterHawkerCentre(Query query , DbEventHandler<List<HawkerCentre>> eventHandler) {
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
+                        eventHandler.onSuccess(hawkerCentreList);
+                    } else {
+                        eventHandler.onSuccess(null);
+                    }
+                } else {
+                    eventHandler.onFailure(task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
 }
