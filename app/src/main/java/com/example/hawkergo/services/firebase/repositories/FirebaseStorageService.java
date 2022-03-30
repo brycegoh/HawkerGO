@@ -13,7 +13,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-public class StorageRepository {
+public class FirebaseStorageService {
     final static FirebaseStorage storage = FirebaseStorage.getInstance();
     final static StorageReference storageRef = storage.getReference();
 

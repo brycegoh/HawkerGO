@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-public class AuthRepository {
+public class AuthService {
     final static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public static FirebaseUser getAuthenticatedUser(){

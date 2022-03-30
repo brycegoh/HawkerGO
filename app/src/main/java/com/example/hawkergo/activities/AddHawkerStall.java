@@ -1,8 +1,6 @@
 package com.example.hawkergo.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.TimePickerDialog;
@@ -19,25 +17,21 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.hawkergo.HawkerStallActivity;
-import com.example.hawkergo.MainActivity;
 import com.example.hawkergo.R;
-import com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.interfaces.UploadImageEventHandler;
-import com.example.hawkergo.services.firebase.repositories.HawkerCentresRepository;
-import com.example.hawkergo.services.firebase.repositories.StorageRepository;
-import com.example.hawkergo.services.firebase.repositories.TagsRepository;
+import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
+import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
+import com.example.hawkergo.services.firebase.repositories.TagsService;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.example.hawkergo.utils.ui.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -117,7 +111,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
         String id = intent.getStringExtra("id");
         hawkerCentreId = id;
         if (id != null) {
-            HawkerCentresRepository.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
+            HawkerCentresService.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
                 @Override
                 public void onSuccess(HawkerCentre o) {
                     hawkerCentre = o;
@@ -188,7 +182,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
     }
 
     private void getAllTagsAndInflateChips() {
-        TagsRepository.getAllTags(
+        TagsService.getAllTags(
                 new DbEventHandler<Tags>() {
                     @Override
                     public void onSuccess(Tags o) {
@@ -229,7 +223,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
                     public void onDebouncedClick(View view) {
                         String text = addMoreCategoryTextFieldController.getText().toString().toLowerCase().trim();
                         if (!TextValidatorHelper.isNullOrEmpty(text) && !newCategories.contains(text) && !categories.contains(text)) {
-                            TagsRepository.addTag(text, new DbEventHandler<String>() {
+                            TagsService.addTag(text, new DbEventHandler<String>() {
                                 @Override
                                 public void onSuccess(String o) {
                                     newCategories.add(text);
@@ -405,7 +399,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
                     formattedOpeningTime
             );
 
-            StorageRepository.uploadImageUri(selectedImage,
+            FirebaseStorageService.uploadImageUri(selectedImage,
                     new DbEventHandler<String>() {
                         @Override
                         public void onSuccess(String downloadUrl) {
@@ -418,7 +412,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
                                     selectedCategories,
                                     hawkerCentreId
                             );
-                            HawkerCentresRepository.addStallIntoHawkerCentre(
+                            HawkerCentresService.addStallIntoHawkerCentre(
                                     hawkerCentreId,
                                     newHawkerStall,
                                     new DbEventHandler<String>() {

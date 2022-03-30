@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HawkerCentresRepository implements HawkerCentreQueryable {
+public class HawkerCentresService implements HawkerCentreQueryable {
     private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_CENTRES;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
 
@@ -119,7 +119,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      */
     public static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
-        HawkerStallsRepository.addHawkerStall(
+        HawkerStallsService.addHawkerStall(
                 newHawkerStall,
                 hawkerCentreID,
                 new DbEventHandler<String>() {
@@ -198,7 +198,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     }
 
     public void exampleAct(){
-        Query q = HawkerCentresRepository.getCollectionRef().whereEqualTo("field", "vegetarian").whereEqualTo("asdas", "adadsd");
+        Query q = HawkerCentresService.getCollectionRef().whereEqualTo("field", "vegetarian").whereEqualTo("asdas", "adadsd");
     }
 
     public static CollectionReference getCollectionRef() {

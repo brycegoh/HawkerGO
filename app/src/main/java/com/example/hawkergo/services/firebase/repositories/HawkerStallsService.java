@@ -18,10 +18,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HawkerStallsRepository implements HawkerStallQueryable {
+public class HawkerStallsService implements HawkerStallQueryable {
     private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_STALLS;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
 
@@ -144,5 +145,25 @@ public class HawkerStallsRepository implements HawkerStallQueryable {
             }
         });
     };
+
+    public static void incrementReviewCount(String hawkerStallId, DbEventHandler<String> eventHandler){
+        Map<String, Object> fieldToUpdate = new HashMap<>();
+        fieldToUpdate.put("reviewCount", FieldValue.increment(1));
+        collectionRef.document(hawkerStallId).update(fieldToUpdate).addOnSuccessListener(
+                new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                    }
+                }
+        ).addOnFailureListener(
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        eventHandler.onFailure(e);
+                    }
+                }
+        );
+    }
 
 }

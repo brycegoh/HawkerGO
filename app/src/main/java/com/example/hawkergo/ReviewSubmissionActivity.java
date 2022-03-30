@@ -9,15 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hawkergo.models.Review;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.ReviewRepository;
+import com.example.hawkergo.services.firebase.repositories.ReviewService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -72,7 +70,7 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
                 Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID);
 
 
-                ReviewRepository.addReview(hawkerStallID, review, new DbEventHandler<String>() {
+                ReviewService.addReview(hawkerStallID, review, new DbEventHandler<String>() {
                     @Override
                     public void onSuccess(String o) {
                         Log.i(TAG, "Successfully added review into Firestore for: "+ hawkerStallID);
