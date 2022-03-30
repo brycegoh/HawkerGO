@@ -127,7 +127,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
                     public void onSuccess(String hawkerStallId) {
                         HashMap<String, Object> updateFields  = new HashMap<>();
                         updateFields.put("stallsID", FieldValue.arrayUnion(hawkerStallId));
-                        updateFields.put("tags", FieldValue.arrayUnion(newHawkerStall.tags));
+                        updateFields.put("tags", FieldValue.arrayUnion(newHawkerStall.getTags()));
 
                         documentReference.update(updateFields)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {

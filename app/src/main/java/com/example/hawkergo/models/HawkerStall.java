@@ -7,17 +7,88 @@ import java.util.List;
 public class HawkerStall extends BaseDbFields {
     // TODO: Need to add in imageUrl for the hawker stall
     // TODO: Do we want a field to track numReviews only? Thinking of storage space concerns
-    public String address , name, imageUrl, hawkerCentreID;
-    public OpeningHours openingHours;
-    public List<Review> reviews;
-    public List<String> reviewsIds;
-    public List<String> popularItems;
-    public List<String> tags;
+    private String address , name, imageUrl, hawkerCentreID;
+    private OpeningHours openingHours;
+    private List<Review> reviews;
+    private List<String> reviewsIds;
+    private List<String> popularItems;
+    private List<String> tags;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getHawkerCentreID() {
+        return hawkerCentreID;
+    }
+
+    public void setHawkerCentreID(String hawkerCentreID) {
+        this.hawkerCentreID = hawkerCentreID;
+    }
+
+    public OpeningHours getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(OpeningHours openingHours) {
+        this.openingHours = openingHours;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<String> getReviewsIds() {
+        return reviewsIds;
+    }
+
+    public void setReviewsIds(List<String> reviewsIds) {
+        this.reviewsIds = reviewsIds;
+    }
+
+    public List<String> getPopularItems() {
+        return popularItems;
+    }
+
+    public void setPopularItems(List<String> popularItems) {
+        this.popularItems = popularItems;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public HawkerStall(){};
 
-    public HawkerStall(String id, String address, String name, HashMap<String,String> openingHours, String hawkerCentre, String imageUrl, List<String> reviewsIds){
-        this.id = id;
+    public HawkerStall(String address, String name, HashMap<String,String> openingHours, String hawkerCentre, String imageUrl, List<String> reviewsIds){
         this.address = address;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -43,7 +114,6 @@ public class HawkerStall extends BaseDbFields {
 
     public HashMap<String, Object> toMap(){
         HashMap<String, Object> map = new HashMap<>();
-        map.put("id", id);
         map.put("address", this.address);
         map.put("openingHours", this.openingHours);
         map.put("name", this.name);

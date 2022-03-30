@@ -66,14 +66,14 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
         HawkerStall stallItem = mHawkerStalls.get(position);
 
 
-        holder.stallName.setText(stallItem.name);
-        holder.stallAddress.setText(stallItem.address);
+        holder.stallName.setText(stallItem.getName());
+        holder.stallAddress.setText(stallItem.getAddress());
         holder.stallRating.setText("5");
 
 
 
-        if (stallItem.reviews != null) {
-            int numReviews = stallItem.reviews.size();
+        if (stallItem.getReviews() != null) {
+            int numReviews = stallItem.getReviews().size();
             if (numReviews == 1) {
                 holder.stallReviews.setText("(" + numReviews + R.string.review  + ")");
             } else {

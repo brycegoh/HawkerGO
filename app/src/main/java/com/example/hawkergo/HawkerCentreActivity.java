@@ -76,7 +76,7 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                                     @Override
                                     public void onItemClick(View view, int position) {
                                         Intent intent = new Intent(HawkerCentreActivity.this, HawkerStallActivity.class);
-                                        String centreId = hawkerCentreList.get(position).id;
+                                        String centreId = hawkerCentreList.get(position).getId();
                                         intent.putExtra("hawkerCentreId", centreId);
                                         startActivity(intent);
                                     }

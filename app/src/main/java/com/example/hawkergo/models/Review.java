@@ -5,12 +5,52 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Review extends BaseDbFields {
-    public String id, comment, name, hawkerStall;
-    public Double stars;
-    public Date dateReviewed;
+    private String comment, name, hawkerStall;
+    private Double stars;
+    private Date dateReviewed;
 
     public Review(){};
 
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getHawkerStall() {
+        return hawkerStall;
+    }
+
+    public void setHawkerStall(String hawkerStall) {
+        this.hawkerStall = hawkerStall;
+    }
+
+    public Double getStars() {
+        return stars;
+    }
+
+    public void setStars(Double stars) {
+        this.stars = stars;
+    }
+
+    public Date getDateReviewed() {
+        return dateReviewed;
+    }
+
+    public void setDateReviewed(Date dateReviewed) {
+        this.dateReviewed = dateReviewed;
+    }
 
     public Review(String name, String comment, Double stars, Date dateReviewed, String hawkerStall){
         /**
@@ -32,7 +72,6 @@ public class Review extends BaseDbFields {
 
     public HashMap<String, Object> toMap(){
         HashMap<String, Object> map = new HashMap<>();
-        map.put("id", id);
         map.put("name", this.name);
         map.put("comment", this.comment);
         map.put("stars", this.stars);

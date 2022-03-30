@@ -119,12 +119,13 @@ public class AddHawkerStall extends AuthenticatedActivity {
                 @Override
                 public void onSuccess(HawkerCentre o) {
                     hawkerCentre = o;
-                    mainTitleController.setText("Adding a stall to " + hawkerCentre.name);
+                    mainTitleController.setText("Adding a stall to " + hawkerCentre.getName());
                 }
 
                 @Override
                 public void onFailure(Exception e) {
-
+                    System.out.println("=========");
+                    System.out.println(e.getMessage().toString());
                 }
             });
         }
