@@ -7,7 +7,7 @@ import java.util.List;
 public class HawkerStall extends BaseDbFields {
     // TODO: Need to add in imageUrl for the hawker stall
     // TODO: Do we want a field to track numReviews only? Thinking of storage space concerns
-    public String address , name, imageUrl;
+    public String address , name, imageUrl, hawkerCentreID;
     public OpeningHours openingHours;
     public List<Review> reviews;
     public List<String> reviewsIds;
@@ -24,12 +24,7 @@ public class HawkerStall extends BaseDbFields {
         this.reviewsIds = reviewsIds;
     }
 
-    public HawkerStall(String address, String name, OpeningHours openingHours, String imageUrl, List<String> popularItems, List<String> tags){
-        System.out.println(openingHours.hours);
-        System.out.println(openingHours.remarks);
-        System.out.println(openingHours.days);
-        System.out.println(popularItems.toString());
-        System.out.println(tags.toString());
+    public HawkerStall(String address, String name, OpeningHours openingHours, String imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreID){
 
         this.address = address;
         this.name = name;
@@ -38,6 +33,7 @@ public class HawkerStall extends BaseDbFields {
         this.imageUrl = imageUrl;
         this.popularItems = popularItems;
         this.tags = tags;
+        this.hawkerCentreID = hawkerCentreID;
     }
 
     public void attachReviews(List<Review> reviews){

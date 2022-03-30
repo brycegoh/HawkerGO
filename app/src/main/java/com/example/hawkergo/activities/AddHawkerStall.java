@@ -41,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class AddHawkerStall extends AppCompatActivity {
+public class AddHawkerStall extends AuthenticatedActivity {
     private String hawkerCentreId;
 
 
@@ -211,10 +211,6 @@ public class AddHawkerStall extends AppCompatActivity {
         categoriesChipGrpController.addView(chip);
     }
 
-    private void showAddCategoryErrorToast() {
-        Toast.makeText(this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
-    }
-
     private void attachButtonEventListeners() {
         addMoreCategoryChip.setOnClickListener(
                 new View.OnClickListener() {
@@ -240,7 +236,7 @@ public class AddHawkerStall extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    showAddCategoryErrorToast();
+                                    Toast.makeText(AddHawkerStall.this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -415,15 +411,6 @@ public class AddHawkerStall extends AppCompatActivity {
                     formattedOpeningTime
             );
 
-            HawkerStall newHawkerStall = new HawkerStall(
-                    formattedAddress,
-                    stallName,
-                    newOpeningHours,
-                    "downloadUrl",
-                    favouriteFoods,
-                    selectedCategories
-            );
-
             StorageRepository.uploadImageUri(selectedImage,
                     new DbEventHandler<String>() {
                         @Override
@@ -434,7 +421,8 @@ public class AddHawkerStall extends AppCompatActivity {
                                     newOpeningHours,
                                     downloadUrl,
                                     favouriteFoods,
-                                    selectedCategories
+                                    selectedCategories,
+                                    hawkerCentreId
                             );
                             HawkerCentresRepository.addStallIntoHawkerCentre(
                                     hawkerCentreId,
@@ -447,7 +435,7 @@ public class AddHawkerStall extends AppCompatActivity {
 
                                         @Override
                                         public void onFailure(Exception e) {
-                                            System.out.println(e.toString());
+                                            Toast.makeText(AddHawkerStall.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                             );
