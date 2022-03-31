@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hawkergo.activities.AddHawkerStall;
 import com.example.hawkergo.activities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
@@ -18,7 +17,7 @@ import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
 import com.example.hawkergo.utils.K;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
 import com.example.hawkergo.utils.adapters.HawkerCentreAdapter;
-import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
     private List<HawkerCentre> hawkerCentreList = new ArrayList<>();
     private HawkerCentreAdapter mHawkerCentreAdapter;
     private ImageButton filterButton;
-    private TextView filterTag;
+    private ChipGroup filterChipGroup;
     private TextView header;
     private FloatingActionButton floatingActionButton;
     private final String HAWKER_CENTRE_NAME = "HAWKER_CENTRE_NAME";
@@ -46,12 +45,12 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
 
         // Remove FilterButton for now
         this.filterButton = findViewById(R.id.filter_button);
-        this.filterTag = findViewById(R.id.filter_tag);
         this.header = findViewById(R.id.header);
+        this.filterChipGroup = findViewById(R.id.chipGroup);
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
         this.filterButton.setVisibility(View.GONE);
-        this.filterTag.setVisibility(View.GONE);
         this.header.setText("All Hawker Centres");
+        this.filterChipGroup.setVisibility(View.GONE);
 
         HawkerCentresService.getAllHawkerCentres(
                 new DbEventHandler<List<HawkerCentre>>() {
@@ -79,11 +78,9 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                                         preferencesEditor.putString(HAWKER_CENTRE_NAME, hawkerCentreName);
                                         preferencesEditor.apply();
 
-                                        intent.putExtra("hawkerCentreId", centreId);
-                                        intent.putExtra("hawkerCentreName", hawkerCentreName);
+                                        intent.putExtra(K.HAWKER_CENTRE_ID, centreId);
+                                        intent.putExtra(K.HAWKER_CENTRE_NAME, hawkerCentreName);
                                         startActivity(intent);
-
-
 
 
                                     }

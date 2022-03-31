@@ -4,14 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,27 +23,29 @@ import com.example.hawkergo.services.firebase.utils.FirebaseRef;
 import com.example.hawkergo.utils.K;
 import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class HawkerStallActivity extends AppCompatActivity implements FilterDialogFragment.MyDialogListener {
+public class HawkerStallActivity extends AppCompatActivity implements FilterDialogFragment.MyDialogListener, View.OnClickListener {
     private static final String TAG = "HawkerStallActivity";
     private List<HawkerStall> hawkerStallList = new ArrayList<>();
     private HawkerStallAdapter mHawkerStallAdapter;
     private String hawkerCentreId;
     private ImageButton filterButton;
-    private TextView filterTag;
+    private ChipGroup filterChipGroup;
     private TextView header;
     private String headerString;
     private FloatingActionButton floatingActionButton;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private SharedPreferences mPreferences;
+    private List<String> filterList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +54,14 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
         setContentView(R.layout.hawker_list);
 
         mPreferences = getSharedPreferences(K.GLOBAL_SHARED_PREFS, MODE_PRIVATE);
-        // Try retrieving from last saved state, if it fails, retrieve default value
+        // Ensure that header is not null when clicking back from AddHawkerStall.java
         headerString = mPreferences.getString(K.HAWKER_CENTRE_NAME, K.HAWKER_CENTRE_NAME);
 
         // Set FilterButton
         this.filterButton = findViewById(R.id.filter_button);
-        this.filterTag = findViewById(R.id.filter_tag);
         this.header = findViewById(R.id.header);
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
+        this.filterChipGroup = findViewById(R.id.chipGroup);
         this.filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,8 +85,8 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
         });
 
         Intent intent = getIntent();
-        hawkerCentreId = intent.getStringExtra("hawkerCentreId");
-        String hawkerCentreName = intent.getStringExtra("hawkerCentreName");
+        hawkerCentreId = intent.getStringExtra(K.HAWKER_CENTRE_ID);
+        String hawkerCentreName = intent.getStringExtra(K.HAWKER_CENTRE_NAME);
 
         if (hawkerCentreName != null) {
             headerString = hawkerCentreName;
@@ -108,27 +107,7 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
             stallColRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_STALLS);
         }
 
-        stallColRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    HawkerStall newHawkerStall = document.toObject(HawkerStall.class);
-                    hawkerStallList.add(newHawkerStall);
-                }
-
-                Log.d(TAG, "onComplete: " + hawkerStallList);
-
-                RecyclerView recyclerView = (RecyclerView) findViewById(R.id.hawker_stall_recycler_view);
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-                mHawkerStallAdapter = new HawkerStallAdapter(getApplicationContext(), hawkerStallList);
-                recyclerView.setAdapter(mHawkerStallAdapter);
-
-            } else {
-                Log.d("TAG", "Error getting documents: ", task.getException());
-            }
-        }
-        );
+        updateRecyclerView(stallColRef);
 
         floatingActionButton.setOnClickListener(
                 new DebouncedOnClickListener() {
@@ -149,39 +128,47 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
     }
 
     @Override
+    public void onClick(View view) {
+        Chip chip = (Chip) view;
+        filterChipGroup.removeView(chip);
+        filterList.remove(chip.getText().toString());
+        Query filteredColRef;
+        if (filterList.size() > 0) {
+            filteredColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", filterList);
+        } else {
+            // If there are no filters, retrieve all hawker stalls
+            filteredColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerCentreId", hawkerCentreId);
+        }
+        updateRecyclerView(filteredColRef);
+
+    }
+
+    @Override
     public void finish(List<String> result) {
         Log.d(TAG, "finish: " + result);
 
+        filterChipGroup.removeAllViews();
+        for (String el : result) {
+            filterList.add(el);
+            Chip chip = new Chip(this);
+            chip.setId(View.generateViewId());
+            chip.setText(el);
+            chip.setChipBackgroundColorResource(R.color.grey);
+            chip.setCloseIconVisible(true);
+            chip.setTextColor(getResources().getColor(R.color.black));
+            chip.setOnCloseIconClickListener(this);
+            filterChipGroup.addView(chip);
+
+        }
+
         Query filteredColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", result);
 
-        // TODO: Refactor code
-        // TODO: Update tags on view accordingly
-        this.filterTag.setText(result.get(0));
-        ConstraintLayout layout = (ConstraintLayout)findViewById(R.id.hawker_list_constraint);
-        ConstraintSet set = new ConstraintSet();
-        List<TextView> filterViews = new ArrayList<>(Collections.singletonList(this.filterTag));
+        updateRecyclerView(filteredColRef);
+    }
 
-
-
-        TextView view = new TextView(this);
-        view.setId(View.generateViewId());  // cannot set id after add
-        view.setText(result.get(1));
-        layout.addView(view, 0);
-        set.clone(layout);
-        filterViews.add(view);
-        int n = filterViews.size();
-        int marginValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics());
-
-        set.connect(filterViews.get(n-2).getId(), ConstraintSet.END, filterViews.get(n - 1).getId(), ConstraintSet.START,   marginValue);
-        set.connect(filterViews.get(n-2).getId(), ConstraintSet.TOP, filterViews.get(n - 1).getId(), ConstraintSet.TOP,   0);
-        set.connect(filterViews.get(n-2).getId(), ConstraintSet.BOTTOM, filterViews.get(n - 1).getId(), ConstraintSet.BOTTOM,   0);
-//        for (int i = 1; i < result.size(); i++)  {
-//
-//
-//        }
-        set.applyTo(layout);
-
-        filteredColRef.get().addOnCompleteListener(task -> {
+    private void updateRecyclerView(Query colRef) {
+        Log.d(TAG, "updateRecyclerView: starts");
+        colRef.get().addOnCompleteListener(task -> {
 
                     if (task.isSuccessful()) {
                         hawkerStallList.clear();
@@ -190,7 +177,6 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
                             HawkerStall newHawkerStall = document.toObject(HawkerStall.class);
                             hawkerStallList.add(newHawkerStall);
                         }
-                        Log.d(TAG, "onComplete: FilteredColRef " + hawkerStallList.size());
 
                         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.hawker_stall_recycler_view);
 
@@ -204,6 +190,7 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
                     }
                 }
         );
+
     }
 
 

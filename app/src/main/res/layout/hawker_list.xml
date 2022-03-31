@@ -22,31 +22,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/filter_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/rounded_corner"
-        android:padding="8dp"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:text="All"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/header"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hawker_stall_recycler_view"
         android:layout_width="379dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_tag" />
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
 
     <ImageButton
         android:id="@+id/filter_button"
@@ -54,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:background="@android:color/transparent"
+        android:contentDescription="Button to filter list of hawker stalls"
         app:layout_constraintBottom_toBottomOf="@+id/header"
         app:layout_constraintEnd_toEndOf="@+id/hawker_stall_recycler_view"
         app:layout_constraintTop_toTopOf="@+id/header"
@@ -66,18 +51,31 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
-        app:tint="@color/green_200"
+        android:contentDescription="Button to add a hawker stall"
         app:backgroundTint="@color/green_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@color/green_500"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
+        app:srcCompat="@drawable/ic_baseline_add_24"
+        app:tint="@color/green_200" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/filter_button"
+        app:layout_constraintStart_toStartOf="@+id/header"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+    </com.google.android.material.chip.ChipGroup>
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="9dp">
 
     </FrameLayout>
 
