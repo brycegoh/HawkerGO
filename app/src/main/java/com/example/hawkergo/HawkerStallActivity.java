@@ -19,18 +19,14 @@ import com.example.hawkergo.services.firebase.repositories.TagsRepository;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
 import com.example.hawkergo.services.firebase.utils.FirebaseRef;
 import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class HawkerStallActivity extends AppCompatActivity {
+public class HawkerStallActivity extends AppCompatActivity implements FilterDialogFragment.MyDialogListener {
     private static final String TAG = "HawkerStallActivity";
     private List<HawkerStall> hawkerStallList = new ArrayList<>();
     private HawkerStallAdapter mHawkerStallAdapter;
@@ -38,12 +34,15 @@ public class HawkerStallActivity extends AppCompatActivity {
     private ImageButton filterButton;
     private TextView filterTag;
     private TextView header;
+    private FilterDialogFragment filterDialog;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: starts");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
 
@@ -79,7 +78,7 @@ public class HawkerStallActivity extends AppCompatActivity {
         this.header.setText(hawkerCentreName);
 
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
         Query stallColRef;
 
@@ -93,8 +92,6 @@ public class HawkerStallActivity extends AppCompatActivity {
         stallColRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    Log.d("TAG", document.getId() + " => " + document.getData());
-
                     HawkerStall newHawkerStall = document.toObject(HawkerStall.class);
                     hawkerStallList.add(newHawkerStall);
                 }
@@ -116,5 +113,38 @@ public class HawkerStallActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    public void finish(List<String> result) {
+        Log.d(TAG, "finish: " + result);
+
+        Query filteredColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", result);
+
+        // TODO: Refactor code
+        // TODO: Update tags on view accordingly
+        filteredColRef.get().addOnCompleteListener(task -> {
+
+                    if (task.isSuccessful()) {
+                        hawkerStallList.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+                            HawkerStall newHawkerStall = document.toObject(HawkerStall.class);
+                            hawkerStallList.add(newHawkerStall);
+                        }
+                        Log.d(TAG, "onComplete: FilteredColRef " + hawkerStallList.size());
+
+                        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.hawker_stall_recycler_view);
+
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+                        mHawkerStallAdapter = new HawkerStallAdapter(getApplicationContext(), hawkerStallList);
+                        recyclerView.setAdapter(mHawkerStallAdapter);
+
+                    } else {
+                        Log.d("TAG", "Error getting documents: ", task.getException());
+                    }
+                }
+        );
     }
 }

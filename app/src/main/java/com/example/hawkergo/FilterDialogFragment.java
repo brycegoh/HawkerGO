@@ -9,10 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.example.hawkergo.models.Tags;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.TagsRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +18,7 @@ import java.util.List;
 public class FilterDialogFragment extends DialogFragment {
     public static final String TAG = "FilterDialogFragment";
     private String[] categoriesArray;
+
 
     public FilterDialogFragment() {
         // Required empty public constructor
@@ -34,8 +31,8 @@ public class FilterDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        List<Integer> selectedItems = new ArrayList<>();  // Where we track the selected items
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        List<String> selectedItems = new ArrayList<>();  // Where we track the selected items
 
         // Set the dialog title
         builder.setTitle(R.string.categories)
@@ -48,10 +45,10 @@ public class FilterDialogFragment extends DialogFragment {
                                                 boolean isChecked) {
                                 if (isChecked) {
                                     // If the user checked the item, add it to the selected items
-                                    selectedItems.add(which);
+                                    selectedItems.add(categoriesArray[which]);
                                 } else if (selectedItems.contains(which)) {
                                     // Else, if the item is already in the array, remove it
-                                    selectedItems.remove(which);
+                                    selectedItems.remove(categoriesArray[which]);
                                 }
                             }
                         })
@@ -60,6 +57,11 @@ public class FilterDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // TODO: Implement backend filter functionality
+                        MyDialogListener activity = (MyDialogListener) getActivity();
+                        activity.finish(selectedItems);
+
+
+
 
                         // 1. Execute query
                         // 2. Pass result back to HawkerStallActivity.java
@@ -74,8 +76,15 @@ public class FilterDialogFragment extends DialogFragment {
                 });
 
 
+
+
         return builder.create();
 
+    }
+
+
+    public interface MyDialogListener {
+        void finish(List<String> result);
     }
 
 
