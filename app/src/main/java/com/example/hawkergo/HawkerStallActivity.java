@@ -66,7 +66,7 @@ public class HawkerStallActivity extends AppCompatActivity {
                     String name = (String) docData.get("name");
                     HashMap<String,String> openingHours = (HashMap<String, String>) docData.get("openingHours");
                     String hawkerCentre = (String) docData.get("hawkerCentre");
-                    String imageUrl = (String) docData.get("imageUrl");
+                    List<String> imageUrl = (List<String>) docData.get("imageUrls");
 
                     HawkerStall newHawkerStall = new HawkerStall(address, name, openingHours, hawkerCentre, imageUrl,  null);
                     hawkerStallList.add(newHawkerStall);

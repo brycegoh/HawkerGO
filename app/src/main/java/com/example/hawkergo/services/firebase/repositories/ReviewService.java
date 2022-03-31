@@ -1,5 +1,7 @@
 package com.example.hawkergo.services.firebase.repositories;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import com.example.hawkergo.models.Review;
@@ -93,7 +95,7 @@ public class ReviewService implements ReviewQueryable {
      * @param review        New review to be inserted
      * @param eventHandler  Callback to handle on success or failure events
      */
-    public static void addReview(String hawkerStallID, Review review, DbEventHandler<String> eventHandler){
+    public static void addReview(String hawkerStallID, Review review, String selectedImage, DbEventHandler<String> eventHandler){
         DocumentReference docRef = collectionRef.document(hawkerStallID);
         DocumentReference reviewRef = docRef.collection("reviews").document();
         reviewRef
@@ -101,8 +103,9 @@ public class ReviewService implements ReviewQueryable {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        HawkerStallsService.incrementReviewCount(
+                        HawkerStallsService.incrementReviewAndAddPhotoCount(
                                 hawkerStallID,
+                                selectedImage,
                                 new DbEventHandler<String>() {
                                     @Override
                                     public void onSuccess(String o) {

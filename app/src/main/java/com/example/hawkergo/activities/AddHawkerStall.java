@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -93,6 +94,8 @@ public class AddHawkerStall extends AuthenticatedActivity {
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 String result = bundle.getString("uriString");
                 Uri x = Uri.parse(result);
+                ImageView imageView = findViewById(R.id.image_view);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 selectedImage = x;
             }
         });
@@ -407,7 +410,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
                                     formattedAddress,
                                     stallName,
                                     newOpeningHours,
-                                    downloadUrl,
+                                    new ArrayList<>(Arrays.asList(downloadUrl)),
                                     favouriteFoods,
                                     selectedCategories,
                                     hawkerCentreId

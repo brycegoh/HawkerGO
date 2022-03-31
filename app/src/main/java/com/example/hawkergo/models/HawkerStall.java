@@ -7,7 +7,8 @@ import java.util.List;
 public class HawkerStall extends BaseDbFields {
     // TODO: Need to add in imageUrl for the hawker stall
     // TODO: Do we want a field to track numReviews only? Thinking of storage space concerns
-    private String address , name, imageUrl, hawkerCentreID;
+    private String address , name, hawkerCentreID;
+    private List<String> imageUrls;
     private Integer reviewCount;
     private OpeningHours openingHours;
     private List<Review> reviews;
@@ -17,20 +18,19 @@ public class HawkerStall extends BaseDbFields {
 
     public HawkerStall(){};
 
-    public HawkerStall(String address, String name, HashMap<String,String> openingHours, String hawkerCentre, String imageUrl, List<String> reviewsIds){
+    public HawkerStall(String address, String name, HashMap<String,String> openingHours, String hawkerCentre, List<String> imageUrl, List<String> reviewsIds){
         this.address = address;
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.imageUrls = imageUrl;
         this.reviewsIds = reviewsIds;
     }
 
-    public HawkerStall(String address, String name, OpeningHours openingHours, String imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreID){
+    public HawkerStall(String address, String name, OpeningHours openingHours, List<String> imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreID){
 
         this.address = address;
         this.name = name;
-        this.imageUrl =imageUrl;
+        this.imageUrls =imageUrl;
         this.openingHours = openingHours;
-        this.imageUrl = imageUrl;
         this.popularItems = popularItems;
         this.tags = tags;
         this.hawkerCentreID = hawkerCentreID;
@@ -70,12 +70,12 @@ public class HawkerStall extends BaseDbFields {
         this.name = name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrls(List<String> imageUrl) {
+        this.imageUrls = imageUrl;
     }
 
     public String getHawkerCentreID() {
