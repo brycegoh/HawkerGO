@@ -59,7 +59,7 @@ public class HawkerCentresService implements HawkerCentreQueryable {
     public static void searchAllHawkerCentres(String searchTerm, DbEventHandler<List<HawkerCentre>> eventHandler) {
         collectionRef
                 .whereGreaterThanOrEqualTo("name", searchTerm)
-                .whereLessThanOrEqualTo("name", "searchTerm\uF7FF")
+                .whereLessThanOrEqualTo("name", searchTerm + "\uF7FF")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
