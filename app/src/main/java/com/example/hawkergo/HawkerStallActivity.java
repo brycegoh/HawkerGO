@@ -3,11 +3,14 @@ package com.example.hawkergo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +27,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class HawkerStallActivity extends AppCompatActivity implements FilterDialogFragment.MyDialogListener {
@@ -123,6 +128,31 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
 
         // TODO: Refactor code
         // TODO: Update tags on view accordingly
+        this.filterTag.setText(result.get(0));
+        ConstraintLayout layout = (ConstraintLayout)findViewById(R.id.hawker_list_constraint);
+        ConstraintSet set = new ConstraintSet();
+        List<TextView> filterViews = new ArrayList<>(Collections.singletonList(this.filterTag));
+
+
+
+        TextView view = new TextView(this);
+        view.setId(View.generateViewId());  // cannot set id after add
+        view.setText(result.get(1));
+        layout.addView(view, 0);
+        set.clone(layout);
+        filterViews.add(view);
+        int n = filterViews.size();
+        int marginValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics());
+
+        set.connect(filterViews.get(n-2).getId(), ConstraintSet.END, filterViews.get(n - 1).getId(), ConstraintSet.START,   marginValue);
+        set.connect(filterViews.get(n-2).getId(), ConstraintSet.TOP, filterViews.get(n - 1).getId(), ConstraintSet.TOP,   0);
+        set.connect(filterViews.get(n-2).getId(), ConstraintSet.BOTTOM, filterViews.get(n - 1).getId(), ConstraintSet.BOTTOM,   0);
+//        for (int i = 1; i < result.size(); i++)  {
+//
+//
+//        }
+        set.applyTo(layout);
+
         filteredColRef.get().addOnCompleteListener(task -> {
 
                     if (task.isSuccessful()) {
