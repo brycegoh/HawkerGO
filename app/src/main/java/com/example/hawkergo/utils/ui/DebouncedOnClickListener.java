@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class DebouncedOnClickListener implements View.OnClickListener {
 
+    public static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     HashMap<Integer, ScheduledFuture<?>> tracker = new HashMap<>();
 
     final long TIME_DELAY = 1000;
@@ -20,22 +21,19 @@ public abstract class DebouncedOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        Integer key = view.getId();
 
-        if(tracker.containsKey(key)){
-            ScheduledFuture<?> scheduledTask = tracker.get(key);
-            if(scheduledTask != null && !scheduledTask.isDone()){
-                scheduledTask.cancel(false); // dont interrupt if is running
-            }
+        Integer key = view.getId();
+        ScheduledFuture<?> scheduledTask = tracker.containsKey(key) ? tracker.get(key) : null;
+        if (scheduledTask != null) {
+            scheduledTask.cancel(false); // don't interrupt if is running
+        } else {
+            tracker.put(key, (ScheduledFuture<?>) executor.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    onDebouncedClick(view);
+                }
+            }, TIME_DELAY, TIME_UNIT));
         }
 
-        tracker.put(key, (ScheduledFuture<?>) executor.schedule(new Runnable() {
-            @Override
-            public void run() {
-                onDebouncedClick(view);
-            }
-        }, TIME_DELAY, TIME_UNIT));
     }
-
 }
