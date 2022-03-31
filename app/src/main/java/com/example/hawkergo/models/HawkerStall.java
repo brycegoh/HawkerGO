@@ -9,7 +9,7 @@ public class HawkerStall extends BaseDbFields {
     // TODO: Do we want a field to track numReviews only? Thinking of storage space concerns
     private String address , name, hawkerCentreID;
     private List<String> imageUrls;
-    private Integer reviewCount;
+    private Integer reviewCount = 0;
     private OpeningHours openingHours;
     private List<Review> reviews;
     private List<String> reviewsIds;
