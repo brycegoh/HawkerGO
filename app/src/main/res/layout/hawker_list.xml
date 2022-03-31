@@ -59,11 +59,25 @@
         app:layout_constraintTop_toTopOf="@+id/header"
         app:srcCompat="@drawable/ic_filter_icon" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:tint="@color/green_200"
+        app:backgroundTint="@color/green_700"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="@color/green_500"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
+
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp" >
+        android:layout_marginTop="10dp">
 
     </FrameLayout>
 

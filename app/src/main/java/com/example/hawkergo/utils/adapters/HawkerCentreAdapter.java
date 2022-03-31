@@ -75,10 +75,10 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
     public void onBindViewHolder(@NonNull HawkerCentreViewHolder holder, int position) {
         HawkerCentre centreItem = mHawkerCentres.get(position);
 
-        holder.stallName.setText(centreItem.name);
-        holder.stallAddress.setText(centreItem.address);
+        holder.stallName.setText(centreItem.getName());
+        holder.stallAddress.setText(centreItem.getAddress());
 
-        new DownloadImageTask(holder.stallImage).execute(centreItem.imageUrl);
+        new DownloadImageTask(holder.stallImage).execute(centreItem.getImageUrl());
 
 
     }

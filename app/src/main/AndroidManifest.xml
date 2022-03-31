@@ -45,7 +45,8 @@
 
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".LoginActivity"/>
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
@@ -61,10 +62,9 @@
 
         <activity
             android:name=".activities.AddHawkerStall"
-            android:exported="false"/>
-<!--            android:parentActivityName=".activities.AddHawkerStall"-->
-
-
+            android:exported="false"
+            android:parentActivityName=".HawkerStallActivity"
+            />
         <activity
             android:name=".HawkerCentreActivity"
             android:exported="false"/>

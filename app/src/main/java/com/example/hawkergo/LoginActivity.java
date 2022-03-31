@@ -1,24 +1,19 @@
 package com.example.hawkergo;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.AuthRepository;
+import com.example.hawkergo.services.firebase.repositories.AuthService;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
@@ -33,15 +28,25 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        initViews();
+        setOnClickListeners();
+    }
 
+    private void initViews(){
         etLoginEmail = findViewById(R.id.etLoginEmail);
         etLoginPassword = findViewById(R.id.etLoginPass);
         tvRegisterHere = findViewById(R.id.tvRegisterHere);
         btnLogin = findViewById(R.id.btnLogin);
+    }
 
-        btnLogin.setOnClickListener(view -> {
-            loginUser();
+    private void setOnClickListeners(){
+        btnLogin.setOnClickListener(new DebouncedOnClickListener() {
+            @Override
+            public void onDebouncedClick(View view) {
+                loginUser();
+            }
         });
+
         tvRegisterHere.setOnClickListener(view ->{
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
@@ -75,14 +80,12 @@ public class LoginActivity extends AppCompatActivity {
         if(!Arrays.asList(validations).contains(false)){
             String email = etLoginEmail.getText().toString();
             String password = etLoginPassword.getText().toString();
-
-            AuthRepository.loginUser(
+            AuthService.loginUser(
                     email,
                     password,
                     new DbEventHandler<String>() {
                         @Override
                         public void onSuccess(String o) {
-                            System.out.println("success");
                             Toast.makeText(LoginActivity.this, "MAKAN LO!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, HawkerCentreActivity.class));
                         }

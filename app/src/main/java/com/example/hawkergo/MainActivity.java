@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hawkergo.activities.AddHawkerStall;
-import com.example.hawkergo.services.firebase.repositories.AuthRepository;
+import com.example.hawkergo.services.firebase.repositories.AuthService;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser user = AuthRepository.getAuthenticatedUser();
+        FirebaseUser user = AuthService.getAuthenticatedUser();
         if (user != null){
             Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
             startActivity(toHawkerCentreIntent);

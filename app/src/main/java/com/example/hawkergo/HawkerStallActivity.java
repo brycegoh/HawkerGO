@@ -1,6 +1,7 @@
 package com.example.hawkergo;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -15,19 +16,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hawkergo.activities.AddHawkerStall;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.TagsRepository;
+import com.example.hawkergo.services.firebase.repositories.TagsService;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
 import com.example.hawkergo.services.firebase.utils.FirebaseRef;
+import com.example.hawkergo.utils.K;
 import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
+import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,11 +43,10 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
     private ImageButton filterButton;
     private TextView filterTag;
     private TextView header;
-    private FilterDialogFragment filterDialog;
+    private String headerString;
+    private FloatingActionButton floatingActionButton;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-
+    private SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +54,22 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
 
+        mPreferences = getSharedPreferences(K.GLOBAL_SHARED_PREFS, MODE_PRIVATE);
+        // Try retrieving from last saved state, if it fails, retrieve default value
+        headerString = mPreferences.getString(K.HAWKER_CENTRE_NAME, K.HAWKER_CENTRE_NAME);
+
         // Set FilterButton
         this.filterButton = findViewById(R.id.filter_button);
         this.filterTag = findViewById(R.id.filter_tag);
         this.header = findViewById(R.id.header);
+        this.floatingActionButton = findViewById(R.id.floatingActionButton);
         this.filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // create a FragmentManager
                 FragmentManager fm = getSupportFragmentManager();
 
-                TagsRepository.getAllTags(new DbEventHandler<Tags>() {
+                TagsService.getAllTags(new DbEventHandler<Tags>() {
                     @Override
                     public void onSuccess(Tags o) {
                         String[] categoriesArray = o.getCategoriesArray();
@@ -80,7 +88,13 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
         Intent intent = getIntent();
         hawkerCentreId = intent.getStringExtra("hawkerCentreId");
         String hawkerCentreName = intent.getStringExtra("hawkerCentreName");
-        this.header.setText(hawkerCentreName);
+
+        if (hawkerCentreName != null) {
+            headerString = hawkerCentreName;
+
+        }
+
+        this.header.setText(headerString);
 
 
 
@@ -115,6 +129,20 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
             }
         }
         );
+
+        floatingActionButton.setOnClickListener(
+                new DebouncedOnClickListener() {
+
+                    @Override
+                    public void onDebouncedClick(View view) {
+                        Intent intent = new Intent(HawkerStallActivity.this, AddHawkerStall.class);
+                        intent.putExtra("id", hawkerCentreId);
+                        startActivity(intent);
+
+                    }
+                }
+        );
+
 
 
 
@@ -177,4 +205,6 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
                 }
         );
     }
+
+
 }

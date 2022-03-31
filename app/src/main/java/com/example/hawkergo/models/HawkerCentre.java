@@ -5,16 +5,62 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HawkerCentre extends BaseDbFields {
-    public String address, name, imageUrl;
-    public OpeningHours openingHours;
-    public  List<String> stallsID;
-    public List<String> tags;
+    private String address, name, imageUrl;
+    private OpeningHours openingHours;
+    private  List<String> stallsID;
+    private List<String> tags;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public OpeningHours getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(OpeningHours openingHours) {
+        this.openingHours = openingHours;
+    }
+
+    public List<String> getStallsID() {
+        return stallsID;
+    }
+
+    public void setStallsID(List<String> stallsID) {
+        this.stallsID = stallsID;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public  HawkerCentre(){};
 
-    public HawkerCentre(String id, String address, String name, OpeningHours openingHours, String imageUrl, List<String> stallsID) {
-        this.id = id;
+    public HawkerCentre(String address, String name, OpeningHours openingHours, String imageUrl, List<String> stallsID) {
         this.address = address;
         this.name = name;
         this.openingHours = openingHours;
@@ -64,6 +110,55 @@ public class HawkerCentre extends BaseDbFields {
             this.name = name;
             return this;
         }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        public OpeningHours getOpeningHours() {
+            return openingHours;
+        }
+
+        public void setOpeningHours(OpeningHours openingHours) {
+            this.openingHours = openingHours;
+        }
+
+        public List<String> getStallsID() {
+            return stallsID;
+        }
+
+        public void setStallsID(List<String> stallsID) {
+            this.stallsID = stallsID;
+        }
+
         public Builder addOpeningHours(OpeningHours openingHours) {
             this.openingHours = openingHours;
             return this;
@@ -79,7 +174,7 @@ public class HawkerCentre extends BaseDbFields {
         }
 
         public HawkerCentre build() {
-            return new HawkerCentre(id, address,  name, openingHours, imageUrl, stallsID);
+            return new HawkerCentre(address,  name, openingHours, imageUrl, stallsID);
         }
     }
 

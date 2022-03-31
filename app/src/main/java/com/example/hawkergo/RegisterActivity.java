@@ -1,25 +1,24 @@
 package com.example.hawkergo;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentResultListener;
 
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.AuthRepository;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.hawkergo.services.firebase.repositories.AuthService;
+import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 
@@ -31,8 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     TextView tvLoginHere;
     Button btnRegister;
     ProgressBar progressbar;
-
-    FirebaseAuth mAuth;
+    Uri selectedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         progressbar = findViewById(R.id.progressBar);
 
-        mAuth = FirebaseAuth.getInstance();
+        addFragmentBundleListener();
 
         btnRegister.setOnClickListener(view ->{
             createUser();
@@ -54,6 +52,19 @@ public class RegisterActivity extends AppCompatActivity {
 
         tvLoginHere.setOnClickListener(view ->{
             startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+        });
+    }
+
+    private void addFragmentBundleListener(){
+        getSupportFragmentManager().setFragmentResultListener("selectedImageString", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                String result = bundle.getString("uriString");
+                Uri x = Uri.parse(result);
+                ImageView imageView = findViewById(R.id.image_view);
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                selectedImage = x;
+            }
         });
     }
 
@@ -71,25 +82,39 @@ public class RegisterActivity extends AppCompatActivity {
         }else if (TextUtils.isEmpty(name)){
             etRegName.setError("Name cannot be empty");
             etRegName.requestFocus();
+        }else if (selectedImage == null){
+            Toast.makeText(this, "Add a profile pic!", Toast.LENGTH_SHORT).show();
         }else{
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.toString()).build();
-            AuthRepository.createUserAndUpdateUserProfile(
-                    email,
-                    password,
-                    profileUpdates,
-                    new DbEventHandler<String>() {
-                        @Override
-                        public void onSuccess(String o) {
-                            Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                        }
+            FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
+                @Override
+                public void onSuccess(String downloadUrl) {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
+                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
+                    AuthService.createUserAndUpdateUserProfile(
+                            email,
+                            password,
+                            profileUpdates,
+                            new DbEventHandler<String>() {
+                                @Override
+                                public void onSuccess(String o) {
+                                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-            );
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                    );
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
+
         }
     }
 
