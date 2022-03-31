@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentResultListener;
 
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.AuthService;
+import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -84,25 +85,36 @@ public class RegisterActivity extends AppCompatActivity {
         }else if (selectedImage == null){
             Toast.makeText(this, "Add a profile pic!", Toast.LENGTH_SHORT).show();
         }else{
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.toString()).setPhotoUri(selectedImage).build();
-            Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
-            AuthService.createUserAndUpdateUserProfile(
-                    email,
-                    password,
-                    profileUpdates,
-                    new DbEventHandler<String>() {
-                        @Override
-                        public void onSuccess(String o) {
-                            Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                        }
+            FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
+                @Override
+                public void onSuccess(String downloadUrl) {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
+                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
+                    AuthService.createUserAndUpdateUserProfile(
+                            email,
+                            password,
+                            profileUpdates,
+                            new DbEventHandler<String>() {
+                                @Override
+                                public void onSuccess(String o) {
+                                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-            );
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                    );
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
+
         }
     }
 

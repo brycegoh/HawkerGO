@@ -2,6 +2,7 @@ package com.example.hawkergo.services.firebase.repositories;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,11 +19,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import javax.annotation.Nullable;
+
 public class AuthService {
     final static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public static FirebaseUser getAuthenticatedUser(){
         return mAuth.getCurrentUser();
+    }
+
+    public static Uri getUserProfilePic(){
+        FirebaseUser user = getAuthenticatedUser();
+        return user!=null ?  user.getPhotoUrl() : null;
     }
 
     public static void logoutUser(){

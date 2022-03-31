@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentResultListener;
 
 import com.example.hawkergo.models.Review;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
+import com.example.hawkergo.services.firebase.repositories.AuthService;
 import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
 import com.example.hawkergo.services.firebase.repositories.ReviewService;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,13 +40,10 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private EditText editText;
     private Button submitButton;
-    public double reviewStars;
-    public String reviewContent;
+    private double reviewStars;
+    private String reviewContent;
     private Uri selectedImage;
-
-    private FirebaseAuth mAuth;
-    String userDisplayName;
-
+    private String userDisplayName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +87,9 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
 
                 // get date reviewed = current date <Date>
                 Date currentDate = new Date();
-
-                Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID);
+                Uri profilePic = AuthService.getUserProfilePic();
+                String image = profilePic != null ? profilePic.toString() : null;
+                Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, image);
 
                 FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
                     @Override

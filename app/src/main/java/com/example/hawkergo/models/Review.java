@@ -8,6 +8,7 @@ public class Review extends BaseDbFields {
     private String comment, name, hawkerStall;
     private Double stars;
     private Date dateReviewed;
+    private String imageUrl;
 
     public Review(){};
 
@@ -52,7 +53,7 @@ public class Review extends BaseDbFields {
         this.dateReviewed = dateReviewed;
     }
 
-    public Review(String name, String comment, Double stars, Date dateReviewed, String hawkerStall){
+    public Review(String name, String comment, Double stars, Date dateReviewed, String hawkerStall, String imageUrl){
         /**
          * New review document:
          *
@@ -68,6 +69,7 @@ public class Review extends BaseDbFields {
         this.stars = stars;
         this.dateReviewed = dateReviewed;
         this.hawkerStall = hawkerStall;
+        this.imageUrl = imageUrl;
     }
 
     public HashMap<String, Object> toMap(){
@@ -78,6 +80,14 @@ public class Review extends BaseDbFields {
         map.put("dateReviewed", this.dateReviewed);
         map.put("hawkerStall", this.hawkerStall);
         return map;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 //    @Override
