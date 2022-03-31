@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.activities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
+import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
@@ -41,6 +43,8 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
     private List<HawkerCentre> hawkerCentreList = new ArrayList<>();
     private HawkerCentreAdapter mHawkerCentreAdapter;
     private ImageButton filterButton;
+    private TextView filterTag;
+    private TextView header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,13 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
 
         // Remove FilterButton for now
         this.filterButton = findViewById(R.id.filter_button);
+        this.filterTag = findViewById(R.id.filter_tag);
+        this.header = findViewById(R.id.header);
         this.filterButton.setVisibility(View.GONE);
+        this.filterTag.setVisibility(View.GONE);
+        this.header.setText("All Hawker Centres");
+
+
 
 
         HawkerCentresRepository.getAllHawkerCentres(
@@ -70,8 +80,11 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                                     @Override
                                     public void onItemClick(View view, int position) {
                                         Intent intent = new Intent(HawkerCentreActivity.this, HawkerStallActivity.class);
-                                        String centreId = hawkerCentreList.get(position).id;
+                                        HawkerCentre currentHawkerCentre = hawkerCentreList.get(position);
+                                        String centreId = currentHawkerCentre.id;
+                                        String hawkerCentreName = currentHawkerCentre.name;
                                         intent.putExtra("hawkerCentreId", centreId);
+                                        intent.putExtra("hawkerCentreName", hawkerCentreName);
                                         startActivity(intent);
 
 

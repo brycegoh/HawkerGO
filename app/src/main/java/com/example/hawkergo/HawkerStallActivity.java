@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -35,6 +36,9 @@ public class HawkerStallActivity extends AppCompatActivity {
     private HawkerStallAdapter mHawkerStallAdapter;
     private String hawkerCentreId;
     private ImageButton filterButton;
+    private TextView filterTag;
+    private TextView header;
+
 
 
 
@@ -45,6 +49,8 @@ public class HawkerStallActivity extends AppCompatActivity {
 
         // Set FilterButton
         this.filterButton = findViewById(R.id.filter_button);
+        this.filterTag = findViewById(R.id.filter_tag);
+        this.header = findViewById(R.id.header);
         this.filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +75,8 @@ public class HawkerStallActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         hawkerCentreId = intent.getStringExtra("hawkerCentreId");
-        Log.d(TAG, "onCreate: hawkerCentreId is " + hawkerCentreId);
+        String hawkerCentreName = intent.getStringExtra("hawkerCentreName");
+        this.header.setText(hawkerCentreName);
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -83,20 +90,10 @@ public class HawkerStallActivity extends AppCompatActivity {
             stallColRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_STALLS);
         }
 
-        CollectionReference docRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_CENTRES);
-
-
         stallColRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Log.d("TAG", document.getId() + " => " + document.getData());
-                    Map<String, Object> docData = document.getData();
-                    String id = (String) document.getId();
-                    String address = (String) docData.get("address");
-                    String name = (String) docData.get("name");
-                    HashMap<String,String> openingHours = (HashMap<String, String>) docData.get("openingHours");
-                    String hawkerCentre = (String) docData.get("hawkerCentre");
-                    String imageUrl = (String) docData.get("imageUrl");
 
                     HawkerStall newHawkerStall = document.toObject(HawkerStall.class);
                     hawkerStallList.add(newHawkerStall);
@@ -116,21 +113,6 @@ public class HawkerStallActivity extends AppCompatActivity {
             }
         }
         );
-
-//        docRef
-//        .get()
-//        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Log.d("TAG", document.getId() + " => " + document.getData());
-//                    }
-//                } else {
-//                    Log.d("TAG", "Error getting documents: ", task.getException());
-//                }
-//            }
-//        });
 
 
 

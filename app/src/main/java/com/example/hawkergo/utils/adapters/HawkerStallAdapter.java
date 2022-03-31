@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerStall;
+import com.example.hawkergo.utils.DownloadImageTask;
 
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
             this.stallAddress = itemView.findViewById(R.id.stall_address);
             this.stallRating = itemView.findViewById(R.id.rating_number);
             this.stallReviews = itemView.findViewById(R.id.review_number);
+            this.stallImage = itemView.findViewById(R.id.stall_image);
 
 
 
@@ -69,6 +71,8 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
         holder.stallName.setText(stallItem.name);
         holder.stallAddress.setText(stallItem.address);
         holder.stallRating.setText("5");
+
+        new DownloadImageTask(holder.stallImage).execute(stallItem.imageUrl);
 
 
 
