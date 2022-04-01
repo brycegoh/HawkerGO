@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.activities.AddHawkerStall;
+import com.example.hawkergo.activities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
@@ -33,7 +35,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HawkerStallActivity extends AppCompatActivity implements FilterDialogFragment.MyDialogListener, View.OnClickListener {
+public class HawkerStallActivity extends AuthenticatedActivity implements FilterDialogFragment.MyDialogListener, View.OnClickListener {
     private static final String TAG = "HawkerStallActivity";
     private List<HawkerStall> hawkerStallList = new ArrayList<>();
     private HawkerStallAdapter mHawkerStallAdapter;
@@ -77,6 +79,9 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
 
                     @Override
                     public void onFailure(Exception e) {
+                        Toast.makeText(HawkerStallActivity.this,
+                                "Unable to retrieve filter tags. Please try again.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -96,11 +101,9 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
         this.header.setText(headerString);
 
 
-
-
         Query stallColRef;
 
-        if(hawkerCentreId != null) {
+        if (hawkerCentreId != null) {
             stallColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerCentreId", hawkerCentreId);
 
         } else {
@@ -121,8 +124,6 @@ public class HawkerStallActivity extends AppCompatActivity implements FilterDial
                     }
                 }
         );
-
-
 
 
     }
