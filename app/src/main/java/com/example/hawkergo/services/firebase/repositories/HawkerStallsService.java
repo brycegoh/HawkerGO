@@ -16,6 +16,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
@@ -144,6 +145,30 @@ public class HawkerStallsService implements HawkerStallQueryable {
             }
         });
     };
+
+    public static void filterHawkerCentre(Query query , DbEventHandler<List<HawkerStall>> eventHandler) {
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<HawkerStall> hawkerStallList = querySnapshot.toObjects(HawkerStall.class);
+                        eventHandler.onSuccess(hawkerStallList);
+                    } else {
+                        eventHandler.onSuccess(null);
+                    }
+                } else {
+                    eventHandler.onFailure(task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
 
     public static void incrementReviewAndAddPhotoCount(String hawkerStallId, String selectedImage, DbEventHandler<String> eventHandler){
         Map<String, Object> fieldToUpdate = new HashMap<>();

@@ -14,7 +14,7 @@ import com.example.hawkergo.activities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
-import com.example.hawkergo.utils.K;
+import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
 import com.example.hawkergo.utils.adapters.HawkerCentreAdapter;
 import com.google.android.material.chip.ChipGroup;
@@ -31,17 +31,12 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
     private ChipGroup filterChipGroup;
     private TextView header;
     private FloatingActionButton floatingActionButton;
-    private final String HAWKER_CENTRE_NAME = "HAWKER_CENTRE_NAME";
-    private SharedPreferences mPreferences;
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
-
-        mPreferences = getSharedPreferences(K.GLOBAL_SHARED_PREFS, MODE_PRIVATE);
 
         // Remove FilterButton for now
         this.filterButton = findViewById(R.id.filter_button);
@@ -74,15 +69,9 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                                         String centreId = currentHawkerCentre.getId();
                                         String hawkerCentreName = currentHawkerCentre.getName();
 
-                                        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-                                        preferencesEditor.putString(HAWKER_CENTRE_NAME, hawkerCentreName);
-                                        preferencesEditor.apply();
-
-                                        intent.putExtra(K.HAWKER_CENTRE_ID, centreId);
-                                        intent.putExtra(K.HAWKER_CENTRE_NAME, hawkerCentreName);
+                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, centreId);
+                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
                                         startActivity(intent);
-
-
                                     }
 
                                     @Override

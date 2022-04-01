@@ -1,0 +1,17 @@
+package com.example.hawkergo.utils;
+
+public class Constants {
+
+    public static class RequestCodes{
+        public static final Integer HAWKER_STALL_LISTING_TO_ADD_STALL_FORM = 1;
+    }
+
+    public static class ResultCodes{
+        public static final Integer ADD_STALL_FORM_TO_HAWKER_STALL_LISTING = 2;
+    }
+
+    public static class IntentExtraDataKeys{
+        public static final String HAWKER_CENTRE_NAME = "HAWKER_CENTRE_NAME";
+        public static final String HAWKER_CENTRE_ID = "HAWKER_CENTRE_ID";
+    }
+}

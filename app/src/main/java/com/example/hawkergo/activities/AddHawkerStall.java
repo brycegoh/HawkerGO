@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -27,6 +28,7 @@ import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
 import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
 import com.example.hawkergo.services.firebase.repositories.TagsService;
+import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.example.hawkergo.utils.ui.DynamicEditTextManager;
@@ -35,6 +37,7 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,28 +45,28 @@ public class AddHawkerStall extends AuthenticatedActivity {
     private String hawkerCentreId;
 
 
-    String[] openingDaysChipsOptions;
-    List<String> categories;
-    List<String> newCategories;
-    HawkerCentre hawkerCentre;
+    private String[] openingDaysChipsOptions;
+    private List<String> categories;
+    private List<String> newCategories;
+    private HawkerCentre hawkerCentre;
 
     // default opening and closing time
-    int openingHour = 8, openingMinute = 30;
-    int closingHour = 21, closingMinute = 30;
+    private int openingHour = 8, openingMinute = 30;
+    private int closingHour = 21, closingMinute = 30;
 
-    Uri selectedImage;
+    private Uri selectedImage;
 
     // view controllers
-    Chip addMoreCategoryChip;
-    ChipGroup openingHoursChipGrpController, categoriesChipGrpController;
-    EditText nameFieldController, floorFieldController, unitNumFieldController, addMoreCategoryTextFieldController;
-    TextView openingHoursErrorTextController, selectCategoryErrorTextController, mainTitleController;
-    Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButtonController, addMoreCategoryButtonController;
-    LinearLayout addMoreCategoryController;
+    private Chip addMoreCategoryChip;
+    private ChipGroup openingHoursChipGrpController, categoriesChipGrpController;
+    private EditText nameFieldController, floorFieldController, unitNumFieldController, addMoreCategoryTextFieldController;
+    private TextView openingHoursErrorTextController, selectCategoryErrorTextController, mainTitleController;
+    private Button openingTimeButtonController, closingTimeButtonController, submitButtonController, addMoreFavFoodButtonController, addMoreCategoryButtonController;
+    private LinearLayout addMoreCategoryController;
 
     // chip selection tracker
-    ArrayList<String> selectedOpeningDays = new ArrayList<>();
-    ArrayList<String> selectedCategories = new ArrayList<>();
+    private ArrayList<String> selectedOpeningDays = new ArrayList<>();
+    private ArrayList<String> selectedCategories = new ArrayList<>();
 
 
     /**
@@ -71,8 +74,33 @@ public class AddHawkerStall extends AuthenticatedActivity {
      * This manager abstracts out logic required to programmatically add EditText views into the form
      * Enables user to add as many favourite foods as they want to
      */
-    DynamicEditTextManager dynamicEditTextManager;
+    private DynamicEditTextManager dynamicEditTextManager;
 
+
+    /**
+     * On back navigate handlers
+     *
+     * Add extra String data:
+     *  1. hawkerCentreId
+     *  2. hawkerCentreName
+     * */
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, hawkerCentreId);
+        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentre.getName());
+        setResult(Constants.ResultCodes.ADD_STALL_FORM_TO_HAWKER_STALL_LISTING, resultIntent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,10 +139,9 @@ public class AddHawkerStall extends AuthenticatedActivity {
 
     private void handleIntent() {
         Intent intent = getIntent();
-        String id = intent.getStringExtra("id");
-        hawkerCentreId = id;
-        if (id != null) {
-            HawkerCentresService.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
+        hawkerCentreId = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
+        if (hawkerCentreId != null) {
+            HawkerCentresService.getHawkerCentreByID(hawkerCentreId, new DbEventHandler<HawkerCentre>() {
                 @Override
                 public void onSuccess(HawkerCentre o) {
                     hawkerCentre = o;
@@ -123,12 +150,10 @@ public class AddHawkerStall extends AuthenticatedActivity {
 
                 @Override
                 public void onFailure(Exception e) {
-                    System.out.println("=========");
-                    System.out.println(e.getMessage().toString());
+                    Toast.makeText(AddHawkerStall.this, "Failed to load hawker centre. Please try again", Toast.LENGTH_SHORT).show();
                 }
             });
         }
-
     }
 
     private void initViews() {
@@ -159,9 +184,9 @@ public class AddHawkerStall extends AuthenticatedActivity {
 
     private void inflateOpeningDaysChips() {
         openingDaysChipsOptions = getResources().getStringArray(R.array.chip_options);
-        for (int i = 0; i < openingDaysChipsOptions.length; i++) {
+        for (String openingDaysChipsOption : openingDaysChipsOptions) {
             Chip chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip, openingHoursChipGrpController, false);
-            chip.setText(openingDaysChipsOptions[i]);
+            chip.setText(openingDaysChipsOption);
             chip.setId(View.generateViewId());
             openingHoursChipGrpController.addView(chip);
             addChipOnSelectListener(chip, selectedOpeningDays);
@@ -410,7 +435,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
                                     formattedAddress,
                                     stallName,
                                     newOpeningHours,
-                                    new ArrayList<>(Arrays.asList(downloadUrl)),
+                                    new ArrayList<>(Collections.singletonList(downloadUrl)),
                                     favouriteFoods,
                                     selectedCategories,
                                     hawkerCentreId
