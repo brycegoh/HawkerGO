@@ -1,5 +1,22 @@
 <resources>
     <string name="app_name">HawkerGO</string>
+
+    <string-array name="username">
+        <item>Tom</item>
+        <item>Joe</item>
+        <item>John</item>
+    </string-array>
+    <string-array name="rating">
+        <item>4.3</item>
+        <item>3</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="reviews">
+        <item>Very nice, worth the price</item>
+        <item>Test Review</item>
+        <item>Test Review</item>
+    </string-array>
+
     <string name="select_a_category">Select a category</string>
     <string name="adding_a_stall_title">Adding a stall</string>
     <string name="add_your_favourite_food_items">Add your favourite food items</string>
