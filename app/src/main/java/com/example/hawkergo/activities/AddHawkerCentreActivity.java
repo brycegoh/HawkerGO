@@ -22,7 +22,7 @@ import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
+import com.example.hawkergo.utils.ui.Debouncer;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -49,13 +49,14 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
     // chip selection tracker
     ArrayList<String> selectedOpeningDays = new ArrayList<>();
 
+    private final Debouncer debouncer = new Debouncer();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hawker_centre);
         this.initViews();
         this.inflateOpeningDaysChips();
-//        this.getAllTagsAndInflateChips();
         this.attachButtonEventListeners();
         this.addFragmentBundleListener();
     }
@@ -123,10 +124,26 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
 
     private void attachButtonEventListeners() {
         submitButtonController.setOnClickListener(
-                new DebouncedOnClickListener() {
+                new View.OnClickListener() {
                     @Override
-                    public void onDebouncedClick(View view) {
-                        onClickSubmitButton();
+                    public void onClick(View view) {
+                        boolean isValid = validateSelectedImage() &&
+                                validateStreetNumberField() &&
+                                validateStreetNameField() &&
+                                validatePostalCodeField() &&
+                                validateOpeningHoursChips() &&
+                                validateNameField();
+                        if(isValid){
+                            debouncer.debounce(
+                                    "SUBMIT_NEW_HAWKER_CENTRE",
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            onClickSubmitButton();
+                                        }
+                                    }
+                            );
+                        }
                     }
                 }
         );
@@ -237,22 +254,8 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
     }
 
     private void onClickSubmitButton() {
-        submitButtonController.setEnabled(false);
-        
-        Boolean[] validationArray = {
-                validateSelectedImage(),
-                validateStreetNumberField(),
-                validateStreetNameField(),
-                validatePostalCodeField(),
-                validateOpeningHoursChips(),
-                validateNameField(),
-                
-        };
 
-        boolean isAllValid = !Arrays.asList(validationArray).contains(false);
 
-        if (isAllValid) {
-            // init fields needed to be saved to firestore
             String centreName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
 
             centreName = nameFieldController.getText().toString();
@@ -315,7 +318,7 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
             );
 
 
-        }
+
 
         submitButtonController.setEnabled(true);
     }

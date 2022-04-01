@@ -13,7 +13,7 @@ import com.example.hawkergo.R;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.UserService;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
+import com.example.hawkergo.utils.ui.Debouncer;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Arrays;
@@ -24,6 +24,8 @@ public class LoginActivity extends AppCompatActivity {
     TextInputEditText etLoginPassword;
     TextView tvRegisterHere;
     Button btnLogin;
+
+    private final Debouncer debouncer = new Debouncer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +43,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setOnClickListeners(){
-        btnLogin.setOnClickListener(new DebouncedOnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDebouncedClick(View view) {
-                loginUser();
+            public void onClick(View view) {
+                debouncer.debounce(
+                        "LOGIN_USER",
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                loginUser();
+                            }
+                        }
+                );
+
             }
         });
 

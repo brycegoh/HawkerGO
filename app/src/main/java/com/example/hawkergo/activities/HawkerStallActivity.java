@@ -25,6 +25,8 @@ import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -43,6 +45,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private List<String> filterList = new ArrayList<>();
     private String hawkerCentreName;
+    private final CollectionReference collectionRef =  db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS);
 
 
     @Override
@@ -123,9 +126,9 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     private void queryDbAndUpdateRecyclerView(){
         Query stallColRef;
         if (hawkerCentreId != null) {
-            stallColRef = db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerCentreId", hawkerCentreId);
+            stallColRef = collectionRef.whereEqualTo("hawkerCentreId", hawkerCentreId);
         } else {
-            stallColRef = FirebaseHelper.getCollectionReference(FirebaseHelper.CollectionIds.HAWKER_STALLS);
+            stallColRef = collectionRef;
         }
         updateRecyclerView(stallColRef);
     }
@@ -137,10 +140,10 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
         filterList.remove(chip.getText().toString());
         Query filteredColRef;
         if (filterList.size() > 0) {
-            filteredColRef = db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", filterList);
+            filteredColRef = collectionRef.whereArrayContainsAny("tags", filterList);
         } else {
             // If there are no filters, retrieve all hawker stalls
-            filteredColRef = db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerCentreId", hawkerCentreId);
+            filteredColRef = collectionRef.whereEqualTo("hawkerCentreId", hawkerCentreId);
         }
         updateRecyclerView(filteredColRef);
     }
@@ -148,30 +151,33 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     @Override
     public void finish(List<String> result) {
         filterChipGroup.removeAllViews();
-        for (String el : result) {
-            filterList.add(el);
-            Chip chip = new Chip(this);
-            chip.setId(View.generateViewId());
-            chip.setText(el);
-            chip.setChipBackgroundColorResource(R.color.grey);
-            chip.setCloseIconVisible(true);
-            chip.setTextColor(getResources().getColor(R.color.black));
-            chip.setOnCloseIconClickListener(this);
-            filterChipGroup.addView(chip);
+        if(result != null && result.size() > 0){
+            for (String el : result) {
+                filterList.add(el);
+                Chip chip = new Chip(this);
+                chip.setId(View.generateViewId());
+                chip.setText(el);
+                chip.setChipBackgroundColorResource(R.color.grey);
+                chip.setCloseIconVisible(true);
+                chip.setTextColor(getResources().getColor(R.color.black));
+                chip.setOnCloseIconClickListener(this);
+                filterChipGroup.addView(chip);
+            }
+
+            Query filteredColRef = collectionRef.whereArrayContainsAny("tags", result);
+            updateRecyclerView(filteredColRef);
         }
-
-        Query filteredColRef = db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", result);
-
-        updateRecyclerView(filteredColRef);
     }
 
     private void updateRecyclerView(Query query) {
         HawkerStallsService.filterHawkerCentre(
-                query,
+                query.whereEqualTo("hawkerCentreId", hawkerCentreId),
                 new DbEventHandler<List<HawkerStall>>() {
                     @Override
                     public void onSuccess(List<HawkerStall> hawkerStallsFromDb) {
-                        hawkerStallList.clear();
+                        if(hawkerStallList != null && hawkerStallList.size() > 0){
+                            hawkerStallList.clear();
+                        }
                         hawkerStallList = hawkerStallsFromDb;
                         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.hawker_stall_recycler_view);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

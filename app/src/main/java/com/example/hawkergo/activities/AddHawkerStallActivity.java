@@ -29,7 +29,7 @@ import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.services.TagsService;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
+import com.example.hawkergo.utils.ui.Debouncer;
 import com.example.hawkergo.utils.ui.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -42,7 +42,6 @@ import java.util.Locale;
 
 public class AddHawkerStallActivity extends AuthenticatedActivity {
     private String hawkerCentreId;
-
 
     private String[] openingDaysChipsOptions;
     private List<String> categories;
@@ -67,6 +66,8 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
     private ArrayList<String> selectedOpeningDays = new ArrayList<>();
     private ArrayList<String> selectedCategories = new ArrayList<>();
 
+    private final Debouncer debouncer = new Debouncer();
+
 
     /**
      * Dynamic edit text
@@ -78,11 +79,11 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
 
     /**
      * On back navigate handlers
-     *
+     * <p>
      * Add extra String data:
-     *  1. hawkerCentreId
-     *  2. hawkerCentreName
-     * */
+     * 1. hawkerCentreId
+     * 2. hawkerCentreName
+     */
     @Override
     public void onBackPressed() {
         Intent resultIntent = new Intent();
@@ -115,7 +116,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
         this.addFragmentBundleListener();
     }
 
-    private void addFragmentBundleListener(){
+    private void addFragmentBundleListener() {
         getSupportFragmentManager().setFragmentResultListener("selectedImageString", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
@@ -138,7 +139,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
 
     private void handleIntent() {
         Intent intent = getIntent();
-        hawkerCentreId = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
+        hawkerCentreId = hawkerCentreId == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID) : hawkerCentreId;
         if (hawkerCentreId != null) {
             HawkerCentresService.getHawkerCentreByID(hawkerCentreId, new DbEventHandler<HawkerCentre>() {
                 @Override
@@ -245,24 +246,32 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                 }
         );
         addMoreCategoryButtonController.setOnClickListener(
-                new DebouncedOnClickListener() {
+                new View.OnClickListener() {
                     @Override
-                    public void onDebouncedClick(View view) {
+                    public void onClick(View view) {
                         String text = addMoreCategoryTextFieldController.getText().toString().toLowerCase().trim();
                         if (!TextValidatorHelper.isNullOrEmpty(text) && !newCategories.contains(text) && !categories.contains(text)) {
-                            TagsService.addTag(text, new DbEventHandler<String>() {
-                                @Override
-                                public void onSuccess(String o) {
-                                    newCategories.add(text);
-                                    addChipToCategory(text);
-                                    addMoreCategoryTextFieldController.setText(null);
-                                }
+                            debouncer.debounce(
+                                    "ADD_TAGS",
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            TagsService.addTag(text, new DbEventHandler<String>() {
+                                                @Override
+                                                public void onSuccess(String o) {
+                                                    newCategories.add(text);
+                                                    addChipToCategory(text);
+                                                    addMoreCategoryTextFieldController.setText(null);
+                                                }
+                                                @Override
+                                                public void onFailure(Exception e) {
+                                                    Toast.makeText(AddHawkerStallActivity.this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                    }
+                            );
 
-                                @Override
-                                public void onFailure(Exception e) {
-                                    Toast.makeText(AddHawkerStallActivity.this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
-                                }
-                            });
                         }
                     }
                 }
@@ -277,10 +286,26 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                 }
         );
         submitButtonController.setOnClickListener(
-                new DebouncedOnClickListener() {
+                new View.OnClickListener () {
                     @Override
-                    public void onDebouncedClick(View view) {
-                        onClickSubmitButton();
+                    public void onClick(View view) {
+                        boolean isAllValid = validateOpeningHoursChips() &&
+                                validateFloorField() &&
+                                validateUnitNumField() &&
+                                validateNameField() &&
+                                validateCategoriesChips();
+                        if(isAllValid){
+                            debouncer.debounce(
+                                    "SUBMIT_NEW_STALL",
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            onClickSubmitButton();
+                                        }
+                                    }
+                            );
+                        }
+
                     }
                 }
         );
@@ -324,84 +349,109 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
     }
 
     private boolean validateFloorField() {
+        System.out.println("floor 1");
         boolean isValid = true;
+        System.out.println("floor 2");
         String text = floorFieldController.getText().toString();
+        System.out.println("floor 3");
         if (TextValidatorHelper.isNullOrEmpty(text)) {
+            System.out.println("floor 4");
             isValid = false;
+            System.out.println("floor 5");
             floorFieldController.setError("Please fill in the floor number");
+            System.out.println("floor 6");
         }
         if (!TextValidatorHelper.isNumeric(text)) {
+            System.out.println("floor 7");
             isValid = false;
+            System.out.println("floor 8");
             floorFieldController.setError("Please fill in only numeric values");
+            System.out.println("floor 9");
         }
+        System.out.println("floor 10");
         return isValid;
     }
 
     private boolean validateUnitNumField() {
+        System.out.println("num field 1");
         boolean isValid = true;
+        System.out.println("num field 2");
         String text = unitNumFieldController.getText().toString();
+        System.out.println("num field 3");
         if (TextValidatorHelper.isNullOrEmpty(text)) {
+            System.out.println("num field 4");
             isValid = false;
+            System.out.println("num field 5");
             unitNumFieldController.setError("Please fill in the unit number");
+            System.out.println("num field 6");
         }
         if (!TextValidatorHelper.isNumeric(text)) {
+            System.out.println("num field 7");
             isValid = false;
+            System.out.println("num field 8");
             unitNumFieldController.setError("Please fill in only numeric values");
+            System.out.println("num field 9");
         }
+        System.out.println("num field 10");
         return isValid;
     }
 
     private boolean validateNameField() {
+        System.out.println("name 1");
         boolean isValid = true;
+        System.out.println("name 2");
         String text = nameFieldController.getText().toString();
+        System.out.println("name 3");
         if (TextValidatorHelper.isNullOrEmpty(text)) {
+            System.out.println("name 4");
             isValid = false;
+            System.out.println("name 5");
             nameFieldController.setError("Please fill in the name");
+            System.out.println("name 6");
         }
+        System.out.println("name 7");
         return isValid;
     }
 
     private boolean validateOpeningHoursChips() {
+        System.out.println("open chips 1");
         boolean isValid = true;
+        System.out.println("open chips 2");
         List<Integer> x = openingHoursChipGrpController.getCheckedChipIds();
-        if (x.size() > 0) {
-            openingHoursErrorTextController.setText("");
-        } else {
+        System.out.println("open chips 3");
+        if (x.size() <= 0) {
+            System.out.println("open chips 6");
             isValid = false;
+            System.out.println("open chips 7");
             openingHoursErrorTextController.setText("Please select at least 1 day");
+            System.out.println("open chips 8");
         }
+        System.out.println("open chips 9");
         return isValid;
     }
 
     private boolean validateCategoriesChips() {
+        System.out.println("chips 1");
         boolean isValid = true;
+        System.out.println("chips 2");
         List<Integer> x = categoriesChipGrpController.getCheckedChipIds();
-        if (x.size() > 0) {
-            selectCategoryErrorTextController.setText("");
-        } else {
+        System.out.println("chips 3");
+        if (x.size() <= 0) {
+            System.out.println("chips 5");
             isValid = false;
+            System.out.println("chips 6");
             selectCategoryErrorTextController.setText("Please select at least 1 category");
+            System.out.println("chips 7");
         }
+        System.out.println("chips 8");
         return isValid;
     }
 
     private void onClickSubmitButton() {
-        submitButtonController.setEnabled(false);
-        Boolean[] validationArray = {
-                validateOpeningHoursChips(),
-                validateFloorField(),
-                validateUnitNumField(),
-                validateNameField(),
-                validateCategoriesChips()
-        };
-        dynamicEditTextManager.getAllFavFoodItems();
-        boolean isAllValid = !Arrays.asList(validationArray).contains(false);
-
-        if (isAllValid) {
+            System.out.println("is valid");
             // init fields needed to be saved to firestore
             String stallName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
             List<String> favouriteFoods = dynamicEditTextManager.getAllFavFoodItems();
-            ;
 
             stallName = nameFieldController.getText().toString();
             formattedAddress = "#" + floorFieldController.getText().toString() + "-" + unitNumFieldController.getText().toString();
@@ -430,11 +480,13 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                     new DbEventHandler<String>() {
                         @Override
                         public void onSuccess(String downloadUrl) {
+                            List<String> imageUrls = new ArrayList<>();
+                            imageUrls.add(downloadUrl);
                             HawkerStall newHawkerStall = new HawkerStall(
                                     formattedAddress,
                                     stallName,
                                     newOpeningHours,
-                                    new ArrayList<>(Collections.singletonList(downloadUrl)),
+                                    imageUrls,
                                     favouriteFoods,
                                     selectedCategories,
                                     hawkerCentreId
@@ -446,10 +498,9 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                                         @Override
                                         public void onSuccess(String o) {
                                             Toast.makeText(AddHawkerStallActivity.this, "Successfully uploaded!", Toast.LENGTH_SHORT).show();
-                                            Intent toHawkerStallListingIntent = new Intent(AddHawkerStallActivity.this, HawkerStallActivity.class);
-                                            toHawkerStallListingIntent.putExtra("hawkerCentreId", hawkerCentreId);
-                                            startActivity(toHawkerStallListingIntent);
+                                            onBackPressed();
                                         }
+
                                         @Override
                                         public void onFailure(Exception e) {
                                             Toast.makeText(AddHawkerStallActivity.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
@@ -466,9 +517,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
             );
 
 
-        }
 
-        submitButtonController.setEnabled(true);
     }
 
 }

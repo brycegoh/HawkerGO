@@ -19,6 +19,7 @@ public class FirebaseStorageService {
     public static void uploadImageUri(Uri uri, DbEventHandler<String> eventHandler){
 
         UploadTask uploadTask = storageRef.child(uri.getLastPathSegment()).putFile(uri);
+        System.out.println("uploading now");
         uploadTask.addOnSuccessListener(
                 new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override

@@ -19,6 +19,7 @@ import com.example.hawkergo.R;
 import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.services.UserService;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.utils.ui.Debouncer;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
@@ -32,6 +33,8 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnRegister;
     ProgressBar progressbar;
     Uri selectedImage;
+
+    private final Debouncer debouncer = new Debouncer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +50,16 @@ public class RegisterActivity extends AppCompatActivity {
 
         addFragmentBundleListener();
 
-        btnRegister.setOnClickListener(view ->{
+        btnRegister.setOnClickListener(view -> {
             createUser();
         });
 
-        tvLoginHere.setOnClickListener(view ->{
+        tvLoginHere.setOnClickListener(view -> {
             startActivity(new Intent(RegisterActivity.this, MainActivity.class));
         });
     }
 
-    private void addFragmentBundleListener(){
+    private void addFragmentBundleListener() {
         getSupportFragmentManager().setFragmentResultListener("selectedImageString", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
@@ -69,52 +72,65 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void createUser(){
+    private void createUser() {
         String name = etRegName.getText().toString();
         String email = etRegEmail.getText().toString();
         String password = etRegPassword.getText().toString();
 
-        if (TextUtils.isEmpty(email)){
+        if (TextUtils.isEmpty(email)) {
             etRegEmail.setError("Email cannot be empty");
             etRegEmail.requestFocus();
-        }else if (TextUtils.isEmpty(password)){
+        } else if (TextUtils.isEmpty(password)) {
             etRegPassword.setError("Password cannot be empty");
             etRegPassword.requestFocus();
-        }else if (TextUtils.isEmpty(name)){
+        } else if (TextUtils.isEmpty(name)) {
             etRegName.setError("Name cannot be empty");
             etRegName.requestFocus();
-        }else if (selectedImage == null){
+        } else if (selectedImage == null) {
             Toast.makeText(this, "Add a profile pic!", Toast.LENGTH_SHORT).show();
-        }else{
-            FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
-                @Override
-                public void onSuccess(String downloadUrl) {
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
-                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
-                    UserService.createUserAndUpdateUserProfile(
-                            email,
-                            password,
-                            profileUpdates,
-                            new DbEventHandler<String>() {
+        } else {
+            debouncer.debounce(
+                    "REGISTER_USER",
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
                                 @Override
-                                public void onSuccess(String o) {
+                                public void onSuccess(String downloadUrl) {
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
                                     Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                    UserService.createUserAndUpdateUserProfile(
+                                            email,
+                                            password,
+                                            profileUpdates,
+                                            new DbEventHandler<String>() {
+                                                @Override
+                                                public void onSuccess(String o) {
+                                                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
+                                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                                }
+
+                                                @Override
+                                                public void onFailure(Exception e) {
+                                                    Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                    );
                                 }
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(
+                                            RegisterActivity.this,
+                                            e.getMessage() != null ? e.getMessage().toString() : "Error registering",
+                                            Toast.LENGTH_LONG)
+                                            .show();
                                 }
-                            }
-                    );
-                }
+                            });
+                        }
+                    }
+            );
 
-                @Override
-                public void onFailure(Exception e) {
-
-                }
-            });
 
         }
     }
