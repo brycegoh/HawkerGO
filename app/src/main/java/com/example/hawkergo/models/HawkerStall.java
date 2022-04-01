@@ -1,14 +1,12 @@
 package com.example.hawkergo.models;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class HawkerStall extends BaseDbFields {
-    // TODO: Need to add in imageUrl for the hawker stall
-    // TODO: Do we want a field to track numReviews only? Thinking of storage space concerns
-    private String address , name, imageUrl, hawkerCentreID;
-    private Integer reviewCount;
+    private String address , name, hawkerCentreId;
+    private List<String> imageUrls;
+    private Integer reviewCount = 0;
     private OpeningHours openingHours;
     private List<Review> reviews;
     private List<String> reviewsIds;
@@ -17,23 +15,22 @@ public class HawkerStall extends BaseDbFields {
 
     public HawkerStall(){};
 
-    public HawkerStall(String address, String name, HashMap<String,String> openingHours, String hawkerCentre, String imageUrl, List<String> reviewsIds){
+    public HawkerStall(String address, String name, HashMap<String,String> openingHours, String hawkerCentre, List<String> imageUrl, List<String> reviewsIds){
         this.address = address;
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.imageUrls = imageUrl;
         this.reviewsIds = reviewsIds;
     }
 
-    public HawkerStall(String address, String name, OpeningHours openingHours, String imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreID){
+    public HawkerStall(String address, String name, OpeningHours openingHours, List<String> imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreId){
 
         this.address = address;
         this.name = name;
-        this.imageUrl =imageUrl;
+        this.imageUrls =imageUrl;
         this.openingHours = openingHours;
-        this.imageUrl = imageUrl;
         this.popularItems = popularItems;
         this.tags = tags;
-        this.hawkerCentreID = hawkerCentreID;
+        this.hawkerCentreId = hawkerCentreId;
     }
 
     public void attachReviews(List<Review> reviews){
@@ -70,20 +67,20 @@ public class HawkerStall extends BaseDbFields {
         this.name = name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrls(List<String> imageUrl) {
+        this.imageUrls = imageUrl;
     }
 
-    public String getHawkerCentreID() {
-        return hawkerCentreID;
+    public String getHawkerCentreId() {
+        return hawkerCentreId;
     }
 
-    public void setHawkerCentreID(String hawkerCentreID) {
-        this.hawkerCentreID = hawkerCentreID;
+    public void setHawkerCentreId(String hawkerCentreId) {
+        this.hawkerCentreId = hawkerCentreId;
     }
 
     public OpeningHours getOpeningHours() {

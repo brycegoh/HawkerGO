@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerStall;
+import com.example.hawkergo.utils.DownloadImageTask;
 
 import java.util.List;
 
@@ -39,22 +40,17 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
 
         public HawkerStallViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            Log.d(TAG, "HawkerStallViewHolder: starts");
             this.stallName = itemView.findViewById(R.id.stall_name);
             this.stallAddress = itemView.findViewById(R.id.stall_address);
             this.stallRating = itemView.findViewById(R.id.rating_number);
             this.stallReviews = itemView.findViewById(R.id.review_number);
-
-
-
+            this.stallImage = itemView.findViewById(R.id.stall_image);
         }
     }
 
     @NonNull
     @Override
     public HawkerStallViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: new view requested");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hawker_list_item, parent, false);
         return new HawkerStallViewHolder(view);
     }
@@ -69,6 +65,8 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
         holder.stallName.setText(stallItem.getName());
         holder.stallAddress.setText(stallItem.getAddress());
         holder.stallRating.setText("5");
+
+        new DownloadImageTask(holder.stallImage).execute(stallItem.getImageUrls().get(0));
 
 
 
@@ -88,7 +86,6 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: called");
         if (mHawkerStalls == null) {
             return 0;
         } else {

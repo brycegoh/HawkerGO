@@ -36,4 +36,10 @@
         <item name="rippleColor">@color/white_opacity10</item>
     </style>
 
+    <!-- can be used to create rounded edges pictures -->
+    <style name = "roundimageview" parent ="">
+        <item name = "cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+        <item name="color">@color/white</item>
+    </style>
 </resources>

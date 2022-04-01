@@ -1,11 +1,12 @@
 package com.example.hawkergo;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,8 +14,11 @@ import com.example.hawkergo.activities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
+import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
 import com.example.hawkergo.utils.adapters.HawkerCentreAdapter;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,25 +28,24 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
     private List<HawkerCentre> hawkerCentreList = new ArrayList<>();
     private HawkerCentreAdapter mHawkerCentreAdapter;
     private ImageButton filterButton;
+    private ChipGroup filterChipGroup;
+    private TextView header;
+    private FloatingActionButton floatingActionButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
 
-        // Set FilterButton
-
+        // Remove FilterButton for now
         this.filterButton = findViewById(R.id.filter_button);
-        this.filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // create a FragmentManager
-                FragmentManager fm = getSupportFragmentManager();
-                new FilterDialogFragment().show(fm, FilterDialogFragment.TAG);
-
-            }
-        });
-
+        this.header = findViewById(R.id.header);
+        this.filterChipGroup = findViewById(R.id.chipGroup);
+        this.floatingActionButton = findViewById(R.id.floatingActionButton);
+        this.filterButton.setVisibility(View.GONE);
+        this.header.setText("All Hawker Centres");
+        this.filterChipGroup.setVisibility(View.GONE);
 
         HawkerCentresService.getAllHawkerCentres(
                 new DbEventHandler<List<HawkerCentre>>() {
@@ -62,8 +65,12 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                                     @Override
                                     public void onItemClick(View view, int position) {
                                         Intent intent = new Intent(HawkerCentreActivity.this, HawkerStallActivity.class);
-                                        String centreId = hawkerCentreList.get(position).getId();
-                                        intent.putExtra("hawkerCentreId", centreId);
+                                        HawkerCentre currentHawkerCentre = hawkerCentreList.get(position);
+                                        String centreId = currentHawkerCentre.getId();
+                                        String hawkerCentreName = currentHawkerCentre.getName();
+
+                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, centreId);
+                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
                                         startActivity(intent);
                                     }
 
@@ -80,6 +87,7 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                     }
                 }
         );
+
 
 
 

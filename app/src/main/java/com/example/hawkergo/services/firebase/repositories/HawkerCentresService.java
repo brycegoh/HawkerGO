@@ -56,6 +56,34 @@ public class HawkerCentresService implements HawkerCentreQueryable {
         });
     }
 
+    public static void searchAllHawkerCentres(String searchTerm, DbEventHandler<List<HawkerCentre>> eventHandler) {
+        collectionRef
+                .whereGreaterThanOrEqualTo("name", searchTerm)
+                .whereLessThanOrEqualTo("name", searchTerm + "\uF7FF")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
+                        eventHandler.onSuccess(hawkerCentreList);
+                    } else {
+                        eventHandler.onSuccess(null);
+                    }
+                } else {
+                    eventHandler.onFailure(task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
+
 
     /**
      * Get a hawker centres by its ID

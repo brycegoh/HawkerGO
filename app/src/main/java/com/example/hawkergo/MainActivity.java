@@ -14,6 +14,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
+        
+
+        startActivity(toHawkerCentreIntent);
         setContentView(R.layout.activity_main);
     }
 
@@ -21,9 +25,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = AuthService.getAuthenticatedUser();
+        //remove ltr
+
+//        System.out.println("================");
+//        System.out.println(user.getDisplayName());
         if (user != null){
-//            Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
-//            startActivity(toHawkerCentreIntent);
+            //Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
+
+             Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
+             startActivity(toHawkerCentreIntent);
 
 //            bryce uses this to redirect to his screen for testing
             Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
@@ -31,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(toHawkerCentreIntent);
 
         } else {
-            Intent toLoginScreen = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(toLoginScreen);
+            //Intent toLoginScreen = new Intent(MainActivity.this, LoginActivity.class);
+            //startActivity(toLoginScreen);
+            Intent toHawkerCentreIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(toHawkerCentreIntent);
         }
     }
 

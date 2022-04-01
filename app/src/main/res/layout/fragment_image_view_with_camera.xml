@@ -16,8 +16,8 @@
             android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:contentDescription="Hawker Stall Photo"
+            android:scaleType="fitCenter"
+            android:contentDescription="Photo"
             android:src="@drawable/ic_baseline_insert_photo_24"
             />
 
@@ -26,10 +26,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            app:fabSize="mini"
             android:layout_margin="10dp"
+            android:padding="5dp"
+            android:scaleType="fitXY"
             app:backgroundTint="@color/teal_700"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_baseline_add_a_photo_24" />
+            android:src="@drawable/ic_baseline_add_a_photo_14" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>

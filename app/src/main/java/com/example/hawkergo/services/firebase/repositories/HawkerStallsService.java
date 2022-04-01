@@ -16,6 +16,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
@@ -56,7 +57,6 @@ public class HawkerStallsService implements HawkerStallQueryable {
      * @param eventHandler      Callback to handle on success or failure events
      */
     public static void updateHawkerStallById(String hawkerStallID, HawkerStall hawkerStallFields, DbEventHandler<String> eventHandler){
-        // TODO: check if builder pattern is necessary for update function
         DocumentReference documentReference = collectionRef.document(hawkerStallID);
         Map<String, Object> fieldsToUpdate = hawkerStallFields.toMap();
         documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -146,9 +146,34 @@ public class HawkerStallsService implements HawkerStallQueryable {
         });
     };
 
-    public static void incrementReviewCount(String hawkerStallId, DbEventHandler<String> eventHandler){
+    public static void filterHawkerCentre(Query query , DbEventHandler<List<HawkerStall>> eventHandler) {
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<HawkerStall> hawkerStallList = querySnapshot.toObjects(HawkerStall.class);
+                        eventHandler.onSuccess(hawkerStallList);
+                    } else {
+                        eventHandler.onSuccess(null);
+                    }
+                } else {
+                    eventHandler.onFailure(task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
+
+    public static void incrementReviewAndAddPhotoCount(String hawkerStallId, String selectedImage, DbEventHandler<String> eventHandler){
         Map<String, Object> fieldToUpdate = new HashMap<>();
         fieldToUpdate.put("reviewCount", FieldValue.increment(1));
+        fieldToUpdate.put("imageUrls", FieldValue.arrayUnion(selectedImage));
         collectionRef.document(hawkerStallId).update(fieldToUpdate).addOnSuccessListener(
                 new OnSuccessListener<Void>() {
                     @Override

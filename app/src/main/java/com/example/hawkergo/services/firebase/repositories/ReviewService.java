@@ -1,5 +1,7 @@
 package com.example.hawkergo.services.firebase.repositories;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import com.example.hawkergo.models.Review;
@@ -14,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
@@ -32,7 +35,7 @@ public class ReviewService implements ReviewQueryable {
         DocumentReference docRef = collectionRef.document(hawkerStallID);
         CollectionReference colRef = docRef.collection("reviews");
 
-        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        colRef.orderBy("dateReviewed", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -93,7 +96,7 @@ public class ReviewService implements ReviewQueryable {
      * @param review        New review to be inserted
      * @param eventHandler  Callback to handle on success or failure events
      */
-    public static void addReview(String hawkerStallID, Review review, DbEventHandler<String> eventHandler){
+    public static void addReview(String hawkerStallID, Review review, String selectedImage, DbEventHandler<String> eventHandler){
         DocumentReference docRef = collectionRef.document(hawkerStallID);
         DocumentReference reviewRef = docRef.collection("reviews").document();
         reviewRef
@@ -101,8 +104,9 @@ public class ReviewService implements ReviewQueryable {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        HawkerStallsService.incrementReviewCount(
+                        HawkerStallsService.incrementReviewAndAddPhotoCount(
                                 hawkerStallID,
+                                selectedImage,
                                 new DbEventHandler<String>() {
                                     @Override
                                     public void onSuccess(String o) {
@@ -155,7 +159,6 @@ public class ReviewService implements ReviewQueryable {
      * @param eventHandler  Callback to handle on success or failure events
      */
     public static void editReview(String hawkerStallID, String reviewID, Review newReview, DbEventHandler<String> eventHandler){
-        // TODO: check if builder pattern is necessary for update function
         DocumentReference reviewReference = collectionRef.document(hawkerStallID).collection("reviews").document(reviewID);
         reviewReference.set(newReview).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
