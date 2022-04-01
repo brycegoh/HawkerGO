@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,13 +22,13 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/rating_icon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="@+id/userNameTV"
                 app:layout_constraintTop_toBottomOf="@+id/userNameTV"
-                app:srcCompat="@drawable/star_icon" />
+                android:src="@drawable/star_icon" />
 
             <TextView
                 android:id="@+id/reviewTV"
@@ -35,13 +36,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/rating_icon"
                 app:layout_constraintTop_toBottomOf="@+id/userNameTV" />
 
 
             <androidx.cardview.widget.CardView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:elevation="12dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
@@ -53,14 +54,14 @@
                 android:innerRadius="0dp"
                 android:shape="ring"
                 android:thicknessRatio="1.9">
+
                 <ImageView
-                    android:layout_height="50dp"
-                    android:layout_width="match_parent"
                     android:id="@+id/imageView"
-                    android:src="@drawable/ic_launcher_foreground"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true">
-                </ImageView>
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_launcher_foreground"></ImageView>
             </androidx.cardview.widget.CardView>
 
 
@@ -86,7 +87,7 @@
                 android:id="@+id/userNameTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="26dp"
+                android:layout_marginStart="40dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toEndOf="@+id/imageViewCard"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -101,6 +102,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageViewCard" />
+
+            <TextView
+                android:id="@+id/review_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Date of Review"
+                app:layout_constraintStart_toStartOf="@+id/rating_icon"
+                app:layout_constraintTop_toBottomOf="@+id/rating_icon" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

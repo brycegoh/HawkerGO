@@ -7,78 +7,118 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hawkergo.models.HawkerStall;
-import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
-import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
+import com.example.hawkergo.models.Review;
+import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
+import com.example.hawkergo.services.firebase.repositories.HawkerStallsRepository;
+import com.example.hawkergo.services.firebase.repositories.ReviewRepository;
+import com.example.hawkergo.utils.DownloadImageTask;
 import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /*
-import android.widget.ImageView;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.models.SlideModel;
 
-import java.util.ArrayList;
-import java.util.List;
 */
 
 public class IndividualStallActivity extends AppCompatActivity {
-    String s1[], s2[],s3[];
-    int images[] = {R.drawable.test_stall_four,R.drawable.test_stall_one,R.drawable.test_stall_three};
+
+    List<String> imagesURL = new ArrayList<>();
+
+    int images[] = {R.drawable.user, R.drawable.user};
     RecyclerView recyclerView;
     TextView stallNameTV, ratingTV, locationTV, openingTV;
+    ImageView stall_Image;
+    Button btnAddReview;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_stall);
+        imagesURL.add("https://firebasestorage.googleapis.com/v0/b/hawkergo-cfe05.appspot.com/o/image%3A31?alt=media&token=d5cd8838-fa25-4131-9399-3f58a1cac6aa");
+        imagesURL.add("https://firebasestorage.googleapis.com/v0/b/hawkergo-cfe05.appspot.com/o/image%3A31?alt=media&token=d5cd8838-fa25-4131-9399-3f58a1cac6aa");
+
+        //Get ID from Hawker Stall List
+        //Intent intent = getIntent();
+        //hawkerStallId = intent.getStringExtra("hawkerStallId");
+        String hawkerStallId = "woaOm6sNdT11WeJDfi7N";
+        //Log.d("ID Pass in", hawkerStallId);
 
         recyclerView = findViewById(R.id.individual_stall_recycler);
         ratingTV = findViewById(R.id.ratingTextView);
         locationTV = findViewById(R.id.locationTextView);
         openingTV = findViewById(R.id.openingHoursTextView);
         stallNameTV = findViewById(R.id.stallNameTextView);
+        stall_Image = findViewById(R.id.stall_picture);
+        btnAddReview = findViewById(R.id.btnAddNewReview);
 
-        //Get ID from Hawker Stall List
-        //Intent intent = getIntent();
-        //hawkerStallId = intent.getStringExtra("hawkerStallId");
-        String hawkerStallId = "EZqqy9NYcUnVu8U2Ltxm";
-        //Log.d("ID Pass in", hawkerStallId);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Query stallDetailsRef;
+        btnAddReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(IndividualStallActivity.this, ReviewSubmissionActivity.class);
+                intent.putExtra("hawkerStallId", hawkerStallId);
+                startActivity(intent);            }
+        });
 
-        //DocumentReference docRef = db.collection("cities").document("SF");
-        stallDetailsRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerStallId", hawkerStallId);
+        HawkerStallsRepository.getHawkerStallByID(
+                hawkerStallId,
+                new DbEventHandler<HawkerStall>() {
+                    @Override
+                    public void onSuccess(HawkerStall o) {
 
-        stallDetailsRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("TAG", document.getId() + " => " + document.getData());
-                            Map<String, Object> docData = document.getData();
-                            String id = (String) document.getId();
-                            String address = (String) docData.get("address");
-                            String name = (String) docData.get("name");
-                            HashMap<String,String> openingHours = (HashMap<String, String>) docData.get("openingHours");
-                            String hawkerCentre = (String) docData.get("hawkerCentre");
-                            String imageUrl = (String) docData.get("imageUrl");
-                            //HawkerStall hawkerStall = new HawkerStall(id, address, name, openingHours, hawkerCentre, imageUrl,  null);
-                            stallNameTV.setText(name);
-                            locationTV.setText(address);
-                            openingTV.setText(openingHours.get("days"));
+                        //Picasso.get().load(o.imageUrl).into(stall_Image);
+                        new DownloadImageTask(stall_Image).execute(o.imageUrl);
+                        stallNameTV.setText(o.name);
+                        locationTV.setText(o.address);
+                        openingTV.setText(o.openingHours.days + ", " + o.openingHours.hours);
+                    }
 
+                    @Override
+                    public void onFailure(Exception e) {
+                    }
+                }
+        );
+
+        ReviewRepository.getAllReviews(
+                hawkerStallId,
+                new DbEventHandler<List<Review>>() {
+                    @Override
+                    public void onSuccess(List<Review> o) {
+                        Double sum = 0.0;
+                        //sort by dates
+                        Collections.sort(o,
+                                (o1, o2) -> o1.dateReviewed.compareTo(o2.dateReviewed));
+                        for (Review review : o) {
+                            sum += review.stars;
                         }
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.getException());
+                        Double avg = sum / o.size();
+                        ratingTV.setText(avg.toString());
+                        //throws the card views and all into the activity main
+                        IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(getApplicationContext(), o, imagesURL);
+                        //recyclerView.setNestedScrollingEnabled(false);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        recyclerView.setAdapter(individualStallAdapter);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
                     }
                 }
         );
@@ -91,17 +131,5 @@ public class IndividualStallActivity extends AppCompatActivity {
         slideModels.add(new SlideModel(R.drawable.user1));
         imageSlider.setImageList(slideModels,true);
         */
-
-
-        s1 = getResources().getStringArray(R.array.username);
-        s2 = getResources().getStringArray(R.array.rating);
-        s3 = getResources().getStringArray(R.array.reviews);
-
-        //recyclerView.setNestedScrollingEnabled(false);
-
-        //throws the card views and all into the activity main
-        IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(this, s1, s2, s3, images);
-        recyclerView.setAdapter(individualStallAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

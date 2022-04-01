@@ -11,18 +11,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.models.Review;
+import com.example.hawkergo.utils.DownloadImageTask;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStallAdapter.MyViewHolder> {
 
-    String data1[], data2[], data3[];
-    int images[];
+    List<Review> reviews;
+    List<String> images;
     Context context;
 
-    public IndividualStallAdapter(Context ct, String s1[], String s2[], String s3[], int img[]) {
+
+    public IndividualStallAdapter(Context ct, List<Review> reviewsList, List<String> img) {
         context = ct;
-        data1 = s1;
-        data2 = s2;
-        data3 = s3;
+        reviews = reviewsList;
         images = img;
     }
 
@@ -36,21 +41,29 @@ public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStall
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.usernameText.setText(data1[position]);
-        holder.ratingText.setText(data2[position]);
-        holder.reviewTxt.setText(data3[position]);
-        holder.userImage.setImageResource(images[position]);
-
+        if (reviews.get(position).name != null) {
+            holder.usernameText.setText(reviews.get(position).name);
+        } else {
+            holder.usernameText.setText("Anonymous");
+        }
+        holder.ratingText.setText(reviews.get(position).stars.toString());
+        holder.reviewTxt.setText(reviews.get(position).comment);
+        new DownloadImageTask(holder.userImage).execute(images.get(position));
+        //set date format
+        String pattern = "dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(reviews.get(position).dateReviewed);
+        holder.reviewDate.setText(date);
     }
 
     @Override
     public int getItemCount() {
-        return data1.length;
+        return reviews.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView usernameText, ratingText, reviewTxt;
+        TextView usernameText, ratingText, reviewTxt, reviewDate;
         ImageView userImage;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -59,7 +72,7 @@ public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStall
             ratingText = itemView.findViewById(R.id.reviewTV);
             reviewTxt = itemView.findViewById(R.id.userReviewTV);
             userImage = itemView.findViewById(R.id.imageView);
-
+            reviewDate = itemView.findViewById(R.id.review_date);
         }
     }
 }

@@ -46,7 +46,12 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+
         <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -70,6 +75,9 @@
             android:parentActivityName=".HawkerCentreActivity" />
         <activity
             android:name=".IndividualStallActivity"
+            android:parentActivityName=".HawkerStallActivity" />
+        <activity
+            android:name=".ReviewSubmissionActivity"
             android:parentActivityName=".HawkerStallActivity" />
     </application>
 
