@@ -63,6 +63,9 @@
         <activity
             android:name=".activities.AddHawkerStall"
             android:exported="false"/>
+        <activity
+            android:name=".activities.AddHawkerCentre"
+            android:exported="false"/>
 <!--            android:parentActivityName=".activities.AddHawkerStall"-->
 
 

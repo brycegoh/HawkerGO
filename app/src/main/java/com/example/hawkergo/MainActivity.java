@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hawkergo.activities.AddHawkerStall;
+import com.example.hawkergo.activities.AddHawkerCentre;
 import com.example.hawkergo.services.firebase.repositories.AuthService;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
 //            startActivity(toHawkerCentreIntent);
 
 //            bryce uses this to redirect to his screen for testing
-            Intent toHawkerCentreIntent = new Intent(MainActivity.this, AddHawkerStall.class);
-            toHawkerCentreIntent.putExtra("id", "8Esh2FzcoCwxNJPmjdYB");
+            Intent toHawkerCentreIntent = new Intent(MainActivity.this, AddHawkerCentre.class);
+//            toHawkerCentreIntent.putExtra("id", "8Esh2FzcoCwxNJPmjdYB");
             startActivity(toHawkerCentreIntent);
 
         } else {

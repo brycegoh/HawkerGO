@@ -6,6 +6,15 @@
     <string name="no_reviews">(0 reviews)</string>
     <string name="review">review</string>
     <string name="reviews">reviews</string>
+
+    // Strings for adding hawker centre page
+    <string name="adding_hawker_centre_title">Adding a hawker centre</string>
+    <string name="hawker_centre_name">Hawker centre name</string>
+    <string name="street_number">Street number</string>
+    <string name="street_name">Street name</string>
+    <string name="postal_code">Postal code</string>
+    <string name="postal_s">S</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="categories">Categories</string>

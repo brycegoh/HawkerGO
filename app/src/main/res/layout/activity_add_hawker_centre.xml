@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/image_view_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="300dp">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/image_view_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:name="com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment"/>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/hawker_centre_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_view_fragment_container"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/adding_hawker_centre_title" />
+
+            <EditText
+                android:id="@+id/name_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/hawker_centre_title"
+                android:layout_marginBottom="20dp"
+                android:autofillHints="Name"
+                android:hint="@string/hawker_centre_name"
+                android:inputType="text" />
+
+            <LinearLayout
+                android:id="@+id/address_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name_field"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/street_number_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autofillHints="Name"
+                    android:hint="@string/street_number"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/street_name_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autofillHints="Name"
+                    android:hint="@string/street_name"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/postal_code_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/address_field"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/postal_s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/postal_s"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/postal_code_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autofillHints="Name"
+                    android:hint="@string/postal_code"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/opening_hours_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/postal_code_container"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/opening_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/opening_hours" />
+
+                <TextView
+                    android:id="@+id/opening_hours_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/error_red" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/opening_days_chip_grp_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/opening_hours_container"
+                android:layout_marginBottom="12dp"
+                android:gravity="center">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/opening_days_chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/select_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/opening_days_chip_grp_container"
+                android:layout_marginBottom="5dp"
+                android:text="@string/select_time" />
+
+            <LinearLayout
+                android:id="@+id/time_selection_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/select_time"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/opening_time_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:text="@string/time_picker_button_title_opening_time" />
+
+                <TextView
+                    android:id="@+id/select_time_delimiter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/select_time_delimiter" />
+
+                <Button
+                    android:id="@+id/closing_time_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:text="@string/time_picker_button_title_closing_time" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/submit_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/time_selection_container"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
+                android:text="@string/submit_button_title" />
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>
