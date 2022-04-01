@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +32,7 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
 
     // Intent intent = getIntent();
     /*TODO get hawkerStallID from previous activity: HawkerStallActivity
-    String hawkerStallID = intent.getStringExtra(HawkerStallActivity.KEY, null);
+    String hawkerStallID = intent.getStringExtra("hawkerStallId", null);
 
      */
 
@@ -78,6 +79,7 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
         });
     }
 
+
     private void addOnClickHandlers(){
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +122,30 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * On back navigate handlers
+     *
+     * Add extra String data:
+     *  1. hawkerCentreId
+     *  2. hawkerCentreName
+     * */
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerStallID);
+        setResult(Constants.ResultCodes.REVIEW_SUBMISSION_TO_HAWKER_STALL, resultIntent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 
 
