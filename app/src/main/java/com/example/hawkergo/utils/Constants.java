@@ -4,10 +4,13 @@ public class Constants {
 
     public static class RequestCodes{
         public static final Integer HAWKER_STALL_LISTING_TO_ADD_STALL_FORM = 1;
+        public static final Integer HAWKER_STALL_TO_REVIEW_SUBMISSIONS = 2;
     }
 
     public static class ResultCodes{
-        public static final Integer TO_HAWKER_STALL_LISTING = 2;
+        public static final Integer TO_HAWKER_STALL_LISTING = 3;
+        public static final Integer ADD_STALL_FORM_TO_HAWKER_STALL_LISTING = 4;
+        public static final Integer REVIEW_SUBMISSION_TO_HAWKER_STALL = 5;
     }
 
     public static class IntentExtraDataKeys{

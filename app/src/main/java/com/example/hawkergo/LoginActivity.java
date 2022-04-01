@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.AuthService;
+import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.google.android.material.textfield.TextInputEditText;

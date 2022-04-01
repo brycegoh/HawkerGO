@@ -75,6 +75,14 @@ public class IndividualStallActivity extends AppCompatActivity {
         hawkerCentreName = hawkerCentreName == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME) : hawkerCentreName;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM &&
+                resultCode == Constants.ResultCodes.REVIEW_SUBMISSION_TO_HAWKER_STALL) {
+            hawkerStallId = data.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
+        }
+    }
 
 
     @Override
@@ -98,7 +106,7 @@ public class IndividualStallActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(IndividualStallActivity.this, ReviewSubmissionActivity.class);
                 intent.putExtra("hawkerStallId", hawkerStallId);
-                startActivity(intent);            }
+                startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_TO_REVIEW_SUBMISSIONS);            }
         });
 
         HawkerStallsService.getHawkerStallByID(
