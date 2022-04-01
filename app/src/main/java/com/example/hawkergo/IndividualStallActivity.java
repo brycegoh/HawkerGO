@@ -16,8 +16,8 @@ import android.widget.TextView;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Review;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.HawkerStallsRepository;
-import com.example.hawkergo.services.firebase.repositories.ReviewRepository;
+import com.example.hawkergo.services.firebase.repositories.HawkerStallsService;
+import com.example.hawkergo.services.firebase.repositories.ReviewService;
 import com.example.hawkergo.utils.DownloadImageTask;
 import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
 import com.squareup.picasso.Picasso;
@@ -49,6 +49,7 @@ public class IndividualStallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_stall);
+
         imagesURL.add("https://firebasestorage.googleapis.com/v0/b/hawkergo-cfe05.appspot.com/o/image%3A31?alt=media&token=d5cd8838-fa25-4131-9399-3f58a1cac6aa");
         imagesURL.add("https://firebasestorage.googleapis.com/v0/b/hawkergo-cfe05.appspot.com/o/image%3A31?alt=media&token=d5cd8838-fa25-4131-9399-3f58a1cac6aa");
 
@@ -76,26 +77,27 @@ public class IndividualStallActivity extends AppCompatActivity {
                 startActivity(intent);            }
         });
 
-        HawkerStallsRepository.getHawkerStallByID(
+        HawkerStallsService.getHawkerStallByID(
                 hawkerStallId,
                 new DbEventHandler<HawkerStall>() {
                     @Override
                     public void onSuccess(HawkerStall o) {
 
                         //Picasso.get().load(o.imageUrl).into(stall_Image);
-                        new DownloadImageTask(stall_Image).execute(o.imageUrl);
-                        stallNameTV.setText(o.name);
-                        locationTV.setText(o.address);
-                        openingTV.setText(o.openingHours.days + ", " + o.openingHours.hours);
+                        //need to change to slider code
+                        //image
+                        //new DownloadImageTask(stall_Image).execute(o.getImageUrls());
+                        stallNameTV.setText(o.getName());
+                        locationTV.setText(o.getAddress());
+                        openingTV.setText(o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours());
                     }
-
                     @Override
                     public void onFailure(Exception e) {
                     }
                 }
         );
 
-        ReviewRepository.getAllReviews(
+        ReviewService.getAllReviews(
                 hawkerStallId,
                 new DbEventHandler<List<Review>>() {
                     @Override
@@ -103,15 +105,14 @@ public class IndividualStallActivity extends AppCompatActivity {
                         Double sum = 0.0;
                         //sort by dates
                         Collections.sort(o,
-                                (o1, o2) -> o1.dateReviewed.compareTo(o2.dateReviewed));
+                                (o1, o2) -> o1.getDateReviewed().compareTo(o2.getDateReviewed()));
                         for (Review review : o) {
-                            sum += review.stars;
+                            sum += review.getStars();
                         }
                         Double avg = sum / o.size();
                         ratingTV.setText(avg.toString());
                         //throws the card views and all into the activity main
                         IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(getApplicationContext(), o, imagesURL);
-                        //recyclerView.setNestedScrollingEnabled(false);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         recyclerView.setAdapter(individualStallAdapter);
                     }

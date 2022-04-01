@@ -24,14 +24,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser user = AuthRepository.getAuthenticatedUser();
+        FirebaseUser user = AuthService.getAuthenticatedUser();
         //remove ltr
 
         if (user != null){
-            Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
+            //Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
 
-            // Intent toHawkerCentreIntent = new Intent(MainActivity.this, IndividualStallActivity.class);
-            // startActivity(toHawkerCentreIntent);
+             Intent toHawkerCentreIntent = new Intent(MainActivity.this, IndividualStallActivity.class);
+             startActivity(toHawkerCentreIntent);
 
 //            bryce uses this to redirect to his screen for testing
 //            Intent toHawkerCentreIntent = new Intent(MainActivity.this, AddHawkerStall.class);
