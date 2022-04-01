@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HawkerStall extends BaseDbFields {
-    // TODO: Need to add in imageUrl for the hawker stall
-    // TODO: Do we want a field to track numReviews only? Thinking of storage space concerns
     private String address , name, hawkerCentreID;
     private List<String> imageUrls;
     private Integer reviewCount = 0;
