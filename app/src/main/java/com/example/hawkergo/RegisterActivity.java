@@ -88,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
             FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
                 @Override
                 public void onSuccess(String downloadUrl) {
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
                     Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
                     AuthService.createUserAndUpdateUserProfile(
                             email,

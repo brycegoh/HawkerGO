@@ -27,10 +27,12 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = AuthService.getAuthenticatedUser();
         //remove ltr
 
+//        System.out.println("================");
+//        System.out.println(user.getDisplayName());
         if (user != null){
             //Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
 
-             Intent toHawkerCentreIntent = new Intent(MainActivity.this, IndividualStallActivity.class);
+             Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
              startActivity(toHawkerCentreIntent);
 
 //            bryce uses this to redirect to his screen for testing
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //Intent toLoginScreen = new Intent(MainActivity.this, LoginActivity.class);
             //startActivity(toLoginScreen);
-            Intent toHawkerCentreIntent = new Intent(MainActivity.this, IndividualStallActivity.class);
+            Intent toHawkerCentreIntent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(toHawkerCentreIntent);
         }
     }

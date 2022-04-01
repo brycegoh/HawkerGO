@@ -28,6 +28,7 @@ import com.example.hawkergo.utils.DownloadImageTask;
 import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -68,20 +69,21 @@ public class IndividualStallActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM &&
+                resultCode == Constants.ResultCodes.TO_HAWKER_STALL_LISTING) {
+            hawkerCentreName = data.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME);
+            hawkerCentreId = data.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
+        }
+    }
+
     private void handleIntent() {
         Intent intent = getIntent();
         hawkerStallId = hawkerStallId == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID) : hawkerStallId;
         hawkerCentreId = hawkerCentreId == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID) : hawkerCentreId;
         hawkerCentreName = hawkerCentreName == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME) : hawkerCentreName;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM &&
-                resultCode == Constants.ResultCodes.REVIEW_SUBMISSION_TO_HAWKER_STALL) {
-            hawkerStallId = data.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
-        }
     }
 
 
@@ -105,7 +107,9 @@ public class IndividualStallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(IndividualStallActivity.this, ReviewSubmissionActivity.class);
-                intent.putExtra("hawkerStallId", hawkerStallId);
+                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerStallId);
+                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
+                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerCentreId);
                 startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_TO_REVIEW_SUBMISSIONS);            }
         });
 
@@ -129,19 +133,21 @@ public class IndividualStallActivity extends AppCompatActivity {
                 new DbEventHandler<List<Review>>() {
                     @Override
                     public void onSuccess(List<Review> o) {
-                        Double sum = 0.0;
-                        //sort by dates
-                        Collections.sort(o,
-                                (o1, o2) -> o1.getDateReviewed().compareTo(o2.getDateReviewed()));
-                        for (Review review : o) {
-                            sum += review.getStars();
+                        ArrayList<Review> reviews = (ArrayList<Review>) o;
+                        if(reviews != null){
+                            Double sum = 0.0;
+                            for (Review review : o) {
+                                double stars = review.getStars();
+                                sum += stars;
+                            }
+                            Double avg = sum / o.size();
+                            ratingTV.setText(avg.toString());
                         }
-                        Double avg = sum / o.size();
-                        ratingTV.setText(avg.toString());
                         //throws the card views and all into the activity main
-                        IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(getApplicationContext(), o, imagesURL);
+                        IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(getApplicationContext(), reviews, imagesURL);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         recyclerView.setAdapter(individualStallAdapter);
+
                     }
 
                     @Override

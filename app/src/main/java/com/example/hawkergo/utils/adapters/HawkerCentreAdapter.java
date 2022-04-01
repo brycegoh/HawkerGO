@@ -64,7 +64,6 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
     @NonNull
     @Override
     public HawkerCentreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: new view requested");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hawker_list_item, parent, false);
         return new HawkerCentreViewHolder(view);
     }
@@ -86,7 +85,6 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: called");
         if (mHawkerCentres == null) {
             return 0;
         } else {

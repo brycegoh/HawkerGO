@@ -196,7 +196,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, centreId);
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, currentHawkerCentre.getId());
-                                        startActivity(intent);
+                                        startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM);
                                     }
 
                                     @Override

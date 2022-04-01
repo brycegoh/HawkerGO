@@ -57,7 +57,7 @@ public class AuthService {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
 
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    FirebaseUser user = getAuthenticatedUser();
                     user.updateProfile(profileUpdates)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

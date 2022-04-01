@@ -1,11 +1,10 @@
 package com.example.hawkergo.models;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class HawkerStall extends BaseDbFields {
-    private String address , name, hawkerCentreID;
+    private String address , name, hawkerCentreId;
     private List<String> imageUrls;
     private Integer reviewCount = 0;
     private OpeningHours openingHours;
@@ -23,7 +22,7 @@ public class HawkerStall extends BaseDbFields {
         this.reviewsIds = reviewsIds;
     }
 
-    public HawkerStall(String address, String name, OpeningHours openingHours, List<String> imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreID){
+    public HawkerStall(String address, String name, OpeningHours openingHours, List<String> imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreId){
 
         this.address = address;
         this.name = name;
@@ -31,7 +30,7 @@ public class HawkerStall extends BaseDbFields {
         this.openingHours = openingHours;
         this.popularItems = popularItems;
         this.tags = tags;
-        this.hawkerCentreID = hawkerCentreID;
+        this.hawkerCentreId = hawkerCentreId;
     }
 
     public void attachReviews(List<Review> reviews){
@@ -76,12 +75,12 @@ public class HawkerStall extends BaseDbFields {
         this.imageUrls = imageUrl;
     }
 
-    public String getHawkerCentreID() {
-        return hawkerCentreID;
+    public String getHawkerCentreId() {
+        return hawkerCentreId;
     }
 
-    public void setHawkerCentreID(String hawkerCentreID) {
-        this.hawkerCentreID = hawkerCentreID;
+    public void setHawkerCentreId(String hawkerCentreId) {
+        this.hawkerCentreId = hawkerCentreId;
     }
 
     public OpeningHours getOpeningHours() {

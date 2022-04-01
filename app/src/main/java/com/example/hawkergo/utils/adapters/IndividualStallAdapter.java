@@ -59,7 +59,7 @@ public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStall
 
     @Override
     public int getItemCount() {
-        return reviews.size();
+        return reviews != null ? reviews.size() : 0;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

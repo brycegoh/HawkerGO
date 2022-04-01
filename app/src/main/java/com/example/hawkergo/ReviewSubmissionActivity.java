@@ -39,7 +39,7 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
     private Uri selectedImage;
     private String selectedImageString;
     private String userDisplayName;
-    private String hawkerStallID;
+    private String hawkerStallID, hawkerCentreId, hawkerCentreName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,9 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
         setContentView(R.layout.review_submission);
 
         Intent intent = getIntent();
-        hawkerStallID = intent.getStringExtra("hawkerStallId");
+        hawkerStallID = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID);
+        hawkerCentreId = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
+        hawkerCentreName = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME);
 
         ratingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
         editText = (EditText) findViewById(R.id.edit_review);
@@ -98,8 +100,11 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
                             public void onSuccess(String o) {
                                 Log.i(TAG, "Successfully added review into Firestore for: " + hawkerStallID);
                                 Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewSubmitted, Toast.LENGTH_LONG).show();
-                                Intent reviewSubmittedIntent = new Intent(ReviewSubmissionActivity.this, MainActivity.class);
-                                startActivity(reviewSubmittedIntent);
+                                Intent intent = new Intent(ReviewSubmissionActivity.this, IndividualStallActivity.class);
+                                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerStallID);
+                                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
+                                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerCentreId);
+                                startActivity(intent);
                             }
 
                             @Override

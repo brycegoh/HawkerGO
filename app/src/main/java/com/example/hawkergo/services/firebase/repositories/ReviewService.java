@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ReviewService implements ReviewQueryable {
         DocumentReference docRef = collectionRef.document(hawkerStallID);
         CollectionReference colRef = docRef.collection("reviews");
 
-        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        colRef.orderBy("dateReviewed", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
