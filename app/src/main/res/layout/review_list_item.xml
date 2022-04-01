@@ -65,24 +65,6 @@
             </androidx.cardview.widget.CardView>
 
 
-            <!--
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profile"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:contentDescription="profile"
-                android:adjustViewBounds="true"
-                app:strokeWidth="2dp"
-                app:strokeColor="@color/black"
-                android:scaleType="fitCenter"
-                android:layout_margin="20dp"
-                android:src="@drawable/user"
-                app:shapeAppearanceOverlay="@style/circular"
-                >
-
-            </com.google.android.material.imageview.ShapeableImageView>
-            -->
-
             <TextView
                 android:id="@+id/userNameTV"
                 android:layout_width="wrap_content"
