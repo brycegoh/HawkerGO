@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser user = AuthService.getAuthenticatedUser();
         if (user != null){
-            Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
-            startActivity(toHawkerCentreIntent);
+            Intent toReviewSubmissionsIntent = new Intent(MainActivity.this, ReviewSubmissionActivity.class);
+            startActivity(toReviewSubmissionsIntent);
 
 
 
