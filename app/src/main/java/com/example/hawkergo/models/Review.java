@@ -8,7 +8,15 @@ public class Review extends BaseDbFields {
     private String comment, name, hawkerStall;
     private Double stars;
     private Date dateReviewed;
-    private String imageUrl;
+    private String imageUrl, profilePicUrl;
+
+    public String getProfilePicUrl() {
+        return profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
+    }
 
     public Review(){};
 
@@ -53,7 +61,7 @@ public class Review extends BaseDbFields {
         this.dateReviewed = dateReviewed;
     }
 
-    public Review(String name, String comment, Double stars, Date dateReviewed, String hawkerStall, String imageUrl){
+    public Review(String name, String comment, Double stars, Date dateReviewed, String hawkerStall, String imageUrl, String profilePicUrl){
         /**
          * New review document:
          *
@@ -62,6 +70,8 @@ public class Review extends BaseDbFields {
          * @param stars Rating out 5
          * @param dateReviewed Date of review
          * @param hawkerStall ID of hawker stall
+         * @param imageUrl URL of image that user uploads for review
+         * @param profilePicUrl URL of user's profile picture
          */
 
         this.name = name;
@@ -70,6 +80,7 @@ public class Review extends BaseDbFields {
         this.dateReviewed = dateReviewed;
         this.hawkerStall = hawkerStall;
         this.imageUrl = imageUrl;
+        this.profilePicUrl = profilePicUrl;
     }
 
     public HashMap<String, Object> toMap(){
@@ -79,6 +90,8 @@ public class Review extends BaseDbFields {
         map.put("stars", this.stars);
         map.put("dateReviewed", this.dateReviewed);
         map.put("hawkerStall", this.hawkerStall);
+        map.put("imageUrl", this.imageUrl);
+        map.put("profilePicUrl", this.profilePicUrl);
         return map;
     }
 

@@ -23,6 +23,7 @@ import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.AuthService;
 import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
 import com.example.hawkergo.services.firebase.repositories.ReviewService;
+import com.example.hawkergo.utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,13 +31,9 @@ import java.util.Date;
 
 public class ReviewSubmissionActivity extends AppCompatActivity {
 
-    // Intent intent = getIntent();
-    /*TODO get hawkerStallID from previous activity: HawkerStallActivity
-    String hawkerStallID = intent.getStringExtra("hawkerStallId", null);
+    Intent intent = getIntent();
 
-     */
-
-    String hawkerStallID = "woaOm6sNdT11WeJDfi7N";
+    String hawkerStallID = intent.getStringExtra("hawkerStallId");
 
     private RatingBar ratingBar;
     private EditText editText;
@@ -44,6 +41,7 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
     private double reviewStars;
     private String reviewContent;
     private Uri selectedImage;
+    private String selectedImageString;
     private String userDisplayName;
 
     @Override
@@ -70,11 +68,10 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
         getSupportFragmentManager().setFragmentResultListener("selectedImageString", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                String result = bundle.getString("uriString");
-                Uri x = Uri.parse(result);
+                selectedImageString = bundle.getString("uriString");
+                selectedImage = Uri.parse(selectedImageString);
                 ImageView imageView = findViewById(R.id.image_view);
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                selectedImage = x;
             }
         });
     }
@@ -90,8 +87,8 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
                 // get date reviewed = current date <Date>
                 Date currentDate = new Date();
                 Uri profilePic = AuthService.getUserProfilePic();
-                String image = profilePic != null ? profilePic.toString() : null;
-                Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, image);
+                String profilePicUrl = profilePic != null ? profilePic.toString() : null;
+                Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, profilePicUrl, selectedImageString);
 
                 FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
                     @Override

@@ -18,6 +18,7 @@ import com.example.hawkergo.models.Review;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
 import com.example.hawkergo.services.firebase.repositories.HawkerStallsService;
 import com.example.hawkergo.services.firebase.repositories.ReviewService;
+import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.DownloadImageTask;
 import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
 import com.squareup.picasso.Picasso;
@@ -43,6 +44,17 @@ public class IndividualStallActivity extends AppCompatActivity {
     TextView stallNameTV, ratingTV, locationTV, openingTV;
     ImageView stall_Image;
     Button btnAddReview;
+    String hawkerStallId;
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM &&
+                resultCode == Constants.ResultCodes.REVIEW_SUBMISSION_TO_HAWKER_STALL) {
+            hawkerStallId = data.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
+        }
+    }
 
 
     @Override
@@ -56,7 +68,7 @@ public class IndividualStallActivity extends AppCompatActivity {
         //Get ID from Hawker Stall List
         //Intent intent = getIntent();
         //hawkerStallId = intent.getStringExtra("hawkerStallId");
-        String hawkerStallId = "woaOm6sNdT11WeJDfi7N";
+        //String hawkerStallId = "woaOm6sNdT11WeJDfi7N";
         //Log.d("ID Pass in", hawkerStallId);
 
         recyclerView = findViewById(R.id.individual_stall_recycler);
@@ -74,7 +86,7 @@ public class IndividualStallActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(IndividualStallActivity.this, ReviewSubmissionActivity.class);
                 intent.putExtra("hawkerStallId", hawkerStallId);
-                startActivity(intent);            }
+                startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_TO_REVIEW_SUBMISSIONS);            }
         });
 
         HawkerStallsService.getHawkerStallByID(

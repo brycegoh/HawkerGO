@@ -191,6 +191,4 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                 }
         );
     }
-
-
 }
