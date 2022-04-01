@@ -73,6 +73,9 @@
             android:name=".HawkerStallActivity"
             android:parentActivityName=".HawkerCentreActivity" />
 
+        <activity android:name=".ReviewSubmissionActivity"
+            android:parentActivityName=".MainActivity"/>
+
     </application>
 
 </manifest>
