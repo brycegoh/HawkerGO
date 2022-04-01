@@ -1,4 +1,4 @@
-package com.example.hawkergo;
+package com.example.hawkergo.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import com.example.hawkergo.R;
 
 import java.util.ArrayList;
 import java.util.List;

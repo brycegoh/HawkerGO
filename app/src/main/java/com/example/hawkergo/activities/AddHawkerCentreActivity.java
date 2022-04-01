@@ -11,25 +11,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.hawkergo.HawkerCentreActivity;
-import com.example.hawkergo.HawkerStallActivity;
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerCentre;
-import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
-import com.example.hawkergo.models.Tags;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
-import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
-import com.example.hawkergo.services.firebase.repositories.TagsService;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.HawkerCentresService;
+import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
-import com.example.hawkergo.utils.ui.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -38,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class AddHawkerCentre extends AuthenticatedActivity {
+public class AddHawkerCentreActivity extends AuthenticatedActivity {
     String[] openingDaysChipsOptions;
 
     // default opening and closing time
@@ -149,7 +142,7 @@ public class AddHawkerCentre extends AuthenticatedActivity {
                                 openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
                             }
                         };
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerCentre.this, timePickerListener, openingHour, openingMinute, true);
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerCentreActivity.this, timePickerListener, openingHour, openingMinute, true);
                         timePickerDialog.setTitle("Opening time");
                         timePickerDialog.show();
                     }
@@ -168,7 +161,7 @@ public class AddHawkerCentre extends AuthenticatedActivity {
                             }
                         };
 
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerCentre.this, timePickerListener, closingHour, closingMinute, true);
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerCentreActivity.this, timePickerListener, closingHour, closingMinute, true);
                         timePickerDialog.setTitle("Closing time");
                         timePickerDialog.show();
                     }
@@ -238,7 +231,7 @@ public class AddHawkerCentre extends AuthenticatedActivity {
 
     private boolean validateSelectedImage(){
         if(selectedImage == null){
-            Toast.makeText(AddHawkerCentre.this, "Please select an image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddHawkerCentreActivity.this, "Please select an image", Toast.LENGTH_SHORT).show();
         }
         return selectedImage != null;
     }
@@ -303,12 +296,12 @@ public class AddHawkerCentre extends AuthenticatedActivity {
                                     new DbEventHandler<String>() {
                                         @Override
                                         public void onSuccess(String o) {
-                                            Intent toHawkerCentreListingPage = new Intent(AddHawkerCentre.this, HawkerCentreActivity.class);
+                                            Intent toHawkerCentreListingPage = new Intent(AddHawkerCentreActivity.this, HawkerCentreActivity.class);
                                             startActivity(toHawkerCentreListingPage);
                                         }
                                         @Override
                                         public void onFailure(Exception e) {
-                                            Toast.makeText(AddHawkerCentre.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(AddHawkerCentreActivity.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                             );
@@ -316,7 +309,7 @@ public class AddHawkerCentre extends AuthenticatedActivity {
 
                         @Override
                         public void onFailure(Exception e) {
-                            Toast.makeText(AddHawkerCentre.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddHawkerCentreActivity.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
                         }
                     }
             );

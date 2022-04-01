@@ -1,4 +1,4 @@
-package com.example.hawkergo.services.firebase.interfaces;
+package com.example.hawkergo.services.interfaces;
 
 import com.google.firebase.firestore.FirebaseFirestoreException;
 

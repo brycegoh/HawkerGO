@@ -18,16 +18,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.hawkergo.HawkerStallActivity;
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.models.Tags;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
-import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
-import com.example.hawkergo.services.firebase.repositories.TagsService;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.HawkerCentresService;
+import com.example.hawkergo.services.FirebaseStorageService;
+import com.example.hawkergo.services.TagsService;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
@@ -41,7 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class AddHawkerStall extends AuthenticatedActivity {
+public class AddHawkerStallActivity extends AuthenticatedActivity {
     private String hawkerCentreId;
 
 
@@ -150,7 +149,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(AddHawkerStall.this, "Failed to load hawker centre. Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddHawkerStallActivity.this, "Failed to load hawker centre. Please try again", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -261,7 +260,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    Toast.makeText(AddHawkerStall.this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddHawkerStallActivity.this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -297,7 +296,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
                                 openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
                             }
                         };
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerStall.this, timePickerListener, openingHour, openingMinute, true);
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerStallActivity.this, timePickerListener, openingHour, openingMinute, true);
                         timePickerDialog.setTitle("Opening time");
                         timePickerDialog.show();
                     }
@@ -316,7 +315,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
                             }
                         };
 
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerStall.this, timePickerListener, closingHour, closingMinute, true);
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerStallActivity.this, timePickerListener, closingHour, closingMinute, true);
                         timePickerDialog.setTitle("Closing time");
                         timePickerDialog.show();
                     }
@@ -446,14 +445,14 @@ public class AddHawkerStall extends AuthenticatedActivity {
                                     new DbEventHandler<String>() {
                                         @Override
                                         public void onSuccess(String o) {
-                                            Toast.makeText(AddHawkerStall.this, "Successfully uploaded!", Toast.LENGTH_SHORT).show();
-                                            Intent toHawkerStallListingIntent = new Intent(AddHawkerStall.this, HawkerStallActivity.class);
+                                            Toast.makeText(AddHawkerStallActivity.this, "Successfully uploaded!", Toast.LENGTH_SHORT).show();
+                                            Intent toHawkerStallListingIntent = new Intent(AddHawkerStallActivity.this, HawkerStallActivity.class);
                                             toHawkerStallListingIntent.putExtra("hawkerCentreId", hawkerCentreId);
                                             startActivity(toHawkerStallListingIntent);
                                         }
                                         @Override
                                         public void onFailure(Exception e) {
-                                            Toast.makeText(AddHawkerStall.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(AddHawkerStallActivity.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                             );
@@ -461,7 +460,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
 
                         @Override
                         public void onFailure(Exception e) {
-                            Toast.makeText(AddHawkerStall.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddHawkerStallActivity.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
                         }
                     }
             );

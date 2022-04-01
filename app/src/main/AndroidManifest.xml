@@ -45,18 +45,14 @@
         </provider>
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:exported="false"
-            android:parentActivityName=".LoginActivity"/>
+            android:parentActivityName=".activities.LoginActivity"/>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
 
         <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -67,25 +63,26 @@
         </activity>
 
         <activity
-            android:name=".activities.AddHawkerStall"
-            android:exported="false"/>
-        <activity
-            android:name=".activities.AddHawkerCentre"
+            android:name=".activities.AddHawkerStallActivity"
             android:exported="false"
-            android:parentActivityName=".HawkerStallActivity"
+            android:parentActivityName=".activities.HawkerStallActivity"/>
+        <activity
+            android:name=".activities.AddHawkerCentreActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.HawkerCentreActivity"
             />
         <activity
-            android:name=".HawkerCentreActivity"
+            android:name=".activities.HawkerCentreActivity"
             android:exported="false"/>
         <activity
-            android:name=".HawkerStallActivity"
-            android:parentActivityName=".HawkerCentreActivity" />
+            android:name=".activities.HawkerStallActivity"
+            android:parentActivityName=".activities.HawkerCentreActivity" />
         <activity
-            android:name=".IndividualStallActivity"
-            android:parentActivityName=".HawkerStallActivity" />
+            android:name=".activities.IndividualStallActivity"
+            android:parentActivityName=".activities.HawkerStallActivity" />
         <activity
-            android:name=".ReviewSubmissionActivity"
-            android:parentActivityName=".HawkerStallActivity" />
+            android:name=".activities.ReviewSubmissionActivity"
+            android:parentActivityName=".activities.HawkerStallActivity" />
     </application>
 
 </manifest>

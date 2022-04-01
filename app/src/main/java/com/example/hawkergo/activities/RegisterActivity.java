@@ -1,4 +1,4 @@
-package com.example.hawkergo;
+package com.example.hawkergo.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,11 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.AuthService;
-import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
+import com.example.hawkergo.MainActivity;
+import com.example.hawkergo.R;
+import com.example.hawkergo.services.FirebaseStorageService;
+import com.example.hawkergo.services.UserService;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 
@@ -90,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onSuccess(String downloadUrl) {
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
                     Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
-                    AuthService.createUserAndUpdateUserProfile(
+                    UserService.createUserAndUpdateUserProfile(
                             email,
                             password,
                             profileUpdates,

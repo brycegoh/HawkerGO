@@ -1,7 +1,6 @@
-package com.example.hawkergo;
+package com.example.hawkergo.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -10,11 +9,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hawkergo.activities.AddHawkerCentre;
-import com.example.hawkergo.activities.AuthenticatedActivity;
+import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerCentre;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
 import com.example.hawkergo.utils.adapters.HawkerCentreAdapter;
@@ -52,7 +50,7 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent toAddHawkerCentre = new Intent(HawkerCentreActivity.this, AddHawkerCentre.class);
+                        Intent toAddHawkerCentre = new Intent(HawkerCentreActivity.this, AddHawkerCentreActivity.class);
                         startActivity(toAddHawkerCentre);
 
                     }

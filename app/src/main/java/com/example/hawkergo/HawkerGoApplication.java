@@ -17,9 +17,6 @@ public class HawkerGoApplication extends Application {
             @SuppressLint("SourceLockedOrientationActivity")
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle bundle) {
-                System.out.println("----------------");
-                System.out.println("CALLED");
-                System.out.println("----------------");
                 activity.setRequestedOrientation(
                         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }

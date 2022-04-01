@@ -1,4 +1,4 @@
-package com.example.hawkergo.services.firebase.interfaces;
+package com.example.hawkergo.services.interfaces;
 
 public interface DbEventHandler<T> {
     void onSuccess(T o);

@@ -1,11 +1,6 @@
-package com.example.hawkergo.services.firebase.interfaces;
+package com.example.hawkergo.services.interfaces;
 
-import com.example.hawkergo.FOR_REFERENCE.QueryHawkerStallEventHandler;
-import com.example.hawkergo.FOR_REFERENCE.WriteEventHandler;
-import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
-import com.example.hawkergo.models.Review;
-import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.List;
 import java.util.Map;

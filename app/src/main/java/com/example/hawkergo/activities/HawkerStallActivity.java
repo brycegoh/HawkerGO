@@ -1,8 +1,7 @@
-package com.example.hawkergo;
+package com.example.hawkergo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -12,26 +11,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hawkergo.activities.AddHawkerStall;
-import com.example.hawkergo.activities.AuthenticatedActivity;
-import com.example.hawkergo.models.HawkerCentre;
+import com.example.hawkergo.R;
+import com.example.hawkergo.fragments.FilterDialogFragment;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Tags;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.HawkerStallsService;
-import com.example.hawkergo.services.firebase.repositories.TagsService;
-import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
-import com.example.hawkergo.services.firebase.utils.FirebaseRef;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.HawkerStallsService;
+import com.example.hawkergo.services.TagsService;
+import com.example.hawkergo.services.utils.FirebaseHelper;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
 import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
-import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +106,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(HawkerStallActivity.this, AddHawkerStall.class);
+                        Intent intent = new Intent(HawkerStallActivity.this, AddHawkerStallActivity.class);
                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, hawkerCentreId);
                         startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM);
                     }
@@ -128,9 +123,9 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     private void queryDbAndUpdateRecyclerView(){
         Query stallColRef;
         if (hawkerCentreId != null) {
-            stallColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerCentreId", hawkerCentreId);
+            stallColRef = db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerCentreId", hawkerCentreId);
         } else {
-            stallColRef = FirebaseRef.getCollectionReference(FirebaseConstants.CollectionIds.HAWKER_STALLS);
+            stallColRef = FirebaseHelper.getCollectionReference(FirebaseHelper.CollectionIds.HAWKER_STALLS);
         }
         updateRecyclerView(stallColRef);
     }
@@ -142,10 +137,10 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
         filterList.remove(chip.getText().toString());
         Query filteredColRef;
         if (filterList.size() > 0) {
-            filteredColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", filterList);
+            filteredColRef = db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", filterList);
         } else {
             // If there are no filters, retrieve all hawker stalls
-            filteredColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerCentreId", hawkerCentreId);
+            filteredColRef = db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS).whereEqualTo("hawkerCentreId", hawkerCentreId);
         }
         updateRecyclerView(filteredColRef);
     }
@@ -165,7 +160,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
             filterChipGroup.addView(chip);
         }
 
-        Query filteredColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", result);
+        Query filteredColRef = db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", result);
 
         updateRecyclerView(filteredColRef);
     }

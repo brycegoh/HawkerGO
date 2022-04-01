@@ -1,14 +1,11 @@
-package com.example.hawkergo.services.firebase.repositories;
-
-import android.net.Uri;
+package com.example.hawkergo.services;
 
 import androidx.annotation.NonNull;
 
 import com.example.hawkergo.models.Review;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.interfaces.ReviewQueryable;
-import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
-import com.example.hawkergo.services.firebase.utils.FirebaseRef;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.interfaces.ReviewQueryable;
+import com.example.hawkergo.services.utils.FirebaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,8 +19,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 public class ReviewService implements ReviewQueryable {
-    private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_STALLS;
-    private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
+    private static final String collectionId = FirebaseHelper.CollectionIds.HAWKER_STALLS;
+    private static final CollectionReference collectionRef = FirebaseHelper.getCollectionReference(collectionId);
 
     /**
      * Get all reviews for a hawker stall
@@ -110,7 +107,7 @@ public class ReviewService implements ReviewQueryable {
                                 new DbEventHandler<String>() {
                                     @Override
                                     public void onSuccess(String o) {
-                                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                                        eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
                                     }
 
                                     @Override
@@ -141,7 +138,7 @@ public class ReviewService implements ReviewQueryable {
         reviewReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -163,7 +160,7 @@ public class ReviewService implements ReviewQueryable {
         reviewReference.set(newReview).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

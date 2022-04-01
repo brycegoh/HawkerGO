@@ -1,17 +1,12 @@
-package com.example.hawkergo.services.firebase.repositories;
+package com.example.hawkergo.services;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.hawkergo.MainActivity;
-import com.example.hawkergo.RegisterActivity;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.utils.FirebaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -19,9 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import javax.annotation.Nullable;
-
-public class AuthService {
+public class UserService {
     final static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public static FirebaseUser getAuthenticatedUser(){
@@ -43,7 +36,7 @@ public class AuthService {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     System.out.println("success");
-                    eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                    eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
                 }else{
                     eventHandler.onFailure(task.getException());
                 }
@@ -68,7 +61,7 @@ public class AuthService {
                                 }
                             });
 
-                    eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                    eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
                 }else{
                     eventHandler.onFailure(task.getException());
                 }

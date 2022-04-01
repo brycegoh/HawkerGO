@@ -1,4 +1,4 @@
-package com.example.hawkergo;
+package com.example.hawkergo.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.AuthService;
-import com.example.hawkergo.utils.Constants;
+import com.example.hawkergo.R;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.UserService;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         if(!Arrays.asList(validations).contains(false)){
             String email = etLoginEmail.getText().toString();
             String password = etLoginPassword.getText().toString();
-            AuthService.loginUser(
+            UserService.loginUser(
                     email,
                     password,
                     new DbEventHandler<String>() {

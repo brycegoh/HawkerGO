@@ -1,12 +1,10 @@
-package com.example.hawkergo.services.firebase.repositories;
+package com.example.hawkergo.services;
 
 import androidx.annotation.NonNull;
 
-import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.Tags;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
-import com.example.hawkergo.services.firebase.utils.FirebaseRef;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.utils.FirebaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,13 +13,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.List;
 
 public class TagsService {
-    private static final String collectionId = FirebaseConstants.CollectionIds.TAGS;
-    private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
+    private static final String collectionId = FirebaseHelper.CollectionIds.TAGS;
+    private static final CollectionReference collectionRef = FirebaseHelper.getCollectionReference(collectionId);
     private static final String tagDocumentId = "PZQY0RGoRhiGvSSQsnFP";
 
     /**
@@ -56,7 +51,7 @@ public class TagsService {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                        eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

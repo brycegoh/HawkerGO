@@ -1,4 +1,4 @@
-package com.example.hawkergo;
+package com.example.hawkergo.activities;
 
 import static android.content.ContentValues.TAG;
 
@@ -18,11 +18,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 
+import com.example.hawkergo.R;
 import com.example.hawkergo.models.Review;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.AuthService;
-import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
-import com.example.hawkergo.services.firebase.repositories.ReviewService;
+import com.example.hawkergo.services.FirebaseStorageService;
+import com.example.hawkergo.services.ReviewService;
+import com.example.hawkergo.services.UserService;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+
 import com.example.hawkergo.utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -88,7 +90,7 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
 
                 // get date reviewed = current date <Date>
                 Date currentDate = new Date();
-                Uri profilePic = AuthService.getUserProfilePic();
+                Uri profilePic = UserService.getUserProfilePic();
                 String profilePicUrl = profilePic != null ? profilePic.toString() : null;
                 Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, profilePicUrl, selectedImageString);
 

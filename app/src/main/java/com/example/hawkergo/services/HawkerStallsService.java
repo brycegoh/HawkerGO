@@ -1,13 +1,11 @@
-package com.example.hawkergo.services.firebase.repositories;
+package com.example.hawkergo.services;
 
 import androidx.annotation.NonNull;
 
-import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.interfaces.HawkerStallQueryable;
-import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
-import com.example.hawkergo.services.firebase.utils.FirebaseRef;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.interfaces.HawkerStallQueryable;
+import com.example.hawkergo.services.utils.FirebaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HawkerStallsService implements HawkerStallQueryable {
-    private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_STALLS;
-    private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
+    private static final String collectionId = FirebaseHelper.CollectionIds.HAWKER_STALLS;
+    private static final CollectionReference collectionRef = FirebaseHelper.getCollectionReference(collectionId);
 
     /**
      * Adds hawker stall into hawkerStall collection
@@ -62,7 +60,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
         documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -83,7 +81,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
         documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -178,7 +176,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
                 new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                        eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
                     }
                 }
         ).addOnFailureListener(

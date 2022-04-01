@@ -1,11 +1,10 @@
-package com.example.hawkergo.services.firebase.repositories;
+package com.example.hawkergo.services;
 
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.interfaces.UploadImageEventHandler;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

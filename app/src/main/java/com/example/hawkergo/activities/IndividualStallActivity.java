@@ -1,4 +1,4 @@
-package com.example.hawkergo;
+package com.example.hawkergo.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -6,31 +6,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.hawkergo.activities.AddHawkerStall;
-import com.example.hawkergo.models.HawkerCentre;
+import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Review;
-import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
-import com.example.hawkergo.services.firebase.repositories.HawkerStallsService;
-import com.example.hawkergo.services.firebase.repositories.ReviewService;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.services.HawkerStallsService;
+import com.example.hawkergo.services.ReviewService;
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.utils.DownloadImageTask;
 import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class IndividualStallActivity extends AppCompatActivity {
