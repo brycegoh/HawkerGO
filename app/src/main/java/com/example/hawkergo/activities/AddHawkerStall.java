@@ -89,7 +89,7 @@ public class AddHawkerStall extends AuthenticatedActivity {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, hawkerCentreId);
         resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentre.getName());
-        setResult(Constants.ResultCodes.ADD_STALL_FORM_TO_HAWKER_STALL_LISTING, resultIntent);
+        setResult(Constants.ResultCodes.TO_HAWKER_STALL_LISTING, resultIntent);
         finish();
     }
 

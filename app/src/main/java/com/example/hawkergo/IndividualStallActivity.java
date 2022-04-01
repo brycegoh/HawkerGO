@@ -8,56 +8,81 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.hawkergo.activities.AddHawkerStall;
+import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Review;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
+import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
 import com.example.hawkergo.services.firebase.repositories.HawkerStallsService;
 import com.example.hawkergo.services.firebase.repositories.ReviewService;
+import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.DownloadImageTask;
 import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/*
-
-import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.models.SlideModel;
-
-*/
-
 public class IndividualStallActivity extends AppCompatActivity {
 
     List<String> imagesURL = new ArrayList<>();
 
-    int images[] = {R.drawable.user, R.drawable.user};
+    int[] images = {R.drawable.user, R.drawable.user};
     RecyclerView recyclerView;
     TextView stallNameTV, ratingTV, locationTV, openingTV;
     ImageView stall_Image;
     Button btnAddReview;
+    private String hawkerStallId, hawkerCentreId, hawkerCentreName;
+
+    /**
+     * On back navigate handlers
+     *
+     * Add extra String data:
+     *  1. hawkerCentreId
+     *  2. hawkerCentreName
+     * */
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, hawkerCentreId);
+        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME,hawkerCentreName);
+        setResult(Constants.ResultCodes.TO_HAWKER_STALL_LISTING, resultIntent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
+
+    private void handleIntent() {
+        Intent intent = getIntent();
+        hawkerStallId = hawkerStallId == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID) : hawkerStallId;
+        hawkerCentreId = hawkerCentreId == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID) : hawkerCentreId;
+        hawkerCentreName = hawkerCentreName == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME) : hawkerCentreName;
+    }
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_stall);
-
+        this.handleIntent();
         imagesURL.add("https://firebasestorage.googleapis.com/v0/b/hawkergo-cfe05.appspot.com/o/image%3A31?alt=media&token=d5cd8838-fa25-4131-9399-3f58a1cac6aa");
-        imagesURL.add("https://firebasestorage.googleapis.com/v0/b/hawkergo-cfe05.appspot.com/o/image%3A31?alt=media&token=d5cd8838-fa25-4131-9399-3f58a1cac6aa");
-
-        //Get ID from Hawker Stall List
-        //Intent intent = getIntent();
-        //hawkerStallId = intent.getStringExtra("hawkerStallId");
-        String hawkerStallId = "woaOm6sNdT11WeJDfi7N";
-        //Log.d("ID Pass in", hawkerStallId);
 
         recyclerView = findViewById(R.id.individual_stall_recycler);
         ratingTV = findViewById(R.id.ratingTextView);
@@ -66,7 +91,6 @@ public class IndividualStallActivity extends AppCompatActivity {
         stallNameTV = findViewById(R.id.stallNameTextView);
         stall_Image = findViewById(R.id.stall_picture);
         btnAddReview = findViewById(R.id.btnAddNewReview);
-
 
 
         btnAddReview.setOnClickListener(new View.OnClickListener() {
@@ -82,11 +106,6 @@ public class IndividualStallActivity extends AppCompatActivity {
                 new DbEventHandler<HawkerStall>() {
                     @Override
                     public void onSuccess(HawkerStall o) {
-
-                        //Picasso.get().load(o.imageUrl).into(stall_Image);
-                        //need to change to slider code
-                        //image
-                        //new DownloadImageTask(stall_Image).execute(o.getImageUrls());
                         stallNameTV.setText(o.getName());
                         locationTV.setText(o.getAddress());
                         openingTV.setText(o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours());
@@ -123,14 +142,5 @@ public class IndividualStallActivity extends AppCompatActivity {
                     }
                 }
         );
-
-        /* Remove comment if need slider
-        ImageSlider imageSlider = findViewById(R.id.slider);
-        List<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.user1));
-        slideModels.add(new SlideModel(R.drawable.user1));
-        slideModels.add(new SlideModel(R.drawable.user1));
-        imageSlider.setImageList(slideModels,true);
-        */
     }
 }

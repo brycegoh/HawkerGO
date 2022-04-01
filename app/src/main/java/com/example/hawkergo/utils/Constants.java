@@ -7,11 +7,12 @@ public class Constants {
     }
 
     public static class ResultCodes{
-        public static final Integer ADD_STALL_FORM_TO_HAWKER_STALL_LISTING = 2;
+        public static final Integer TO_HAWKER_STALL_LISTING = 2;
     }
 
     public static class IntentExtraDataKeys{
         public static final String HAWKER_CENTRE_NAME = "HAWKER_CENTRE_NAME";
         public static final String HAWKER_CENTRE_ID = "HAWKER_CENTRE_ID";
+        public static final String HAWKER_STALL_ID = "HAWKER_STALL_ID";
     }
 }
