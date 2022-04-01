@@ -235,14 +235,23 @@ public class AddHawkerCentre extends AuthenticatedActivity {
         return isValid;
     }
 
+    private boolean validateSelectedImage(){
+        if(selectedImage == null){
+            Toast.makeText(AddHawkerCentre.class, "Please select an image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void onClickSubmitButton() {
         submitButtonController.setEnabled(false);
+        
         Boolean[] validationArray = {
+                validateSelectedImage(),
                 validateStreetNumberField(),
                 validateStreetNameField(),
                 validatePostalCodeField(),
                 validateOpeningHoursChips(),
                 validateNameField(),
+                
         };
 
         boolean isAllValid = !Arrays.asList(validationArray).contains(false);
@@ -292,7 +301,8 @@ public class AddHawkerCentre extends AuthenticatedActivity {
                                     new DbEventHandler<String>() {
                                         @Override
                                         public void onSuccess(String o) {
-                                            Toast.makeText(AddHawkerCentre.this, "Successfully uploaded!", Toast.LENGTH_SHORT).show();
+                                            Intent toHawkerCentreListingPage = new Intent(AddHawkerCentre.this, HawkerCentreActivity.class);
+                                            startActivity(toHawkerCentreListingPage);
                                         }
                                         @Override
                                         public void onFailure(Exception e) {
