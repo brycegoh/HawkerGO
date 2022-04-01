@@ -30,7 +30,7 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
 
     class HawkerCentreViewHolder extends RecyclerView.ViewHolder {
         private static final String TAG = "HawkerCentreViewHolder";
-        ImageView stallImage = null;
+        ImageView stallImage;
         TextView stallName;
         TextView stallAddress;
         TextView stallRating;

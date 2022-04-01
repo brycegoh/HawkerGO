@@ -7,6 +7,19 @@
     android:layout_height="match_parent"
     android:background="?colorSecondary">
 
+    <LinearLayout
+        android:id="@+id/toolbar_container"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize">
+        <include
+            layout="@layout/toolbar"
+            />
+    </LinearLayout>
+
+
     <TextView
         android:id="@+id/header"
         android:layout_width="0dp"
@@ -20,7 +33,8 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/filter_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_container"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hawker_stall_recycler_view"

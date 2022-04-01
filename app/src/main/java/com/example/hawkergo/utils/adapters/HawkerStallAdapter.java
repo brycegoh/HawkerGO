@@ -78,7 +78,17 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
                 holder.stallReviews.setText("("  + numReviews + R.string.reviews +")");
             }
         } else {
-            holder.stallReviews.setText(R.string.no_reviews);
+            StringBuilder formattedCount = null;
+            if(stallItem.getReviewCount() != null && stallItem.getReviewCount() > 0){
+                formattedCount = new StringBuilder();
+                formattedCount.append("(");
+                formattedCount.append(stallItem.getReviewCount().toString());
+                formattedCount.append(" reviews)");
+                holder.stallReviews.setText(formattedCount.toString());
+            }else{
+                holder.stallReviews.setText(R.string.no_reviews);
+            }
+
         }
 
     }

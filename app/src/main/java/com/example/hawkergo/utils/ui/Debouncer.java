@@ -43,6 +43,7 @@ public class Debouncer {
                         fn.run();
                     }
                     catch(Exception e){
+                        System.out.println("======================");
                         System.out.println(e.getMessage().toString());
                     }
                     finally {

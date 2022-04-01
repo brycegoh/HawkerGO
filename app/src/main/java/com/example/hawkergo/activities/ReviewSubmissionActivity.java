@@ -15,7 +15,9 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentResultListener;
 
 import com.example.hawkergo.R;
@@ -31,7 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Date;
 
-public class ReviewSubmissionActivity extends AppCompatActivity {
+public class ReviewSubmissionActivity extends AuthenticatedActivity {
 
     private RatingBar ratingBar;
     private EditText editText;
@@ -48,6 +50,13 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.review_submission);
+
+        Toolbar toolbar = findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        if(bar != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
         hawkerStallID = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID);

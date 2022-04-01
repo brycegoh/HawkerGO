@@ -7,6 +7,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,7 @@ import com.example.hawkergo.services.utils.FirebaseHelper;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
 import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
+import com.example.hawkergo.utils.ui.Debouncer;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -63,6 +66,14 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
+
+        Toolbar toolbar = findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        if(bar != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         this.initViews();
         this.handleIntentExtraData();
         this.attachOnClickListeners();
@@ -147,7 +158,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
         }
         updateRecyclerView(filteredColRef);
     }
-
+    final Debouncer debouncer = new Debouncer();
     @Override
     public void finish(List<String> result) {
         filterChipGroup.removeAllViews();
@@ -165,6 +176,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
             }
 
             Query filteredColRef = collectionRef.whereArrayContainsAny("tags", result);
+
             updateRecyclerView(filteredColRef);
         }
     }

@@ -1,6 +1,8 @@
 package com.example.hawkergo.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.TimePickerDialog;
@@ -55,6 +57,14 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hawker_centre);
+
+        Toolbar toolbar = findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        if(bar != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         this.initViews();
         this.inflateOpeningDaysChips();
         this.attachButtonEventListeners();

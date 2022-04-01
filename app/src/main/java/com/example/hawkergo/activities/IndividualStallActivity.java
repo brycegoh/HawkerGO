@@ -1,6 +1,8 @@
 package com.example.hawkergo.activities;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +26,7 @@ import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndividualStallActivity extends AppCompatActivity {
+public class IndividualStallActivity extends AuthenticatedActivity {
 
     List<String> imagesURL = new ArrayList<>();
 
@@ -82,6 +84,14 @@ public class IndividualStallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_stall);
+
+        Toolbar toolbar = findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        if(bar != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         this.handleIntent();
         imagesURL.add("https://firebasestorage.googleapis.com/v0/b/hawkergo-cfe05.appspot.com/o/image%3A31?alt=media&token=d5cd8838-fa25-4131-9399-3f58a1cac6aa");
 

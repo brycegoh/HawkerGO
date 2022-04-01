@@ -1,6 +1,8 @@
 package com.example.hawkergo.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.TimePickerDialog;
@@ -106,6 +108,12 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hawker_stall);
+        Toolbar toolbar = findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        if(bar != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         newCategories = new ArrayList<>();
         this.initViews();
         this.handleIntent();
