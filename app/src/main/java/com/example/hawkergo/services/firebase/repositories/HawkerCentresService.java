@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HawkerCentresRepository implements HawkerCentreQueryable {
+public class HawkerCentresService implements HawkerCentreQueryable {
     private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_CENTRES;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
 
@@ -34,6 +34,34 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      */
     public static void getAllHawkerCentres(DbEventHandler<List<HawkerCentre>> eventHandler) {
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
+                        eventHandler.onSuccess(hawkerCentreList);
+                    } else {
+                        eventHandler.onSuccess(null);
+                    }
+                } else {
+                    eventHandler.onFailure(task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
+
+    public static void searchAllHawkerCentres(String searchTerm, DbEventHandler<List<HawkerCentre>> eventHandler) {
+        collectionRef
+                .whereGreaterThanOrEqualTo("name", searchTerm)
+                .whereLessThanOrEqualTo("name", searchTerm + "\uF7FF")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -119,7 +147,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
      */
     public static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler) {
         DocumentReference documentReference = collectionRef.document(hawkerCentreID);
-        HawkerStallsRepository.addHawkerStall(
+        HawkerStallsService.addHawkerStall(
                 newHawkerStall,
                 hawkerCentreID,
                 new DbEventHandler<String>() {
@@ -127,7 +155,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
                     public void onSuccess(String hawkerStallId) {
                         HashMap<String, Object> updateFields  = new HashMap<>();
                         updateFields.put("stallsID", FieldValue.arrayUnion(hawkerStallId));
-                        updateFields.put("tags", FieldValue.arrayUnion(newHawkerStall.tags));
+                        updateFields.put("tags", FieldValue.arrayUnion(newHawkerStall.getTags()));
 
                         documentReference.update(updateFields)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -198,7 +226,7 @@ public class HawkerCentresRepository implements HawkerCentreQueryable {
     }
 
     public void exampleAct(){
-        Query q = HawkerCentresRepository.getCollectionRef().whereEqualTo("field", "vegetarian").whereEqualTo("asdas", "adadsd");
+        Query q = HawkerCentresService.getCollectionRef().whereEqualTo("field", "vegetarian").whereEqualTo("asdas", "adadsd");
     }
 
     public static CollectionReference getCollectionRef() {

@@ -19,7 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-public class TagsRepository {
+public class TagsService {
     private static final String collectionId = FirebaseConstants.CollectionIds.TAGS;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
     private static final String tagDocumentId = "PZQY0RGoRhiGvSSQsnFP";

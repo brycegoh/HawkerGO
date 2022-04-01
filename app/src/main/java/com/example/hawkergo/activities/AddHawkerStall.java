@@ -1,8 +1,6 @@
 package com.example.hawkergo.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.TimePickerDialog;
@@ -13,35 +11,34 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.hawkergo.HawkerStallActivity;
 import com.example.hawkergo.R;
-import com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
-import com.example.hawkergo.services.firebase.interfaces.UploadImageEventHandler;
-import com.example.hawkergo.services.firebase.repositories.HawkerCentresRepository;
-import com.example.hawkergo.services.firebase.repositories.StorageRepository;
-import com.example.hawkergo.services.firebase.repositories.TagsRepository;
+import com.example.hawkergo.services.firebase.repositories.HawkerCentresService;
+import com.example.hawkergo.services.firebase.repositories.FirebaseStorageService;
+import com.example.hawkergo.services.firebase.repositories.TagsService;
 import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.example.hawkergo.utils.ui.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class AddHawkerStall extends AppCompatActivity {
+public class AddHawkerStall extends AuthenticatedActivity {
     private String hawkerCentreId;
 
 
@@ -75,7 +72,6 @@ public class AddHawkerStall extends AppCompatActivity {
      * Enables user to add as many favourite foods as they want to
      */
     DynamicEditTextManager dynamicEditTextManager;
-    ActivityResultLauncher<Intent> cameraActivityLauncher, galleryActivityLauncher;
 
 
     @Override
@@ -98,6 +94,8 @@ public class AddHawkerStall extends AppCompatActivity {
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 String result = bundle.getString("uriString");
                 Uri x = Uri.parse(result);
+                ImageView imageView = findViewById(R.id.image_view);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 selectedImage = x;
             }
         });
@@ -116,16 +114,17 @@ public class AddHawkerStall extends AppCompatActivity {
         String id = intent.getStringExtra("id");
         hawkerCentreId = id;
         if (id != null) {
-            HawkerCentresRepository.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
+            HawkerCentresService.getHawkerCentreByID(id, new DbEventHandler<HawkerCentre>() {
                 @Override
                 public void onSuccess(HawkerCentre o) {
                     hawkerCentre = o;
-                    mainTitleController.setText("Adding a stall to " + hawkerCentre.name);
+                    mainTitleController.setText("Adding a stall to " + hawkerCentre.getName());
                 }
 
                 @Override
                 public void onFailure(Exception e) {
-
+                    System.out.println("=========");
+                    System.out.println(e.getMessage().toString());
                 }
             });
         }
@@ -186,7 +185,7 @@ public class AddHawkerStall extends AppCompatActivity {
     }
 
     private void getAllTagsAndInflateChips() {
-        TagsRepository.getAllTags(
+        TagsService.getAllTags(
                 new DbEventHandler<Tags>() {
                     @Override
                     public void onSuccess(Tags o) {
@@ -212,10 +211,6 @@ public class AddHawkerStall extends AppCompatActivity {
         categoriesChipGrpController.addView(chip);
     }
 
-    private void showAddCategoryErrorToast() {
-        Toast.makeText(this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
-    }
-
     private void attachButtonEventListeners() {
         addMoreCategoryChip.setOnClickListener(
                 new View.OnClickListener() {
@@ -231,7 +226,7 @@ public class AddHawkerStall extends AppCompatActivity {
                     public void onDebouncedClick(View view) {
                         String text = addMoreCategoryTextFieldController.getText().toString().toLowerCase().trim();
                         if (!TextValidatorHelper.isNullOrEmpty(text) && !newCategories.contains(text) && !categories.contains(text)) {
-                            TagsRepository.addTag(text, new DbEventHandler<String>() {
+                            TagsService.addTag(text, new DbEventHandler<String>() {
                                 @Override
                                 public void onSuccess(String o) {
                                     newCategories.add(text);
@@ -241,7 +236,7 @@ public class AddHawkerStall extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    showAddCategoryErrorToast();
+                                    Toast.makeText(AddHawkerStall.this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -269,7 +264,17 @@ public class AddHawkerStall extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onOpeningTimeButtonClick();
+                        TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                openingHour = selectedHour;
+                                openingMinute = selectedMinute;
+                                openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
+                            }
+                        };
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerStall.this, timePickerListener, openingHour, openingMinute, true);
+                        timePickerDialog.setTitle("Opening time");
+                        timePickerDialog.show();
                     }
                 }
         );
@@ -277,7 +282,18 @@ public class AddHawkerStall extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onClosingTimeButtonClick();
+                        TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                closingHour = selectedHour;
+                                closingMinute = selectedMinute;
+                                closingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
+                            }
+                        };
+
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(AddHawkerStall.this, timePickerListener, closingHour, closingMinute, true);
+                        timePickerDialog.setTitle("Closing time");
+                        timePickerDialog.show();
                     }
                 }
         );
@@ -345,36 +361,6 @@ public class AddHawkerStall extends AppCompatActivity {
         return isValid;
     }
 
-    private void onOpeningTimeButtonClick() {
-        TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                openingHour = selectedHour;
-                openingMinute = selectedMinute;
-                openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
-            }
-        };
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, timePickerListener, openingHour, openingMinute, true);
-        timePickerDialog.setTitle("Opening time");
-        timePickerDialog.show();
-    }
-
-    private void onClosingTimeButtonClick() {
-        TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                closingHour = selectedHour;
-                closingMinute = selectedMinute;
-                closingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
-            }
-        };
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, timePickerListener, closingHour, closingMinute, true);
-        timePickerDialog.setTitle("Closing time");
-        timePickerDialog.show();
-    }
-
     private void onClickSubmitButton() {
         submitButtonController.setEnabled(false);
         Boolean[] validationArray = {
@@ -416,40 +402,33 @@ public class AddHawkerStall extends AppCompatActivity {
                     formattedOpeningTime
             );
 
-            HawkerStall newHawkerStall = new HawkerStall(
-                    formattedAddress,
-                    stallName,
-                    newOpeningHours,
-                    "downloadUrl",
-                    favouriteFoods,
-                    selectedCategories
-            );
-
-            StorageRepository.uploadImageUri(selectedImage,
-                    new UploadImageEventHandler() {
+            FirebaseStorageService.uploadImageUri(selectedImage,
+                    new DbEventHandler<String>() {
                         @Override
                         public void onSuccess(String downloadUrl) {
-                            // String address, String name, HashMap<String,String> openingHours, String imageUrl, List<String> reviewsIds
                             HawkerStall newHawkerStall = new HawkerStall(
                                     formattedAddress,
                                     stallName,
                                     newOpeningHours,
-                                    downloadUrl,
+                                    new ArrayList<>(Arrays.asList(downloadUrl)),
                                     favouriteFoods,
-                                    selectedCategories
+                                    selectedCategories,
+                                    hawkerCentreId
                             );
-                            HawkerCentresRepository.addStallIntoHawkerCentre(
+                            HawkerCentresService.addStallIntoHawkerCentre(
                                     hawkerCentreId,
                                     newHawkerStall,
                                     new DbEventHandler<String>() {
                                         @Override
                                         public void onSuccess(String o) {
-                                            System.out.println(o);
+                                            Toast.makeText(AddHawkerStall.this, "Successfully uploaded!", Toast.LENGTH_SHORT).show();
+                                            Intent toHawkerStallListingIntent = new Intent(AddHawkerStall.this, HawkerStallActivity.class);
+                                            toHawkerStallListingIntent.putExtra("hawkerCentreId", hawkerCentreId);
+                                            startActivity(toHawkerStallListingIntent);
                                         }
-
                                         @Override
                                         public void onFailure(Exception e) {
-                                            System.out.println(e.toString());
+                                            Toast.makeText(AddHawkerStall.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                             );
@@ -457,7 +436,7 @@ public class AddHawkerStall extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Exception e) {
-                            System.out.println(e.toString());
+                            Toast.makeText(AddHawkerStall.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
                         }
                     }
             );

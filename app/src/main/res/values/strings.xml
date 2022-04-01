@@ -23,4 +23,5 @@
     <string name="rateInstr">Please rate this stall out of 5 stars!</string>
     <string name="reviewCommentInstr">Please tell our community what you think of this stall!</string>
     <string name="reviewFailed">Sorry, your review failed to submit :( Please try again! </string>
+    <string name="register">Register</string>
 </resources>

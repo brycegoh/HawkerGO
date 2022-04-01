@@ -18,10 +18,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HawkerStallsRepository implements HawkerStallQueryable {
+public class HawkerStallsService implements HawkerStallQueryable {
     private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_STALLS;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
 
@@ -55,7 +56,6 @@ public class HawkerStallsRepository implements HawkerStallQueryable {
      * @param eventHandler      Callback to handle on success or failure events
      */
     public static void updateHawkerStallById(String hawkerStallID, HawkerStall hawkerStallFields, DbEventHandler<String> eventHandler){
-        // TODO: check if builder pattern is necessary for update function
         DocumentReference documentReference = collectionRef.document(hawkerStallID);
         Map<String, Object> fieldsToUpdate = hawkerStallFields.toMap();
         documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -144,5 +144,26 @@ public class HawkerStallsRepository implements HawkerStallQueryable {
             }
         });
     };
+
+    public static void incrementReviewAndAddPhotoCount(String hawkerStallId, String selectedImage, DbEventHandler<String> eventHandler){
+        Map<String, Object> fieldToUpdate = new HashMap<>();
+        fieldToUpdate.put("reviewCount", FieldValue.increment(1));
+        fieldToUpdate.put("imageUrls", FieldValue.arrayUnion(selectedImage));
+        collectionRef.document(hawkerStallId).update(fieldToUpdate).addOnSuccessListener(
+                new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                    }
+                }
+        ).addOnFailureListener(
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        eventHandler.onFailure(e);
+                    }
+                }
+        );
+    }
 
 }

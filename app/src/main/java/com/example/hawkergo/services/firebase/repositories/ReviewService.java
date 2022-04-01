@@ -1,5 +1,7 @@
 package com.example.hawkergo.services.firebase.repositories;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import com.example.hawkergo.models.Review;
@@ -17,9 +19,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
-import java.util.Map;
 
-public class ReviewRepository implements ReviewQueryable {
+public class ReviewService implements ReviewQueryable {
     private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_STALLS;
     private static final CollectionReference collectionRef = FirebaseRef.getCollectionReference(collectionId);
 
@@ -94,16 +95,29 @@ public class ReviewRepository implements ReviewQueryable {
      * @param review        New review to be inserted
      * @param eventHandler  Callback to handle on success or failure events
      */
-    public static void addReview(String hawkerStallID, Review review, DbEventHandler<String> eventHandler){
+    public static void addReview(String hawkerStallID, Review review, String selectedImage, DbEventHandler<String> eventHandler){
         DocumentReference docRef = collectionRef.document(hawkerStallID);
         DocumentReference reviewRef = docRef.collection("reviews").document();
-//        newHawkerCenterData.updateDates();
         reviewRef
                 .set(review)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                        HawkerStallsService.incrementReviewAndAddPhotoCount(
+                                hawkerStallID,
+                                selectedImage,
+                                new DbEventHandler<String>() {
+                                    @Override
+                                    public void onSuccess(String o) {
+                                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        eventHandler.onFailure(e);
+                                    }
+                                }
+                        );
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -144,7 +158,6 @@ public class ReviewRepository implements ReviewQueryable {
      * @param eventHandler  Callback to handle on success or failure events
      */
     public static void editReview(String hawkerStallID, String reviewID, Review newReview, DbEventHandler<String> eventHandler){
-        // TODO: check if builder pattern is necessary for update function
         DocumentReference reviewReference = collectionRef.document(hawkerStallID).collection("reviews").document(reviewID);
         reviewReference.set(newReview).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
