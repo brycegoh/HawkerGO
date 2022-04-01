@@ -31,10 +31,6 @@ import java.util.Date;
 
 public class ReviewSubmissionActivity extends AppCompatActivity {
 
-    Intent intent = getIntent();
-
-    String hawkerStallID = intent.getStringExtra("hawkerStallId");
-
     private RatingBar ratingBar;
     private EditText editText;
     private Button submitButton;
@@ -43,12 +39,16 @@ public class ReviewSubmissionActivity extends AppCompatActivity {
     private Uri selectedImage;
     private String selectedImageString;
     private String userDisplayName;
+    private String hawkerStallID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.review_submission);
+
+        Intent intent = getIntent();
+        hawkerStallID = intent.getStringExtra("hawkerStallId");
 
         ratingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
         editText = (EditText) findViewById(R.id.edit_review);
