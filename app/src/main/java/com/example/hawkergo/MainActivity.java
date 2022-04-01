@@ -15,10 +15,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
-        
-
-        startActivity(toHawkerCentreIntent);
         setContentView(R.layout.activity_main);
     }
 
@@ -26,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = UserService.getAuthenticatedUser();
-
         if (user != null){
              Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
              startActivity(toHawkerCentreIntent);
