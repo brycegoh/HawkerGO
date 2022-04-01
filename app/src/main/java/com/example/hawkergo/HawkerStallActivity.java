@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.activities.AddHawkerStall;
 import com.example.hawkergo.activities.AuthenticatedActivity;
+import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
@@ -22,6 +23,7 @@ import com.example.hawkergo.services.firebase.repositories.TagsService;
 import com.example.hawkergo.services.firebase.utils.FirebaseConstants;
 import com.example.hawkergo.services.firebase.utils.FirebaseRef;
 import com.example.hawkergo.utils.Constants;
+import com.example.hawkergo.utils.RecyclerItemClickListener;
 import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
 import com.example.hawkergo.utils.ui.DebouncedOnClickListener;
 import com.google.android.material.chip.Chip;
@@ -52,7 +54,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM &&
-                resultCode == Constants.ResultCodes.ADD_STALL_FORM_TO_HAWKER_STALL_LISTING) {
+                resultCode == Constants.ResultCodes.TO_HAWKER_STALL_LISTING) {
             hawkerCentreName = data.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME);
             hawkerCentreId = data.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
         }
@@ -150,8 +152,6 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
 
     @Override
     public void finish(List<String> result) {
-        Log.d(TAG, "finish: " + result);
-
         filterChipGroup.removeAllViews();
         for (String el : result) {
             filterList.add(el);
@@ -163,7 +163,6 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
             chip.setTextColor(getResources().getColor(R.color.black));
             chip.setOnCloseIconClickListener(this);
             filterChipGroup.addView(chip);
-
         }
 
         Query filteredColRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS).whereArrayContainsAny("tags", result);
@@ -183,6 +182,29 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         mHawkerStallAdapter = new HawkerStallAdapter(getApplicationContext(), hawkerStallList);
                         recyclerView.setAdapter(mHawkerStallAdapter);
+
+                        recyclerView.addOnItemTouchListener(
+                                new RecyclerItemClickListener(getApplicationContext(), recyclerView,new RecyclerItemClickListener.OnItemClickListener() {
+
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Intent intent = new Intent(HawkerStallActivity.this, IndividualStallActivity.class);
+                                        HawkerStall currentHawkerCentre = hawkerStallList.get(position);
+                                        String centreId = currentHawkerCentre.getId();
+                                        String hawkerCentreName = currentHawkerCentre.getName();
+
+                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, centreId);
+                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
+                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, currentHawkerCentre.getId());
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onLongItemClick(View view, int position) {
+                                    }
+                                })
+                        );
+
                     }
                     @Override
                     public void onFailure(Exception e) {
