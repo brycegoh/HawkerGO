@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hawkergo.activities.AddHawkerCentre;
 import com.example.hawkergo.activities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.services.firebase.interfaces.DbEventHandler;
@@ -46,6 +47,17 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
         this.filterButton.setVisibility(View.GONE);
         this.header.setText("All Hawker Centres");
         this.filterChipGroup.setVisibility(View.GONE);
+
+        floatingActionButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent toAddHawkerCentre = new Intent(HawkerCentreActivity.this, AddHawkerCentre.class);
+                        startActivity(toAddHawkerCentre);
+
+                    }
+                }
+        );
 
         HawkerCentresService.getAllHawkerCentres(
                 new DbEventHandler<List<HawkerCentre>>() {

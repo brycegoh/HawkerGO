@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.hawkergo.HawkerCentreActivity;
 import com.example.hawkergo.HawkerStallActivity;
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerCentre;
@@ -237,8 +238,9 @@ public class AddHawkerCentre extends AuthenticatedActivity {
 
     private boolean validateSelectedImage(){
         if(selectedImage == null){
-            Toast.makeText(AddHawkerCentre.class, "Please select an image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddHawkerCentre.this, "Please select an image", Toast.LENGTH_SHORT).show();
         }
+        return selectedImage != null;
     }
 
     private void onClickSubmitButton() {
