@@ -26,11 +26,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: starts");
         super.onCreate(savedInstanceState);
-
-
-
-        Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
-        startActivity(toHawkerCentreIntent);
         setContentView(R.layout.activity_main);
+
+        Button submitReviewBtn = findViewById(R.id.submitReviewBtn);
+
+        submitReviewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent toReviewSubmissionsIntent = new Intent(MainActivity.this, ReviewSubmissionActivity.class);
+                startActivity(toReviewSubmissionsIntent);
+            }
+        });
+
+        Button viewStallsBtn = findViewById(R.id.goToHawkerStallsBtn);
+
+        viewStallsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent toHawkerCentreIntent = new Intent(MainActivity.this, HawkerCentreActivity.class);
+                startActivity(toHawkerCentreIntent);
+            }
+        });
+
+
+
     }
 }

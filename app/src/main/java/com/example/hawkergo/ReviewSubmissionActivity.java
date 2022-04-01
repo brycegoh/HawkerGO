@@ -25,7 +25,7 @@ import java.util.Date;
 
 public class ReviewSubmissionActivity extends AppCompatActivity {
 
-    Intent intent = getIntent();
+    // Intent intent = getIntent();
     /*TODO get hawkerStallID from previous activity: HawkerStallActivity
     String hawkerStallID = intent.getStringExtra(HawkerStallActivity.KEY, null);
 

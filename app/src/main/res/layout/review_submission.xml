@@ -63,7 +63,7 @@
 
         <EditText
             android:id="@+id/edit_review"
-            android:layout_width="400dp"
+            android:layout_width="match_parent"
             android:layout_height="220dp"
             android:autofillHints=""
             android:ems="10"
