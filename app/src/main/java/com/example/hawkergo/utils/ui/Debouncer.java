@@ -25,12 +25,13 @@ import java.util.concurrent.TimeUnit;
 public class Debouncer {
 
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    private final HashMap<Object, ScheduledFuture<?>> tracker = new HashMap<>();
+    private final HashMap<Integer, ScheduledFuture<?>> tracker = new HashMap<>();
 
     final long TIME_DELAY = 1000;
     final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
-    public void debounce(Object key, Runnable fn) {
+    public void debounce(View view, Runnable fn) {
+        Integer key = view.getId();
         ScheduledFuture<?> scheduledTask = tracker.containsKey(key) ? tracker.get(key) : null;
         if (scheduledTask != null) {
             scheduledTask.cancel(false); // don't interrupt if is running

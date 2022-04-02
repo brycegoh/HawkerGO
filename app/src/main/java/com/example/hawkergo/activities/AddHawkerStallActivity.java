@@ -260,7 +260,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                         String text = addMoreCategoryTextFieldController.getText().toString().toLowerCase().trim();
                         if (!TextValidatorHelper.isNullOrEmpty(text) && !newCategories.contains(text) && !categories.contains(text)) {
                             debouncer.debounce(
-                                    "ADD_TAGS",
+                                    view,
                                     new Runnable() {
                                         @Override
                                         public void run() {
@@ -304,7 +304,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                                 validateCategoriesChips();
                         if(isAllValid){
                             debouncer.debounce(
-                                    "SUBMIT_NEW_STALL",
+                                    view,
                                     new Runnable() {
                                         @Override
                                         public void run() {

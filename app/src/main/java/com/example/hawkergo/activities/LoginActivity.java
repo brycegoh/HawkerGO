@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 debouncer.debounce(
-                        "LOGIN_USER",
+                        view,
                         new Runnable() {
                             @Override
                             public void run() {

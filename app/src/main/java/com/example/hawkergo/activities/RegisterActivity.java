@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,32 +27,60 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    TextInputEditText etRegName;
-    TextInputEditText etRegEmail;
-    TextInputEditText etRegPassword;
-    TextView tvLoginHere;
-    Button btnRegister;
-    ProgressBar progressbar;
-    Uri selectedImage;
-
+    private TextInputEditText etRegName;
+    private TextInputEditText etRegEmail;
+    private TextInputEditText etRegPassword;
+    private TextView tvLoginHere;
+    private Button btnRegister;
+    private ProgressBar progressbar;
+    private Uri selectedImage;
     private final Debouncer debouncer = new Debouncer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        this.initViews();
+        this.addFragmentBundleListener();
+        this.attachOnClickListeners();
+    }
 
+    private void initViews(){
         etRegName = findViewById(R.id.etRegName);
         etRegEmail = findViewById(R.id.etRegEmail);
         etRegPassword = findViewById(R.id.etRegPass);
         tvLoginHere = findViewById(R.id.tvLoginHere);
         btnRegister = findViewById(R.id.btnRegister);
         progressbar = findViewById(R.id.progressBar);
+    }
 
-        addFragmentBundleListener();
-
+    private void attachOnClickListeners(){
         btnRegister.setOnClickListener(view -> {
-            createUser();
+            String name = etRegName.getText().toString();
+            String email = etRegEmail.getText().toString();
+            String password = etRegPassword.getText().toString();
+            if (TextUtils.isEmpty(email)) {
+                etRegEmail.setError("Email cannot be empty");
+                etRegEmail.requestFocus();
+            } else if (TextUtils.isEmpty(password)) {
+                etRegPassword.setError("Password cannot be empty");
+                etRegPassword.requestFocus();
+            } else if (TextUtils.isEmpty(name)) {
+                etRegName.setError("Name cannot be empty");
+                etRegName.requestFocus();
+            } else if (selectedImage == null) {
+                Toast.makeText(this, "Add a profile pic!", Toast.LENGTH_SHORT).show();
+            } else {
+                debouncer.debounce(
+                        view,
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                createUser(view, email, password);
+                            }
+                        }
+                );
+            }
         });
 
         tvLoginHere.setOnClickListener(view -> {
@@ -72,67 +101,40 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void createUser() {
-        String name = etRegName.getText().toString();
-        String email = etRegEmail.getText().toString();
-        String password = etRegPassword.getText().toString();
+    private void createUser(View view, String email, String password) {
+        FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
+            @Override
+            public void onSuccess(String downloadUrl) {
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
+                Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
+                UserService.createUserAndUpdateUserProfile(
+                        email,
+                        password,
+                        profileUpdates,
+                        new DbEventHandler<String>() {
+                            @Override
+                            public void onSuccess(String o) {
+                                Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                            }
 
-        if (TextUtils.isEmpty(email)) {
-            etRegEmail.setError("Email cannot be empty");
-            etRegEmail.requestFocus();
-        } else if (TextUtils.isEmpty(password)) {
-            etRegPassword.setError("Password cannot be empty");
-            etRegPassword.requestFocus();
-        } else if (TextUtils.isEmpty(name)) {
-            etRegName.setError("Name cannot be empty");
-            etRegName.requestFocus();
-        } else if (selectedImage == null) {
-            Toast.makeText(this, "Add a profile pic!", Toast.LENGTH_SHORT).show();
-        } else {
-            debouncer.debounce(
-                    "REGISTER_USER",
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
-                                @Override
-                                public void onSuccess(String downloadUrl) {
-                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
-                                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
-                                    UserService.createUserAndUpdateUserProfile(
-                                            email,
-                                            password,
-                                            profileUpdates,
-                                            new DbEventHandler<String>() {
-                                                @Override
-                                                public void onSuccess(String o) {
-                                                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
-                                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                                }
-
-                                                @Override
-                                                public void onFailure(Exception e) {
-                                                    Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                    );
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    Toast.makeText(
-                                            RegisterActivity.this,
-                                            e.getMessage() != null ? e.getMessage().toString() : "Error registering",
-                                            Toast.LENGTH_LONG)
-                                            .show();
-                                }
-                            });
+                            @Override
+                            public void onFailure(Exception e) {
+                                Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-            );
+                );
+            }
 
-
-        }
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(
+                        RegisterActivity.this,
+                        e.getMessage() != null ? e.getMessage().toString() : "Error registering",
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
 }

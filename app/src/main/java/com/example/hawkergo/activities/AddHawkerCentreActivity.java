@@ -61,7 +61,7 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
-        if(bar != null){
+        if (bar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -71,7 +71,7 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
         this.addFragmentBundleListener();
     }
 
-    private void addFragmentBundleListener(){
+    private void addFragmentBundleListener() {
         getSupportFragmentManager().setFragmentResultListener("selectedImageString", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
@@ -143,9 +143,9 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
                                 validatePostalCodeField() &&
                                 validateOpeningHoursChips() &&
                                 validateNameField();
-                        if(isValid){
+                        if (isValid) {
                             debouncer.debounce(
-                                    "SUBMIT_NEW_HAWKER_CENTRE",
+                                    view,
                                     new Runnable() {
                                         @Override
                                         public void run() {
@@ -256,8 +256,8 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
         return isValid;
     }
 
-    private boolean validateSelectedImage(){
-        if(selectedImage == null){
+    private boolean validateSelectedImage() {
+        if (selectedImage == null) {
             Toast.makeText(AddHawkerCentreActivity.this, "Please select an image", Toast.LENGTH_SHORT).show();
         }
         return selectedImage != null;
@@ -266,68 +266,67 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
     private void onClickSubmitButton() {
 
 
-            String centreName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
+        String centreName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
 
-            centreName = nameFieldController.getText().toString();
-            formattedAddress = streetNameFieldController.getText().toString() + " " + streetNameFieldController.getText().toString() + ", S" + postalCodeFieldController.getText().toString();
-            if (selectedOpeningDays.size() == openingDaysChipsOptions.length) {
-                formattedOpeningDays = "Daily";
-            } else {
-                String lastElement = selectedOpeningDays.get(selectedOpeningDays.size() - 1);
-                StringBuilder formattedOpeningDaysBuilder = new StringBuilder("Opens every");
-                for (String i : selectedOpeningDays) {
-                    formattedOpeningDaysBuilder.append(" ").append(i);
-                    if (!i.equals(lastElement)) formattedOpeningDaysBuilder.append(",");
-                }
-                formattedOpeningDays = formattedOpeningDaysBuilder.toString();
+        centreName = nameFieldController.getText().toString();
+        formattedAddress = streetNameFieldController.getText().toString() + " " + streetNameFieldController.getText().toString() + ", S" + postalCodeFieldController.getText().toString();
+        if (selectedOpeningDays.size() == openingDaysChipsOptions.length) {
+            formattedOpeningDays = "Daily";
+        } else {
+            String lastElement = selectedOpeningDays.get(selectedOpeningDays.size() - 1);
+            StringBuilder formattedOpeningDaysBuilder = new StringBuilder("Opens every");
+            for (String i : selectedOpeningDays) {
+                formattedOpeningDaysBuilder.append(" ").append(i);
+                if (!i.equals(lastElement)) formattedOpeningDaysBuilder.append(",");
             }
+            formattedOpeningDays = formattedOpeningDaysBuilder.toString();
+        }
 
-            formattedOpeningTime = Integer.toString(openingHour) + ":" + Integer.toString(openingMinute) +
-                    " - " +
-                    Integer.toString(closingHour) + ":" + Integer.toString(closingMinute);
+        formattedOpeningTime = Integer.toString(openingHour) + ":" + Integer.toString(openingMinute) +
+                " - " +
+                Integer.toString(closingHour) + ":" + Integer.toString(closingMinute);
 
-            OpeningHours newOpeningHours = new OpeningHours(
-                    formattedOpeningDays,
-                    formattedOpeningTime
-            );
+        OpeningHours newOpeningHours = new OpeningHours(
+                formattedOpeningDays,
+                formattedOpeningTime
+        );
 
-            ArrayList<String> stallsID = new ArrayList<>();
+        ArrayList<String> stallsID = new ArrayList<>();
 
-            FirebaseStorageService.uploadImageUri(selectedImage,
-                    new DbEventHandler<String>() {
-                        @Override
-                        public void onSuccess(String downloadUrl) {
-                            HawkerCentre newHawkerCentre = new HawkerCentre(
-                                    formattedAddress,
-                                    centreName,
-                                    newOpeningHours,
-                                    downloadUrl,
-                                    stallsID
-                            );
-                            HawkerCentresService.addHawkerCentre(
-                                    newHawkerCentre,
-                                    new DbEventHandler<String>() {
-                                        @Override
-                                        public void onSuccess(String o) {
-                                            Intent toHawkerCentreListingPage = new Intent(AddHawkerCentreActivity.this, HawkerCentreActivity.class);
-                                            startActivity(toHawkerCentreListingPage);
-                                        }
-                                        @Override
-                                        public void onFailure(Exception e) {
-                                            Toast.makeText(AddHawkerCentreActivity.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
-                                        }
+        FirebaseStorageService.uploadImageUri(selectedImage,
+                new DbEventHandler<String>() {
+                    @Override
+                    public void onSuccess(String downloadUrl) {
+                        HawkerCentre newHawkerCentre = new HawkerCentre(
+                                formattedAddress,
+                                centreName,
+                                newOpeningHours,
+                                downloadUrl,
+                                stallsID
+                        );
+                        HawkerCentresService.addHawkerCentre(
+                                newHawkerCentre,
+                                new DbEventHandler<String>() {
+                                    @Override
+                                    public void onSuccess(String o) {
+                                        Intent toHawkerCentreListingPage = new Intent(AddHawkerCentreActivity.this, HawkerCentreActivity.class);
+                                        startActivity(toHawkerCentreListingPage);
                                     }
-                            );
-                        }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            Toast.makeText(AddHawkerCentreActivity.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
-                        }
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        Toast.makeText(AddHawkerCentreActivity.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                        );
                     }
-            );
 
-
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(AddHawkerCentreActivity.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
 
         submitButtonController.setEnabled(true);
