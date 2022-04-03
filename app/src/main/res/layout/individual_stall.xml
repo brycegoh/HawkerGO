@@ -21,11 +21,9 @@
             android:gravity="center"
             android:textSize="20dp"/>
 
-        <!--Image slider if there is more than one picture-->
-        <!--
         <com.denzcoskun.imageslider.ImageSlider
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
             app:auto_cycle="true"
             app:delay="0"
             app:period="3000"
@@ -36,23 +34,11 @@
             android:layout_margin="20dp"
             >
         </com.denzcoskun.imageslider.ImageSlider>
-        -->
-
-        <!-- picture with rounded rectangle edges -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/stall_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:layout_margin="20dp"
-            android:src="@drawable/test_stall_four"
-            app:shapeAppearanceOverlay="@style/roundimageview"
-            >
-        </com.google.android.material.imageview.ShapeableImageView>
 
         <LinearLayout
+
             android:paddingLeft="20dp"
+            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -134,7 +120,5 @@
             android:paddingHorizontal="20dp"
             >
         </androidx.recyclerview.widget.RecyclerView>
-
-
     </LinearLayout>
 </ScrollView>
