@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_alignParentTop="true"
         android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize">
@@ -15,7 +12,6 @@
             layout="@layout/toolbar"
             />
     </LinearLayout>
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -42,33 +38,6 @@
 
             </LinearLayout>
 
-
-<!--            <androidx.coordinatorlayout.widget.CoordinatorLayout-->
-<!--                android:id="@+id/image_view_container"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="10dp"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/image_view"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="300dp"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:contentDescription="Hawker Stall Photo"-->
-<!--                    android:src="@drawable/ic_baseline_insert_photo_24"-->
-<!--                    />-->
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/add_photo_button"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="bottom|end"-->
-<!--                    android:layout_margin="10dp"-->
-<!--                    android:adjustViewBounds="true"-->
-<!--                    android:src="@drawable/ic_baseline_add_a_photo_24" />-->
-<!--            </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
-
             <TextView
                 android:id="@+id/hawker_centre_title"
                 android:layout_width="wrap_content"
@@ -78,7 +47,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
-                android:text="@string/adding_a_stall_title" />
+                android:text="@string/adding_hawker_centre_title" />
 
             <EditText
                 android:id="@+id/name_field"
@@ -87,7 +56,7 @@
                 android:layout_below="@+id/hawker_centre_title"
                 android:layout_marginBottom="20dp"
                 android:autofillHints="Name"
-                android:hint="@string/name_field"
+                android:hint="@string/hawker_centre_name"
                 android:inputType="text" />
 
             <LinearLayout
@@ -99,41 +68,53 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/hash_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:text="@string/hash_tag"
-                    android:textAlignment="center" />
-
                 <EditText
-                    android:id="@+id/floor_field"
+                    android:id="@+id/street_number_field"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:autofillHints="Name"
-                    android:hint="@string/floor_field"
+                    android:hint="@string/street_number"
                     android:inputType="text" />
 
-                <TextView
-                    android:id="@+id/address_delimiter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:text="@string/unit_number_delimiter"
-                    android:textAlignment="center" />
-
                 <EditText
-                    android:id="@+id/unit_num_field"
+                    android:id="@+id/street_name_field"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:autofillHints="Name"
-                    android:hint="@string/unit_number_field"
+                    android:hint="@string/street_name"
                     android:inputType="text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/postal_code_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/address_field"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/postal_s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/postal_s"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/postal_code_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autofillHints="Name"
+                    android:hint="@string/postal_code"
+                    android:inputType="text" />
+
             </LinearLayout>
 
 
@@ -141,7 +122,7 @@
                 android:id="@+id/opening_hours_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/address_field"
+                android:layout_below="@+id/postal_code_container"
                 android:gravity="start"
                 android:orientation="horizontal">
 
@@ -215,124 +196,12 @@
                     android:text="@string/time_picker_button_title_closing_time" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/categories_chip_grp_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/time_selection_container"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/tags_title_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/select_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="@string/select_a_category" />
-
-                    <TextView
-                        android:id="@+id/select_category_error"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:textColor="@color/error_red" />
-
-                </LinearLayout>
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/categories_chip_group"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/add_more_category_chip"
-                    style="@style/CustomBoldChipStyle"
-                    android:text="Add more categories"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/add_more_categories"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
-                    <EditText
-                        android:id="@+id/add_more_categories_text_field"
-                        android:layout_width="0dp"
-                        android:layout_weight="5"
-                        android:layout_height="wrap_content"
-                        android:hint="Add more categories"
-                        />
-
-                    <Button
-                        android:id="@+id/add_more_categories_button"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:drawableLeft="@drawable/ic_baseline_add_24"
-                        android:layout_weight="1"/>
-
-                </LinearLayout>
-
-
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/fav_food_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:text="@string/add_your_favourite_food_items"
-                android:textAlignment="center"
-                android:layout_below="@+id/categories_chip_grp_container"/>
-
-            <LinearLayout
-                android:id="@+id/favourite_food_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/fav_food_title"
-                android:layout_marginBottom="2dp"
-                android:gravity="center"
-                android:orientation="vertical" />
-
-            <FrameLayout
-                android:id="@+id/add_more_button_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/favourite_food_container"
-                android:background="@drawable/dotted_border"
-                android:layout_marginBottom="20dp"
-                >
-                <Button
-                    android:id="@+id/add_more_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:text="Add more Food Items"
-                    android:textAlignment="center"
-                    />
-            </FrameLayout>
-
 
             <Button
                 android:id="@+id/submit_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/add_more_button_container"
+                android:layout_below="@+id/time_selection_container"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"

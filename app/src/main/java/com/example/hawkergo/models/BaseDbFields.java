@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class BaseDbFields {
     @DocumentId
-    public String id;
+    private String id;
     // @ServerTimestamp
     // public Date dateCreated;
     // @ServerTimestamp
@@ -25,4 +25,13 @@ public class BaseDbFields {
     //     updateDateUpdated();
     //     updateDateCreated();
     // }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerCentre;
+import com.example.hawkergo.utils.DownloadImageTask;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
 
     class HawkerCentreViewHolder extends RecyclerView.ViewHolder {
         private static final String TAG = "HawkerCentreViewHolder";
-        ImageView stallImage = null;
+        ImageView stallImage;
         TextView stallName;
         TextView stallAddress;
         TextView stallRating;
@@ -46,6 +47,7 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
             this.stallAddress = itemView.findViewById(R.id.stall_address);
             this.stallRating = itemView.findViewById(R.id.rating_number);
             this.stallReviews = itemView.findViewById(R.id.review_number);
+            this.stallImage = itemView.findViewById(R.id.stall_image);
 
             ImageView starIcon = itemView.findViewById(R.id.star_icon);
 
@@ -62,7 +64,6 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
     @NonNull
     @Override
     public HawkerCentreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: new view requested");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hawker_list_item, parent, false);
         return new HawkerCentreViewHolder(view);
     }
@@ -73,8 +74,10 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
     public void onBindViewHolder(@NonNull HawkerCentreViewHolder holder, int position) {
         HawkerCentre centreItem = mHawkerCentres.get(position);
 
-        holder.stallName.setText(centreItem.name);
-        holder.stallAddress.setText(centreItem.address);
+        holder.stallName.setText(centreItem.getName());
+        holder.stallAddress.setText(centreItem.getAddress());
+
+        new DownloadImageTask(holder.stallImage).execute(centreItem.getImageUrl());
 
 
     }
@@ -82,7 +85,6 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: called");
         if (mHawkerCentres == null) {
             return 0;
         } else {

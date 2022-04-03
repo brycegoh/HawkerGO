@@ -41,24 +41,25 @@ public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStall
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        if (reviews.get(position).name != null) {
-            holder.usernameText.setText(reviews.get(position).name);
+        if (reviews.get(position).getName() != null) {
+            holder.usernameText.setText(reviews.get(position).getName());
         } else {
             holder.usernameText.setText("Anonymous");
         }
-        holder.ratingText.setText(reviews.get(position).stars.toString());
-        holder.reviewTxt.setText(reviews.get(position).comment);
+        holder.ratingText.setText(reviews.get(position).getStars().toString());
+        holder.reviewTxt.setText(reviews.get(position).getComment());
+        //retrieve profile pic
         new DownloadImageTask(holder.userImage).execute(images.get(position));
         //set date format
         String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String date = simpleDateFormat.format(reviews.get(position).dateReviewed);
+        String date = simpleDateFormat.format(reviews.get(position).getDateReviewed());
         holder.reviewDate.setText(date);
     }
 
     @Override
     public int getItemCount() {
-        return reviews.size();
+        return reviews != null ? reviews.size() : 0;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
