@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="true">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -24,33 +19,13 @@
             />
     </LinearLayout>
 
-        <TextView
-            android:id="@+id/stallNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Jalan Tua Kong Mee Pok"
-            android:paddingTop="20dp"
-            android:gravity="center"
-            android:textSize="20dp"/>
+    <ScrollView
 
-        <com.denzcoskun.imageslider.ImageSlider
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
-            app:auto_cycle="true"
-            app:delay="0"
-            app:period="3000"
-            app:placeholder="@color/black"
-            app:error_image="@color/purple_700"
-            android:id="@+id/slider"
-            app:corner_radius="20"
-            android:layout_margin="20dp"
-            >
-        </com.denzcoskun.imageslider.ImageSlider>
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true">
 
         <LinearLayout
-
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MainActivity"
@@ -65,19 +40,19 @@
                 android:gravity="center"
                 android:textSize="20dp"/>
 
-
-            <!-- picture with rounded rectangle edges -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/stall_picture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
+            <com.denzcoskun.imageslider.ImageSlider
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                app:auto_cycle="true"
+                app:delay="0"
+                app:period="3000"
+                app:placeholder="@color/black"
+                app:error_image="@color/purple_700"
+                android:id="@+id/slider"
+                app:corner_radius="20"
                 android:layout_margin="20dp"
-                android:src="@drawable/test_stall_four"
-                app:shapeAppearanceOverlay="@style/roundimageview"
                 >
-            </com.google.android.material.imageview.ShapeableImageView>
+            </com.denzcoskun.imageslider.ImageSlider>
 
             <LinearLayout
                 android:paddingLeft="20dp"
@@ -165,14 +140,7 @@
 
 
         </LinearLayout>
-    
+    </ScrollView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/individual_stall_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            >
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
-</ScrollView>
+
+</LinearLayout>
