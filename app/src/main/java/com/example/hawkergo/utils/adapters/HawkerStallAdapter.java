@@ -64,8 +64,8 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
 
         holder.stallName.setText(stallItem.getName());
         holder.stallAddress.setText(stallItem.getAddress());
-        //TODO to remove harcoded val
-        holder.stallRating.setText("5");
+        Double avgRating = stallItem.getAverageReview();
+        holder.stallRating.setText(avgRating != null && avgRating != 0.0 ? avgRating.toString() : "No Rating");
 
         if(stallItem.getImageUrls().size() > 0){
             DownloadImageTask task = new DownloadImageTask(holder.stallImage);

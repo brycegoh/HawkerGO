@@ -28,6 +28,7 @@ import com.example.hawkergo.services.UserService;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 
 import com.example.hawkergo.utils.Constants;
+import com.example.hawkergo.utils.ui.Debouncer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -44,6 +45,7 @@ public class ReviewSubmissionActivity extends AuthenticatedActivity {
     private String selectedImageString;
     private String userDisplayName;
     private String hawkerStallID, hawkerCentreId, hawkerCentreName;
+    private Debouncer debouncer = new Debouncer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,38 +98,46 @@ public class ReviewSubmissionActivity extends AuthenticatedActivity {
             public void onClick(View view) {
                 reviewStars = ratingBar.getRating();
                 reviewContent = editText.getText().toString();
-
-                // get date reviewed = current date <Date>
                 Date currentDate = new Date();
                 Uri profilePic = UserService.getUserProfilePic();
                 String profilePicUrl = profilePic != null ? profilePic.toString() : null;
-                FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
-                    @Override
-                    public void onSuccess(String downloadUrl) {
-                        Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, downloadUrl, profilePicUrl);
-                        ReviewService.addReview(hawkerStallID, review, downloadUrl, new DbEventHandler<String>() {
+                debouncer.debounce(
+                        view,
+                        new Runnable() {
                             @Override
-                            public void onSuccess(String o) {
-                                Log.i(TAG, "Successfully added review into Firestore for: " + hawkerStallID);
-                                Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewSubmitted, Toast.LENGTH_LONG).show();
-                                ReviewSubmissionActivity.this.onBackPressed();
+                            public void run() {
+                                uploadImageAndReview(currentDate, profilePicUrl);
                             }
+                        }
+                );
+            }
+        });
+    }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                Log.e(TAG, "Failed to add review into Firestore for: " + hawkerStallID);
-                                Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewFailed, Toast.LENGTH_LONG).show();
-                            }
-                        });
+    private void uploadImageAndReview(Date currentDate, String profilePicUrl){
+        FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
+            @Override
+            public void onSuccess(String downloadUrl) {
+                Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, downloadUrl, profilePicUrl);
+                ReviewService.addReview(hawkerStallID, review, downloadUrl, new DbEventHandler<String>() {
+                    @Override
+                    public void onSuccess(String o) {
+                        Log.i(TAG, "Successfully added review into Firestore for: " + hawkerStallID);
+                        Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewSubmitted, Toast.LENGTH_LONG).show();
+                        ReviewSubmissionActivity.this.onBackPressed();
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-
+                        Log.e(TAG, "Failed to add review into Firestore for: " + hawkerStallID);
+                        Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewFailed, Toast.LENGTH_LONG).show();
                     }
                 });
+            }
 
-
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(ReviewSubmissionActivity.this, "Failed to upload Review. Please try again", Toast.LENGTH_SHORT).show();
             }
         });
     }
