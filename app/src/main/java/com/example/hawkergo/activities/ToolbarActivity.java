@@ -20,17 +20,17 @@ public class ToolbarActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflator = getMenuInflater();
         inflator.inflate(R.menu.actionbar_menu, menu);
-        MenuItem item = menu.findItem(R.id.logout_button);
+        MenuItem searchButton = menu.findItem(R.id.search_button);
+        searchButton.setVisible(false);
         if(UserService.getAuthenticatedUser() == null){
-            invalidateOptionsMenu();
-            item.setVisible(false);
+            MenuItem logoutButton = menu.findItem(R.id.logout_button);
+            logoutButton.setVisible(false);
         }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        System.out.println(item.getItemId());
         if(item.getItemId() == R.id.logout_button){
             UserService.logoutUser();
             startActivity(new Intent(this, MainActivity.class));
@@ -38,12 +38,12 @@ public class ToolbarActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void initToolbar(){
+    public void initToolbar(boolean hasBackButton){
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            bar.setDisplayHomeAsUpEnabled(hasBackButton);
         }
     }
 }

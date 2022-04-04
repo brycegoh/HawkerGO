@@ -57,7 +57,7 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hawker_centre);
-        super.initToolbar();
+        super.initToolbar(true);
         this.initViews();
         this.inflateOpeningDaysChips();
         this.attachButtonEventListeners();

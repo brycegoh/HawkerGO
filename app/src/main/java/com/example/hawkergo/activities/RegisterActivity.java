@@ -40,7 +40,7 @@ public class RegisterActivity extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        super.initToolbar();
+        super.initToolbar(true);
         this.initViews();
         this.addFragmentBundleListener();
         this.attachOnClickListeners();

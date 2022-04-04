@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class HawkerCentre extends BaseDbFields {
+public class HawkerCentre extends BaseDbFields implements Searchable {
     private String address, name, imageUrl;
     private OpeningHours openingHours;
     private  List<String> stallsID;

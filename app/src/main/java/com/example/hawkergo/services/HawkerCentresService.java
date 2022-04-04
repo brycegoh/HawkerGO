@@ -57,15 +57,16 @@ public class HawkerCentresService implements HawkerCentreQueryable {
 
     public static void searchAllHawkerCentres(String searchTerm, DbEventHandler<List<HawkerCentre>> eventHandler) {
         collectionRef
-                .whereGreaterThanOrEqualTo("name", searchTerm)
-                .whereLessThanOrEqualTo("name", searchTerm + "\uF7FF")
+                .whereGreaterThanOrEqualTo("name", searchTerm.toUpperCase())
+                .whereLessThanOrEqualTo("name", searchTerm.toLowerCase() + "\uF7FF")
+                .limit(5)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {
@@ -224,10 +225,6 @@ public class HawkerCentresService implements HawkerCentreQueryable {
                 eventHandler.onFailure(e);
             }
         });
-    }
-
-    public void exampleAct(){
-        Query q = HawkerCentresService.getCollectionRef().whereEqualTo("field", "vegetarian").whereEqualTo("asdas", "adadsd");
     }
 
     public static CollectionReference getCollectionRef() {
