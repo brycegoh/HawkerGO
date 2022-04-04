@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -62,7 +63,11 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                     }
                 }
         );
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         HawkerCentresService.getAllHawkerCentres(
                 new DbEventHandler<List<HawkerCentre>>() {
                     @Override
@@ -99,16 +104,9 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
 
                     @Override
                     public void onFailure(Exception e) {
-
+                        Toast.makeText(HawkerCentreActivity.this, "Failed to get hawker centres", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
-
-
-
-
-
-
-
     }
 }

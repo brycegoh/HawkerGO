@@ -97,6 +97,8 @@ public class HawkerStallsService implements HawkerStallQueryable {
      * @param eventHandler  Callback to handle on success or failure events
      */
     public static void getHawkerStallByID(String hawkerStallID, DbEventHandler<HawkerStall> eventHandler){
+        System.out.println("===========");
+        System.out.println(hawkerStallID);
         DocumentReference docRef = collectionRef.document(hawkerStallID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
