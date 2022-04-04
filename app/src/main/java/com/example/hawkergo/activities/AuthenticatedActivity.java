@@ -16,7 +16,7 @@ import com.example.hawkergo.R;
 import com.example.hawkergo.services.UserService;
 import com.google.firebase.auth.FirebaseUser;
 
-public class AuthenticatedActivity extends AppCompatActivity {
+public class AuthenticatedActivity extends ToolbarActivity {
 
     @Override
     protected void onStart() {
@@ -25,22 +25,6 @@ public class AuthenticatedActivity extends AppCompatActivity {
         if (user == null){
             startActivity(new Intent(this, MainActivity.class));
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflator = getMenuInflater();
-        inflator.inflate(R.menu.actionbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.logout_button){
-            UserService.logoutUser();
-            startActivity(new Intent(this, MainActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -18,8 +18,6 @@ import com.example.hawkergo.utils.DownloadImageTask;
 import java.util.List;
 
 public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapter.HawkerCentreViewHolder> {
-    private static final String TAG = "HawkerAdapter";
-
     private List<HawkerCentre> mHawkerCentres;
     private Context mContext;
 
@@ -29,7 +27,6 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
     }
 
     class HawkerCentreViewHolder extends RecyclerView.ViewHolder {
-        private static final String TAG = "HawkerCentreViewHolder";
         ImageView stallImage;
         TextView stallName;
         TextView stallAddress;
@@ -40,9 +37,6 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
 
         public HawkerCentreViewHolder(@NonNull View itemView) {
             super(itemView);
-
-
-            Log.d(TAG, "HawkerCentreViewHolder: starts");
             this.stallName = itemView.findViewById(R.id.stall_name);
             this.stallAddress = itemView.findViewById(R.id.stall_address);
             this.stallRating = itemView.findViewById(R.id.rating_number);

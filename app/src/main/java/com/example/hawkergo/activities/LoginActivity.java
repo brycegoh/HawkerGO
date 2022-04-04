@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validateEmail(){
         String email = etLoginEmail.getText().toString();
-        boolean isValid = !TextValidatorHelper.isNullOrEmpty(email);
+        boolean isValid = !TextValidatorHelper.isValidEmail(email);
         if (!isValid){
             etLoginEmail.setError("Email cannot be empty");
             etLoginEmail.requestFocus();

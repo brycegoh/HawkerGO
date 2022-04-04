@@ -5,10 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp"
     tools:context=".activities.RegisterActivity">
 
     <LinearLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize">
+        <include
+            layout="@layout/toolbar"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -36,6 +46,8 @@
     </LinearLayout>
 
     <LinearLayout
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -118,6 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:padding="10dp"
             android:text="Register"
             app:backgroundTint="@color/teal_700" />
 
@@ -147,6 +160,9 @@
         </LinearLayout>
 
         <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:padding="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
