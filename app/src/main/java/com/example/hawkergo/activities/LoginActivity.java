@@ -46,15 +46,24 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                debouncer.debounce(
-                        view,
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                loginUser();
+                Boolean[] validations = new Boolean[]{
+                        validateEmail(),
+                        validatePassword()
+                };
+                if(!Arrays.asList(validations).contains(false)){
+                    String email = etLoginEmail.getText().toString();
+                    String password = etLoginPassword.getText().toString();
+                    debouncer.debounce(
+                            view,
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginUser(email, password);
+                                }
                             }
-                        }
-                );
+                    );
+                }
+
 
             }
         });
@@ -66,7 +75,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validateEmail(){
         String email = etLoginEmail.getText().toString();
-        boolean isValid = !TextValidatorHelper.isValidEmail(email);
+        boolean isValid = !TextValidatorHelper.isNullOrEmpty(email) &&
+                TextValidatorHelper.isValidEmail(email);
         if (!isValid){
             etLoginEmail.setError("Email cannot be empty");
             etLoginEmail.requestFocus();
@@ -83,15 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         return isValid;
     }
 
-    private void loginUser(){
-        Boolean[] validations = new Boolean[]{
-                validateEmail(),
-                validatePassword()
-        };
-
-        if(!Arrays.asList(validations).contains(false)){
-            String email = etLoginEmail.getText().toString();
-            String password = etLoginPassword.getText().toString();
+    private void loginUser(String email, String password){
             UserService.loginUser(
                     email,
                     password,
@@ -108,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
             );
 
-        }
+
     }
 
 }

@@ -39,16 +39,17 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
     /**
      * On back navigate handlers
-     *
+     * <p>
      * Add extra String data:
-     *  1. hawkerCentreId
-     *  2. hawkerCentreName
-     * */
+     * 1. hawkerCentreId
+     * 2. hawkerCentreName
+     */
     @Override
     public void onBackPressed() {
+        System.out.println("======== BACK PRESSED");
         Intent resultIntent = new Intent();
         resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, hawkerCentreId);
-        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME,hawkerCentreName);
+        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
         setResult(Constants.ResultCodes.TO_HAWKER_STALL_LISTING, resultIntent);
         finish();
     }
@@ -87,7 +88,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
-        if(bar != null){
+        if (bar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -108,7 +109,8 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                 intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerStallId);
                 intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
                 intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerCentreId);
-                startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_TO_REVIEW_SUBMISSIONS);            }
+                startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_TO_REVIEW_SUBMISSIONS);
+            }
         });
 
         HawkerStallsService.getHawkerStallByID(
@@ -119,12 +121,21 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                         stallNameTV.setText(o.getName());
                         locationTV.setText(o.getAddress());
                         openingTV.setText(o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours());
-                        for (String url : o.getImageUrls())
-                        {
-                            slideModels.add(new SlideModel(url));
+                        if (o.getImageUrls().size() > 0) {
+                            for (String url : o.getImageUrls()) {
+                                if (url != null && url.trim().length() > 0) {
+                                    slideModels.add(new SlideModel(url));
+                                }
+
+                            }
+                            System.out.println("==========================");
+                            System.out.println(imageSlider.getId());
+                            System.out.println(slideModels.toString());
+                            imageSlider.setImageList(slideModels, true);
                         }
-                        imageSlider.setImageList(slideModels,true);
+
                     }
+
                     @Override
                     public void onFailure(Exception e) {
                     }
@@ -137,7 +148,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                     @Override
                     public void onSuccess(List<Review> o) {
                         ArrayList<Review> reviews = (ArrayList<Review>) o;
-                        if(reviews != null){
+                        if (reviews != null) {
                             Double sum = 0.0;
                             for (Review review : o) {
                                 //if (review.getProfilePicUrl() == null) {

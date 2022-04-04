@@ -1,6 +1,7 @@
 package com.example.hawkergo.utils.textValidator;
 
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.TextView;
 
 import java.util.regex.Matcher;
@@ -13,10 +14,7 @@ public class TextValidatorHelper {
     }
 
     public static boolean isValidEmail(String string){
-        final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-        Matcher matcher = pattern.matcher(string);
-        return matcher.matches();
+        return Patterns.EMAIL_ADDRESS.matcher(string).matches();
     }
 
     public static boolean isNullOrEmpty(String string){
