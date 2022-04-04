@@ -147,8 +147,10 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                                 double stars = review.getStars();
                                 sum += stars;
                             }
+
                             Double avg = sum / o.size();
-                            ratingTV.setText(avg.toString());
+                            String result = String.format("%.1f", avg);
+                            ratingTV.setText(result.toString());
                         }
                         //throws the card views and all into the activity main
                         IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(getApplicationContext(), reviews, imagesURL);
