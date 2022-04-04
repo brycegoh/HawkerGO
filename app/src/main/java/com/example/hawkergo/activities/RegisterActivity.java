@@ -25,7 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends ToolbarActivity {
 
     private TextInputEditText etRegName;
     private TextInputEditText etRegEmail;
@@ -40,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        super.initToolbar();
         this.initViews();
         this.addFragmentBundleListener();
         this.attachOnClickListeners();
