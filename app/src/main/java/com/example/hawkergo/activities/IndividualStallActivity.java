@@ -1,7 +1,6 @@
 package com.example.hawkergo.activities;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,9 +10,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Review;
@@ -29,12 +29,12 @@ import java.util.List;
 public class IndividualStallActivity extends AuthenticatedActivity {
 
     List<String> imagesURL = new ArrayList<>();
+    List<SlideModel> slideModels = new ArrayList<>();
 
-    int[] images = {R.drawable.user, R.drawable.user};
     RecyclerView recyclerView;
     TextView stallNameTV, ratingTV, locationTV, openingTV;
-    ImageView stall_Image;
     Button btnAddReview;
+    ImageSlider imageSlider;
     private String hawkerStallId, hawkerCentreId, hawkerCentreName;
 
     /**
@@ -79,7 +79,6 @@ public class IndividualStallActivity extends AuthenticatedActivity {
         hawkerCentreName = hawkerCentreName == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME) : hawkerCentreName;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,16 +92,14 @@ public class IndividualStallActivity extends AuthenticatedActivity {
         }
 
         this.handleIntent();
-        imagesURL.add("https://firebasestorage.googleapis.com/v0/b/hawkergo-cfe05.appspot.com/o/image%3A31?alt=media&token=d5cd8838-fa25-4131-9399-3f58a1cac6aa");
 
         recyclerView = findViewById(R.id.individual_stall_recycler);
         ratingTV = findViewById(R.id.ratingTextView);
         locationTV = findViewById(R.id.locationTextView);
         openingTV = findViewById(R.id.openingHoursTextView);
         stallNameTV = findViewById(R.id.stallNameTextView);
-        stall_Image = findViewById(R.id.stall_picture);
+        imageSlider = findViewById(R.id.slider);
         btnAddReview = findViewById(R.id.btnAddNewReview);
-
 
         btnAddReview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +119,11 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                         stallNameTV.setText(o.getName());
                         locationTV.setText(o.getAddress());
                         openingTV.setText(o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours());
+                        for (String url : o.getImageUrls())
+                        {
+                            slideModels.add(new SlideModel(url));
+                        }
+                        imageSlider.setImageList(slideModels,true);
                     }
                     @Override
                     public void onFailure(Exception e) {
@@ -138,6 +140,10 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                         if(reviews != null){
                             Double sum = 0.0;
                             for (Review review : o) {
+                                //if (review.getProfilePicUrl() == null) {
+                                //    imagesURL.add()
+                                //}
+                                imagesURL.add(review.getProfilePicUrl());
                                 double stars = review.getStars();
                                 sum += stars;
                             }
@@ -148,7 +154,6 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                         IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(getApplicationContext(), reviews, imagesURL);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         recyclerView.setAdapter(individualStallAdapter);
-
                     }
 
                     @Override
