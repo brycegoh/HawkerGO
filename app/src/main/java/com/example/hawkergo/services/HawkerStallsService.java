@@ -2,6 +2,7 @@ package com.example.hawkergo.services;
 
 import androidx.annotation.NonNull;
 
+import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.interfaces.HawkerStallQueryable;
@@ -24,6 +25,10 @@ import java.util.Map;
 public class HawkerStallsService implements HawkerStallQueryable {
     private static final String collectionId = FirebaseHelper.CollectionIds.HAWKER_STALLS;
     private static final CollectionReference collectionRef = FirebaseHelper.getCollectionReference(collectionId);
+
+    public static CollectionReference getCollectionRef(){
+        return collectionRef;
+    }
 
     /**
      * Adds hawker stall into hawkerStall collection
@@ -97,8 +102,6 @@ public class HawkerStallsService implements HawkerStallQueryable {
      * @param eventHandler  Callback to handle on success or failure events
      */
     public static void getHawkerStallByID(String hawkerStallID, DbEventHandler<HawkerStall> eventHandler){
-        System.out.println("===========");
-        System.out.println(hawkerStallID);
         DocumentReference docRef = collectionRef.document(hawkerStallID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -146,13 +149,13 @@ public class HawkerStallsService implements HawkerStallQueryable {
         });
     };
 
-    public static void filterHawkerCentre(Query query , DbEventHandler<List<HawkerStall>> eventHandler) {
+    public static void filterHawkerStalls(Query query , DbEventHandler<List<HawkerStall>> eventHandler) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         List<HawkerStall> hawkerStallList = querySnapshot.toObjects(HawkerStall.class);
                         eventHandler.onSuccess(hawkerStallList);
                     } else {
@@ -163,6 +166,36 @@ public class HawkerStallsService implements HawkerStallQueryable {
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                eventHandler.onFailure(e);
+            }
+        });
+    }
+
+    public static void searchAllHawkerStalls(String hawkerCentreId, String searchTerm, DbEventHandler<List<HawkerStall>> eventHandler) {
+        collectionRef
+                .whereEqualTo("hawkerCentreId", hawkerCentreId)
+                .whereGreaterThanOrEqualTo("name", searchTerm.toUpperCase())
+                .whereLessThanOrEqualTo("name", searchTerm.toLowerCase() + "\uF7FF")
+                .limit(5)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null) {
+                                List<HawkerStall> hawkerStallList = querySnapshot.toObjects(HawkerStall.class);
+                                eventHandler.onSuccess(hawkerStallList);
+                            } else {
+                                eventHandler.onSuccess(null);
+                            }
+                        } else {
+                            eventHandler.onFailure(task.getException());
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 eventHandler.onFailure(e);

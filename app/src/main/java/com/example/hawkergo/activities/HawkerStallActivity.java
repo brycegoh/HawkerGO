@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.R;
 import com.example.hawkergo.fragments.FilterDialogFragment;
+import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Tags;
+import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.HawkerStallsService;
 import com.example.hawkergo.services.TagsService;
@@ -36,9 +38,9 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HawkerStallActivity extends AuthenticatedActivity implements FilterDialogFragment.MyDialogListener, View.OnClickListener {
+public class HawkerStallActivity extends SearchableActivity<HawkerStall> implements FilterDialogFragment.MyDialogListener, View.OnClickListener {
     private static final String TAG = "HawkerStallActivity";
-    private List<HawkerStall> hawkerStallList = new ArrayList<>();
+    private List<HawkerStall> hawkerStallList;
     private HawkerStallAdapter mHawkerStallAdapter;
     private String hawkerCentreId;
     private ImageButton filterButton;
@@ -48,8 +50,6 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private List<String> filterList = new ArrayList<>();
     private String hawkerCentreName;
-    private final CollectionReference collectionRef =  db.collection(FirebaseHelper.CollectionIds.HAWKER_STALLS);
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -66,18 +66,39 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
-
-        Toolbar toolbar = findViewById(R.id.action_bar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        if(bar != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
+        super.initSearchViews();
+        super.initToolbar(true);
         this.initViews();
         this.handleIntentExtraData();
         this.attachOnClickListeners();
         this.initViewsText();
+
+        hawkerStallList = new ArrayList<>();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.hawker_stall_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mHawkerStallAdapter = new HawkerStallAdapter(this, hawkerStallList);
+        recyclerView.setAdapter(mHawkerStallAdapter);
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), recyclerView,new RecyclerItemClickListener.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(HawkerStallActivity.this, IndividualStallActivity.class);
+                        HawkerStall currentHawkerStall = hawkerStallList.get(position);
+                        String centreId = currentHawkerStall.getHawkerCentreId();
+                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, centreId);
+                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
+                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, currentHawkerStall.getId());
+                        startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                    }
+                })
+        );
+
     }
 
     @Override
@@ -140,7 +161,10 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     }
 
     private void queryDbAndUpdateRecyclerView(){
-        Query stallColRef = collectionRef;
+        if(hawkerStallList == null){
+            hawkerStallList = new ArrayList<>();
+        }
+        Query stallColRef = HawkerStallsService.getCollectionRef();
         updateRecyclerView(stallColRef);
     }
 
@@ -151,14 +175,14 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
         filterList.remove(chip.getText().toString());
         Query filteredColRef;
         if (filterList.size() > 0) {
-            filteredColRef = collectionRef.whereArrayContainsAny("tags", filterList);
+            filteredColRef = HawkerStallsService.getCollectionRef().whereArrayContainsAny("tags", filterList);
         } else {
             // If there are no filters, retrieve all hawker stalls
-            filteredColRef = collectionRef.whereEqualTo("hawkerCentreId", hawkerCentreId);
+            filteredColRef = HawkerStallsService.getCollectionRef().whereEqualTo("hawkerCentreId", hawkerCentreId);
         }
         updateRecyclerView(filteredColRef);
     }
-    final Debouncer debouncer = new Debouncer();
+
     @Override
     public void finish(List<String> result) {
         filterChipGroup.removeAllViews();
@@ -175,15 +199,14 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                 filterChipGroup.addView(chip);
             }
 
-            Query filteredColRef = collectionRef.whereArrayContainsAny("tags", result);
+            Query filteredColRef = HawkerStallsService.getCollectionRef().whereArrayContainsAny("tags", result);
 
             updateRecyclerView(filteredColRef);
         }
     }
 
     private void updateRecyclerView(Query query) {
-        System.out.println(query.toString());
-        HawkerStallsService.filterHawkerCentre(
+        HawkerStallsService.filterHawkerStalls(
                 query.whereEqualTo("hawkerCentreId", hawkerCentreId),
                 new DbEventHandler<List<HawkerStall>>() {
                     @Override
@@ -191,32 +214,10 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                         if(hawkerStallList != null && hawkerStallList.size() > 0){
                             hawkerStallList.clear();
                         }
-                        hawkerStallList = hawkerStallsFromDb;
-                        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.hawker_stall_recycler_view);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        mHawkerStallAdapter = new HawkerStallAdapter(getApplicationContext(), hawkerStallList);
-                        recyclerView.setAdapter(mHawkerStallAdapter);
-
-                        recyclerView.addOnItemTouchListener(
-                                new RecyclerItemClickListener(getApplicationContext(), recyclerView,new RecyclerItemClickListener.OnItemClickListener() {
-
-                                    @Override
-                                    public void onItemClick(View view, int position) {
-                                        Intent intent = new Intent(HawkerStallActivity.this, IndividualStallActivity.class);
-                                        HawkerStall currentHawkerStall = hawkerStallList.get(position);
-                                        String centreId = currentHawkerStall.getHawkerCentreId();
-                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, centreId);
-                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
-                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, currentHawkerStall.getId());
-                                        startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM);
-                                    }
-
-                                    @Override
-                                    public void onLongItemClick(View view, int position) {
-                                    }
-                                })
-                        );
-
+                        System.out.println(hawkerStallsFromDb);
+                        System.out.println("=================");
+                        hawkerStallList.addAll(hawkerStallsFromDb);
+                        mHawkerStallAdapter.notifyDataSetChanged();
                     }
                     @Override
                     public void onFailure(Exception e) {
@@ -225,4 +226,40 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                 }
         );
     }
+
+    @Override
+    protected String onSearchResultItemClick(HawkerStall selectedHawkerStall){
+        hawkerStallList.clear();
+        hawkerStallList.add(selectedHawkerStall);
+        mHawkerStallAdapter.notifyDataSetChanged();
+        return selectedHawkerStall.getName();
+    }
+
+    @Override
+    protected void resetDataOnEmptySearchSubmit(){
+        queryDbAndUpdateRecyclerView();
+    }
+
+    @Override
+    protected void onSearchBoxTextChange(String s){
+        HawkerStallsService.searchAllHawkerStalls(
+                hawkerCentreId,
+                s,
+                new DbEventHandler<List<HawkerStall>>() {
+                    @Override
+                    public void onSuccess(List<HawkerStall> o) {
+                        HawkerStallActivity.super.onSearchBoxTextChange(o);
+                        hawkerStallList.clear();
+                        hawkerStallList.addAll(o);
+                        mHawkerStallAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(HawkerStallActivity.this, "Failed to get hawker stalls. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.example.hawkergo.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +25,9 @@ import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.utils.ui.Debouncer;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 
 public class RegisterActivity extends ToolbarActivity {
@@ -103,7 +108,18 @@ public class RegisterActivity extends ToolbarActivity {
     }
 
     private void createUser(View view, String email, String password) {
-        FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
+
+        Bitmap bmp = null;
+        try {
+            bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+        byte[] data = baos.toByteArray();
+
+        FirebaseStorageService.uploadImage(getContentResolver(), selectedImage,true, 25, new DbEventHandler<String>() {
             @Override
             public void onSuccess(String downloadUrl) {
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();

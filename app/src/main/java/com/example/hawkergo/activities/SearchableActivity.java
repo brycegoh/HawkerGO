@@ -84,7 +84,7 @@ public abstract class SearchableActivity <T extends Searchable> extends ToolbarA
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         T selecteditem = searchResults.get(position);
                         String toReplace = onSearchResultItemClick(selecteditem);
-                        searchView.setQuery(toReplace, true);
+                        searchView.setQuery(toReplace, false);
                         searchView.clearFocus();
                         searchResultsListView.setVisibility(View.GONE);
                     }

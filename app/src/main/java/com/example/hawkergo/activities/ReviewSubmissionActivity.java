@@ -115,7 +115,7 @@ public class ReviewSubmissionActivity extends AuthenticatedActivity {
     }
 
     private void uploadImageAndReview(Date currentDate, String profilePicUrl){
-        FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
+        FirebaseStorageService.uploadImage(getContentResolver(), selectedImage, true, 60, new DbEventHandler<String>() {
             @Override
             public void onSuccess(String downloadUrl) {
                 Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, downloadUrl, profilePicUrl);
