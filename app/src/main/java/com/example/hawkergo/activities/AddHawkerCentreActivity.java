@@ -286,7 +286,7 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
 
         ArrayList<String> stallsID = new ArrayList<>();
 
-        FirebaseStorageService.uploadImage( getContentResolver(), selectedImage, true, 60,
+        FirebaseStorageService.uploadImage( getContentResolver(), selectedImage, true, 40,
                 new DbEventHandler<String>() {
                     @Override
                     public void onSuccess(String downloadUrl) {

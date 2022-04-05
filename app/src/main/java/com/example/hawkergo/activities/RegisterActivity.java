@@ -119,7 +119,7 @@ public class RegisterActivity extends ToolbarActivity {
         bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
         byte[] data = baos.toByteArray();
 
-        FirebaseStorageService.uploadImage(getContentResolver(), selectedImage,true, 25, new DbEventHandler<String>() {
+        FirebaseStorageService.uploadImage(getContentResolver(), selectedImage,true, 15, new DbEventHandler<String>() {
             @Override
             public void onSuccess(String downloadUrl) {
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();
