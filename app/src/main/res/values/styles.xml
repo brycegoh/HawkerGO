@@ -36,10 +36,49 @@
         <item name="rippleColor">@color/white_opacity10</item>
     </style>
 
-    <!-- can be used to create rounded edges pictures -->
     <style name = "roundimageview" parent ="">
         <item name = "cornerFamily">rounded</item>
         <item name="cornerSize">20dp</item>
         <item name="color">@color/white</item>
     </style>
+
+    <style name="button1" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/green_1</item>
+    </style>
+
+    <style name="hawkerTextLogo" parent="Widget.MaterialComponents.TextView">
+        <item name="fontFamily">casual</item>
+        <item name="android:textColor">@color/teal_700</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="header1" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="boldHeader1" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/teal_700</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+    <style name="boldHeader2" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/teal_700</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="boldColoredHeader1" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/teal_700</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="boldColoredHeader2" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/teal_700</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+<!--    <style name="BoldedText" parent="Button"-->
+    
+    
 </resources>

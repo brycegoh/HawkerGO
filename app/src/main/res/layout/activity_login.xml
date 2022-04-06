@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp"
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:background="?colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.4"
@@ -16,17 +16,17 @@
         android:orientation="horizontal">
 
         <TextView
+            android:paddingLeft="24dp"
             android:id="@+id/heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:fontFamily="casual"
             android:text="HAWKER"
-            android:textColor="@color/teal_700"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+            style="@style/hawkerTextLogo"
+            />
 
         <ImageView
+            android:paddingRight="24dp"
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,30 +36,35 @@
     </LinearLayout>
 
     <LinearLayout
+        android:background="?colorSecondary"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.6"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:layout_marginTop="25dp">
+        android:paddingTop="24dp">
 
         <TextView
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Ready to Makan?"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/teal_700"
+            style="@style/boldColoredHeader1"
             android:gravity="center_horizontal"
             android:layout_marginVertical="16dp"/>
 
 
         <com.google.android.material.textfield.TextInputLayout
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             android:layout_width="match_parent"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
                 android:id="@+id/etLoginEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,6 +74,9 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
+
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             android:layout_width="match_parent"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_height="wrap_content"
@@ -82,18 +90,20 @@
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:text="Login"
-            app:backgroundTint="@color/teal_700" />
+            style="@style/button1"
+            android:layout_margin="24dp"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -107,11 +117,10 @@
                 android:id="@+id/tvRegisterHere"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:text="Register here"
-                android:textColor="@color/teal_700"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+                style="@style/boldColoredHeader2"
+                />
 
         </LinearLayout>
 
