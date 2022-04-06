@@ -1,4 +1,4 @@
-package com.example.hawkergo.utils.adapters;
+package com.example.hawkergo.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

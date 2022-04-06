@@ -1,7 +1,6 @@
-package com.example.hawkergo.utils.adapters;
+package com.example.hawkergo.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

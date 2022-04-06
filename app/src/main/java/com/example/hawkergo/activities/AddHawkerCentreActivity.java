@@ -1,8 +1,6 @@
 package com.example.hawkergo.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.TimePickerDialog;
@@ -18,18 +16,18 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.services.FirebaseStorageService;
-import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.example.hawkergo.utils.ui.Debouncer;
+import com.example.hawkergo.utils.TextValidatorHelper;
+import com.example.hawkergo.utils.Debouncer;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 

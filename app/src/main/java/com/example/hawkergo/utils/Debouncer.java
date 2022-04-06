@@ -1,4 +1,4 @@
-package com.example.hawkergo.utils.ui;
+package com.example.hawkergo.utils;
 
 import android.view.View;
 

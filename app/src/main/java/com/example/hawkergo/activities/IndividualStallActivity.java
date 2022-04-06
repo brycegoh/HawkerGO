@@ -15,14 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Review;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.HawkerStallsService;
 import com.example.hawkergo.services.ReviewService;
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
-import com.example.hawkergo.utils.adapters.SliderViewPagerAdapter;
+import com.example.hawkergo.adapters.IndividualStallAdapter;
+import com.example.hawkergo.adapters.SliderViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,9 +127,10 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                         @Override
                         public void onSuccess(HawkerStall o) {
                             hawkerStall = o;
+                            String formattedOpeningHours = o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours();
                             stallNameTV.setText(o.getName());
                             locationTV.setText(o.getAddress());
-                            openingTV.setText(o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours());
+                            openingTV.setText(formattedOpeningHours);
                             if (o.getImageUrls().size() > 0) {
                                 for (String url : o.getImageUrls()) {
                                     if (url != null && url.trim().length() > 0) {

@@ -12,15 +12,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 
 import com.example.hawkergo.MainActivity;
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.ToolbarActivity;
 import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.services.UserService;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
-import com.example.hawkergo.utils.ui.Debouncer;
+import com.example.hawkergo.utils.Debouncer;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.UserProfileChangeRequest;
 

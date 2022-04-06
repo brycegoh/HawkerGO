@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
@@ -30,15 +31,13 @@ import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.services.TagsService;
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.example.hawkergo.utils.ui.Debouncer;
-import com.example.hawkergo.utils.ui.DynamicEditTextManager;
+import com.example.hawkergo.utils.TextValidatorHelper;
+import com.example.hawkergo.utils.Debouncer;
+import com.example.hawkergo.activities.helpers.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
