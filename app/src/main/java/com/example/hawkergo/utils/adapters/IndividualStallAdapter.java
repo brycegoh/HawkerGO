@@ -56,7 +56,8 @@ public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStall
             holder.reviewTxt.setText(reviews.get(position).getComment());
         }
         if(images != null && images.size() > 0){
-            DownloadImageTask task = new DownloadImageTask(holder.userImage);
+            DownloadImageTask task = new DownloadImageTask(holder.userImage, context);
+
             task.execute(images.get(position));
         }
         //set date format

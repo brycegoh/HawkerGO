@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +14,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.hawkergo.R;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Review;
@@ -23,6 +22,7 @@ import com.example.hawkergo.services.HawkerStallsService;
 import com.example.hawkergo.services.ReviewService;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.adapters.IndividualStallAdapter;
+import com.example.hawkergo.utils.adapters.SliderViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +30,14 @@ import java.util.List;
 public class IndividualStallActivity extends AuthenticatedActivity {
 
     List<String> imagesURL = new ArrayList<>();
-    List<SlideModel> slideModels = new ArrayList<>();
+    List<String> stallImagesURL = new ArrayList<>();
 
     RecyclerView recyclerView;
     TextView stallNameTV, ratingTV, locationTV, openingTV;
     HawkerStall hawkerStall;
     Button btnAddReview;
-    ImageSlider imageSlider;
+    ViewPager sliderViewPager;
+    SliderViewPagerAdapter sliderViewPagerAdapter;
     private String hawkerStallId, hawkerCentreId, hawkerCentreName;
 
     /**
@@ -100,8 +101,8 @@ public class IndividualStallActivity extends AuthenticatedActivity {
         locationTV = findViewById(R.id.locationTextView);
         openingTV = findViewById(R.id.openingHoursTextView);
         stallNameTV = findViewById(R.id.stallNameTextView);
-        imageSlider = findViewById(R.id.slider);
         btnAddReview = findViewById(R.id.btnAddNewReview);
+        sliderViewPager = (ViewPager) findViewById(R.id.viewPagerSlider);
 
         btnAddReview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,36 +116,39 @@ public class IndividualStallActivity extends AuthenticatedActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        HawkerStallsService.getHawkerStallByID(
-                hawkerStallId,
-                new DbEventHandler<HawkerStall>() {
-                    @Override
-                    public void onSuccess(HawkerStall o) {
-                        hawkerStall = o;
-                        stallNameTV.setText(o.getName());
-                        locationTV.setText(o.getAddress());
-                        openingTV.setText(o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours());
-                        if (o.getImageUrls().size() > 0) {
-                            for (String url : o.getImageUrls()) {
-                                if (url != null && url.trim().length() > 0) {
-                                    slideModels.add(new SlideModel(url));
-                                }
-                            }
-                            imageSlider.setImageList(slideModels, true);
-                        }
-                        IndividualStallActivity.this.getAllReviews();
-                    }
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(IndividualStallActivity.this, "Failed to get hawker centres. Please try again", Toast.LENGTH_SHORT).show();
+        @Override
+        protected void onResume() {
+            super.onResume();
+            HawkerStallsService.getHawkerStallByID(
+                    hawkerStallId,
+                    new DbEventHandler<HawkerStall>() {
+                        @Override
+                        public void onSuccess(HawkerStall o) {
+                            hawkerStall = o;
+                            stallNameTV.setText(o.getName());
+                            locationTV.setText(o.getAddress());
+                            openingTV.setText(o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours());
+                            if (o.getImageUrls().size() > 0) {
+                                for (String url : o.getImageUrls()) {
+                                    if (url != null && url.trim().length() > 0) {
+                                        stallImagesURL.add(url);
+                                    }
+                                }
+                                sliderViewPagerAdapter = new SliderViewPagerAdapter(getApplicationContext(), stallImagesURL);
+                                sliderViewPager.setAdapter(sliderViewPagerAdapter);
+                            }
+
+                            IndividualStallActivity.this.getAllReviews();
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(IndividualStallActivity.this, "Failed to get Reviews. Please try again", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
-                }
-        );
-    }
+            );
+        }
 
     private void getAllReviews(){
         ReviewService.getAllReviews(
@@ -168,7 +172,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                     public void onFailure(Exception e) {
                         Toast.makeText(IndividualStallActivity.this, "Failed to get Reviews. Please try again", Toast.LENGTH_SHORT).show();
                     }
-                }
-        );
-    }
+                        }
+                );
+            }
 }

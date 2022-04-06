@@ -71,7 +71,7 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
         holder.stallName.setText(centreItem.getName());
         holder.stallAddress.setText(centreItem.getAddress());
 
-        new DownloadImageTask(holder.stallImage).execute(centreItem.getImageUrl());
+        new DownloadImageTask(holder.stallImage, mContext).execute(centreItem.getImageUrl());
 
 
     }
