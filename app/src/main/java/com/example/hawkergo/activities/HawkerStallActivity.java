@@ -78,6 +78,11 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
         this.handleIntentExtraData();
         this.attachOnClickListeners();
         this.initViewsText();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         this.queryDbAndUpdateRecyclerView();
     }
 

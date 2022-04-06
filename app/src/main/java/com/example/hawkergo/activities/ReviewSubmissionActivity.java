@@ -101,21 +101,16 @@ public class ReviewSubmissionActivity extends AuthenticatedActivity {
                 Date currentDate = new Date();
                 Uri profilePic = UserService.getUserProfilePic();
                 String profilePicUrl = profilePic != null ? profilePic.toString() : null;
-                Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, profilePicUrl, selectedImageString);
-
                 FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
                     @Override
                     public void onSuccess(String downloadUrl) {
+                        Review review = new Review(userDisplayName, reviewContent, reviewStars, currentDate, hawkerStallID, downloadUrl, profilePicUrl);
                         ReviewService.addReview(hawkerStallID, review, downloadUrl, new DbEventHandler<String>() {
                             @Override
                             public void onSuccess(String o) {
                                 Log.i(TAG, "Successfully added review into Firestore for: " + hawkerStallID);
                                 Toast.makeText(ReviewSubmissionActivity.this, R.string.reviewSubmitted, Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(ReviewSubmissionActivity.this, IndividualStallActivity.class);
-                                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerStallID);
-                                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
-                                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerCentreId);
-                                startActivity(intent);
+                                ReviewSubmissionActivity.this.onBackPressed();
                             }
 
                             @Override

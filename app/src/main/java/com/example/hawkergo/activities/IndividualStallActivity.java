@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.models.SlideModel;
@@ -39,14 +40,13 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
     /**
      * On back navigate handlers
-     * <p>
+     *
      * Add extra String data:
      * 1. hawkerCentreId
      * 2. hawkerCentreName
      */
     @Override
     public void onBackPressed() {
-        System.out.println("======== BACK PRESSED");
         Intent resultIntent = new Intent();
         resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, hawkerCentreId);
         resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
@@ -82,6 +82,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("ON CREATE CALLED === ==== === ===== ==== ===== === ===");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_stall);
 
@@ -108,11 +109,15 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                 Intent intent = new Intent(IndividualStallActivity.this, ReviewSubmissionActivity.class);
                 intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerStallId);
                 intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
-                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerCentreId);
+                intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, hawkerCentreId);
                 startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_TO_REVIEW_SUBMISSIONS);
             }
         });
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         HawkerStallsService.getHawkerStallByID(
                 hawkerStallId,
                 new DbEventHandler<HawkerStall>() {
@@ -128,9 +133,6 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                                 }
 
                             }
-                            System.out.println("==========================");
-                            System.out.println(imageSlider.getId());
-                            System.out.println(slideModels.toString());
                             imageSlider.setImageList(slideModels, true);
                         }
 
@@ -138,6 +140,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
                     @Override
                     public void onFailure(Exception e) {
+                        Toast.makeText(IndividualStallActivity.this, "Failed to get hawker centres. Please try again", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -151,9 +154,6 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                         if (reviews != null) {
                             Double sum = 0.0;
                             for (Review review : o) {
-                                //if (review.getProfilePicUrl() == null) {
-                                //    imagesURL.add()
-                                //}
                                 imagesURL.add(review.getProfilePicUrl());
                                 double stars = review.getStars();
                                 sum += stars;
@@ -171,7 +171,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
                     @Override
                     public void onFailure(Exception e) {
-
+                        Toast.makeText(IndividualStallActivity.this, "Failed to get Reviews. Please try again", Toast.LENGTH_SHORT).show();
                     }
                 }
         );

@@ -20,9 +20,11 @@
     </LinearLayout>
 
     <ScrollView
-
+        android:layout_marginBottom="10dp"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
         android:fillViewport="true">
 
         <LinearLayout
@@ -59,29 +61,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/star_icon"></ImageView>
+                    android:src="@drawable/star_icon" />
                 <TextView
                     android:id="@+id/ratingTextView"
-                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="4.5" />
+                />
             </LinearLayout>
 
             <LinearLayout
-
-                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
                 android:paddingTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/location_pin"></ImageView>
+                    android:src="@drawable/location_pin" />
                 <TextView
                     android:id="@+id/locationTextView"
                     android:paddingLeft="10dp"
@@ -90,18 +93,19 @@
                     android:text="location" />
             </LinearLayout>
             <LinearLayout
-                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
                 android:paddingTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/clock"></ImageView>
+                    android:src="@drawable/clock" />
                 <TextView
                     android:id="@+id/openingHoursTextView"
-                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Opening Hours:" />
@@ -131,14 +135,14 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:minHeight="300dp"
                 android:id="@+id/individual_stall_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:paddingHorizontal="20dp"
+                android:paddingBottom="30dp"
                 >
             </androidx.recyclerview.widget.RecyclerView>
-
-
         </LinearLayout>
     </ScrollView>
 
