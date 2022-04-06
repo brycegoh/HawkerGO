@@ -34,6 +34,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
     RecyclerView recyclerView;
     TextView stallNameTV, ratingTV, locationTV, openingTV;
+    HawkerStall hawkerStall;
     Button btnAddReview;
     ImageSlider imageSlider;
     private String hawkerStallId, hawkerCentreId, hawkerCentreName;
@@ -82,7 +83,6 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("ON CREATE CALLED === ==== === ===== ==== ===== === ===");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_stall);
 
@@ -123,6 +123,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                 new DbEventHandler<HawkerStall>() {
                     @Override
                     public void onSuccess(HawkerStall o) {
+                        hawkerStall = o;
                         stallNameTV.setText(o.getName());
                         locationTV.setText(o.getAddress());
                         openingTV.setText(o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours());
@@ -131,11 +132,10 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                                 if (url != null && url.trim().length() > 0) {
                                     slideModels.add(new SlideModel(url));
                                 }
-
                             }
                             imageSlider.setImageList(slideModels, true);
                         }
-
+                        IndividualStallActivity.this.getAllReviews();
                     }
 
                     @Override
@@ -144,24 +144,19 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                     }
                 }
         );
+    }
 
+    private void getAllReviews(){
         ReviewService.getAllReviews(
                 hawkerStallId,
                 new DbEventHandler<List<Review>>() {
                     @Override
                     public void onSuccess(List<Review> o) {
                         ArrayList<Review> reviews = (ArrayList<Review>) o;
-                        if (reviews != null) {
-                            Double sum = 0.0;
-                            for (Review review : o) {
-                                imagesURL.add(review.getProfilePicUrl());
-                                double stars = review.getStars();
-                                sum += stars;
-                            }
-
-                            Double avg = sum / o.size();
-                            String result = String.format("%.1f", avg);
-                            ratingTV.setText(result.toString());
+                        Double avg = hawkerStall.getAverageReview();
+                        ratingTV.setText( avg != null ?  avg.toString() : "No ratings");
+                        for (Review review : o) {
+                            imagesURL.add(review.getProfilePicUrl());
                         }
                         //throws the card views and all into the activity main
                         IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(getApplicationContext(), reviews, imagesURL);

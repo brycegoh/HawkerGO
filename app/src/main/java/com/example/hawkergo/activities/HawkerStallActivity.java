@@ -140,12 +140,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     }
 
     private void queryDbAndUpdateRecyclerView(){
-        Query stallColRef;
-        if (hawkerCentreId != null) {
-            stallColRef = collectionRef.whereEqualTo("hawkerCentreId", hawkerCentreId);
-        } else {
-            stallColRef = collectionRef;
-        }
+        Query stallColRef = collectionRef;
         updateRecyclerView(stallColRef);
     }
 
@@ -187,6 +182,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     }
 
     private void updateRecyclerView(Query query) {
+        System.out.println(query.toString());
         HawkerStallsService.filterHawkerCentre(
                 query.whereEqualTo("hawkerCentreId", hawkerCentreId),
                 new DbEventHandler<List<HawkerStall>>() {
@@ -207,13 +203,11 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                                     @Override
                                     public void onItemClick(View view, int position) {
                                         Intent intent = new Intent(HawkerStallActivity.this, IndividualStallActivity.class);
-                                        HawkerStall currentHawkerCentre = hawkerStallList.get(position);
-                                        String centreId = currentHawkerCentre.getId();
-                                        String hawkerCentreName = currentHawkerCentre.getName();
-
+                                        HawkerStall currentHawkerStall = hawkerStallList.get(position);
+                                        String centreId = currentHawkerStall.getHawkerCentreId();
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, centreId);
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
-                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, currentHawkerCentre.getId());
+                                        intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, currentHawkerStall.getId());
                                         startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM);
                                     }
 

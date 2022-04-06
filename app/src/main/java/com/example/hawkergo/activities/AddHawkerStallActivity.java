@@ -484,7 +484,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                     formattedOpeningTime
             );
 
-            FirebaseStorageService.uploadImageUri(selectedImage,
+            FirebaseStorageService.uploadImage(getContentResolver(), selectedImage, true, 40,
                     new DbEventHandler<String>() {
                         @Override
                         public void onSuccess(String downloadUrl) {

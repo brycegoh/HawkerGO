@@ -103,6 +103,7 @@ public class ReviewService implements ReviewQueryable {
                     public void onSuccess(Void aVoid) {
                         HawkerStallsService.incrementReviewAndAddPhotoCount(
                                 hawkerStallID,
+                                review.getStars(),
                                 selectedImage,
                                 new DbEventHandler<String>() {
                                     @Override

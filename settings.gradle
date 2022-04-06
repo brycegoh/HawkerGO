@@ -3,6 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven{url 'https://jitpack.io'} // for image slider in individual hawker stall activity
     }
 }
 dependencyResolutionManagement {

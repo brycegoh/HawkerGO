@@ -103,7 +103,7 @@ public class RegisterActivity extends ToolbarActivity {
     }
 
     private void createUser(View view, String email, String password) {
-        FirebaseStorageService.uploadImageUri(selectedImage, new DbEventHandler<String>() {
+        FirebaseStorageService.uploadImage(getContentResolver(), selectedImage, true, 15, new DbEventHandler<String>() {
             @Override
             public void onSuccess(String downloadUrl) {
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etRegName.getText().toString()).setPhotoUri(Uri.parse(downloadUrl)).build();

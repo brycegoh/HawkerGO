@@ -170,9 +170,10 @@ public class HawkerStallsService implements HawkerStallQueryable {
         });
     }
 
-    public static void incrementReviewAndAddPhotoCount(String hawkerStallId, String selectedImage, DbEventHandler<String> eventHandler){
+    public static void incrementReviewAndAddPhotoCount(String hawkerStallId, Double rating, String selectedImage, DbEventHandler<String> eventHandler){
         Map<String, Object> fieldToUpdate = new HashMap<>();
         fieldToUpdate.put("reviewCount", FieldValue.increment(1));
+        fieldToUpdate.put("totalRating", FieldValue.increment(rating));
         fieldToUpdate.put("imageUrls", FieldValue.arrayUnion(selectedImage));
         collectionRef.document(hawkerStallId).update(fieldToUpdate).addOnSuccessListener(
                 new OnSuccessListener<Void>() {

@@ -35,6 +35,12 @@ public class LoginActivity extends AppCompatActivity {
         setOnClickListeners();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
+
     private void initViews(){
         etLoginEmail = findViewById(R.id.etLoginEmail);
         etLoginPassword = findViewById(R.id.etLoginPass);

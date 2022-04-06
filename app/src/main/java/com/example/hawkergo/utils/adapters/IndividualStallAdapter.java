@@ -1,5 +1,6 @@
 package com.example.hawkergo.utils.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStall
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         if (reviews.get(position).getName() != null) {
@@ -46,10 +48,17 @@ public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStall
         } else {
             holder.usernameText.setText("Anonymous");
         }
-        holder.ratingText.setText(reviews.get(position).getStars().toString());
-        holder.reviewTxt.setText(reviews.get(position).getComment());
-        //retrieve profile pic
-        new DownloadImageTask(holder.userImage).execute(images.get(position));
+
+        if(reviews != null && reviews.size()>0 && reviews.get(position).getStars() != null){
+            holder.ratingText.setText(reviews.get(position).getStars().toString());
+        }
+        if(reviews != null && reviews.size()>0 && reviews.get(position).getComment() != null){
+            holder.reviewTxt.setText(reviews.get(position).getComment());
+        }
+        if(images != null && images.size() > 0){
+            DownloadImageTask task = new DownloadImageTask(holder.userImage);
+            task.execute(images.get(position));
+        }
         //set date format
         String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
