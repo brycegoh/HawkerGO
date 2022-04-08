@@ -13,10 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Stall Title"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        style="@style/boldHeader2"/>
 
     <ImageView
         android:id="@+id/star_icon"
@@ -34,10 +34,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:text="TextView"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/star_icon"
         app:layout_constraintStart_toEndOf="@+id/star_icon"
-        app:layout_constraintTop_toTopOf="@+id/star_icon" />
+        app:layout_constraintTop_toTopOf="@+id/star_icon"
+        style="@style/header4"/>
 
     <TextView
         android:id="@+id/review_number"
@@ -47,7 +47,8 @@
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/star_icon"
         app:layout_constraintStart_toEndOf="@+id/rating_number"
-        app:layout_constraintTop_toTopOf="@+id/star_icon" />
+        app:layout_constraintTop_toTopOf="@+id/star_icon"
+        style="@style/header4"/>
 
     <TextView
         android:id="@+id/stall_address"
@@ -60,7 +61,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toBottomOf="@+id/star_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/star_icon"
+        style="@style/header4"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

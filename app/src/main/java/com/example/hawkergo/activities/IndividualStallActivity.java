@@ -2,11 +2,13 @@ package com.example.hawkergo.activities;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.example.hawkergo.adapters.IndividualStallAdapter;
 import com.example.hawkergo.adapters.SliderViewPagerAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.rpc.context.AttributeContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,22 +153,28 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                             }
                             if(hawkerStall.getTags() != null && hawkerStall.getTags().size() >0){
                                 for(String tag : hawkerStall.getTags()){
-                                    Chip chip = new Chip(IndividualStallActivity.this);
-                                    chip.setText(tag.substring(0,1).toUpperCase() + tag.substring(1).toLowerCase());
-                                    chip.setCheckable(false);
-                                    chip.setClickable(false);
-                                    chip.setId(View.generateViewId());
-                                    tagsChipGrp.addView(chip);
+                                    if(tag.length() > 0){
+                                        Chip chip = new Chip(IndividualStallActivity.this);
+                                        chip.setText(tag.substring(0,1).toUpperCase() + tag.substring(1).toLowerCase());
+                                        chip.setCheckable(false);
+                                        chip.setClickable(false);
+                                        chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(IndividualStallActivity.this, R.color.green_5)));
+                                        chip.setId(View.generateViewId());
+                                        tagsChipGrp.addView(chip);
+                                    }
                                 }
                             }else{
                                 tagsHeader.setVisibility(View.GONE);
                             }
                             if(hawkerStall.getPopularItems() != null && hawkerStall.getPopularItems().size() > 0){
                                 for(String item: hawkerStall.getPopularItems()){
-                                    TextView textView = new TextView(IndividualStallActivity.this);
-                                    textView.setText(item.substring(0,1).toUpperCase() + item.substring(1).toLowerCase());
-                                    textView.setId(View.generateViewId());
-                                    favFoodItems.addView(textView);
+                                    if(item.length() > 0){
+                                        TextView textView = new TextView(IndividualStallActivity.this);
+                                        textView.setText(item.substring(0,1).toUpperCase() + item.substring(1).toLowerCase());
+                                        textView.setId(View.generateViewId());
+                                        textView.setTextAppearance(IndividualStallActivity.this, R.style.header3);
+                                        favFoodItems.addView(textView);
+                                    }
                                 }
                             }else{
                                 sigFoodHeader.setVisibility(View.GONE);

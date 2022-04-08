@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?colorPrimaryVariant">
 
     <LinearLayout
         android:layout_alignParentTop="true"
@@ -42,33 +43,6 @@
 
             </LinearLayout>
 
-
-<!--            <androidx.coordinatorlayout.widget.CoordinatorLayout-->
-<!--                android:id="@+id/image_view_container"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="10dp"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/image_view"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="300dp"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:contentDescription="Hawker Stall Photo"-->
-<!--                    android:src="@drawable/ic_baseline_insert_photo_24"-->
-<!--                    />-->
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/add_photo_button"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="bottom|end"-->
-<!--                    android:layout_margin="10dp"-->
-<!--                    android:adjustViewBounds="true"-->
-<!--                    android:src="@drawable/ic_baseline_add_a_photo_24" />-->
-<!--            </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
-
             <TextView
                 android:id="@+id/hawker_centre_title"
                 android:layout_width="wrap_content"
@@ -78,7 +52,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
-                android:text="@string/adding_a_stall_title" />
+                android:text="@string/adding_a_stall_title"
+                style="@style/boldHeader2"/>
 
             <EditText
                 android:id="@+id/name_field"
@@ -106,7 +81,8 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:text="@string/hash_tag"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    style="@style/header2"/>
 
                 <EditText
                     android:id="@+id/floor_field"
@@ -124,7 +100,8 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:text="@string/unit_number_delimiter"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    style="@style/header2"/>
 
                 <EditText
                     android:id="@+id/unit_num_field"
@@ -150,7 +127,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="@string/opening_hours" />
+                    android:text="@string/opening_hours"
+                    style="@style/header2"/>
 
                 <TextView
                     android:id="@+id/opening_hours_error"
@@ -182,7 +160,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/opening_days_chip_grp_container"
                 android:layout_marginBottom="5dp"
-                android:text="@string/select_time" />
+                android:text="@string/select_time"
+                style="@style/header2"/>
 
             <LinearLayout
                 android:id="@+id/time_selection_container"
@@ -197,7 +176,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="@string/time_picker_button_title_opening_time" />
+                    android:text="@string/time_picker_button_title_opening_time"
+                    style="@style/button2"/>
 
                 <TextView
                     android:id="@+id/select_time_delimiter"
@@ -205,14 +185,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:text="@string/select_time_delimiter" />
+                    android:text="@string/select_time_delimiter"
+                    style="@style/header2"/>
 
                 <Button
                     android:id="@+id/closing_time_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="@string/time_picker_button_title_closing_time" />
+                    android:text="@string/time_picker_button_title_closing_time"
+                    style="@style/button2"/>
             </LinearLayout>
 
             <LinearLayout
@@ -238,7 +220,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="@string/select_a_category" />
+                        android:text="@string/select_a_category"
+                        style="@style/header2"/>
 
                     <TextView
                         android:id="@+id/select_category_error"
@@ -246,7 +229,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginBottom="5dp"
-                        android:textColor="@color/error_red" />
+                        android:textColor="@color/error_red"
+                        style="@style/header2"/>
 
                 </LinearLayout>
 
@@ -281,7 +265,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:drawableLeft="@drawable/ic_baseline_add_24"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        style="@style/button2"/>
 
                 </LinearLayout>
 
@@ -324,6 +309,7 @@
                     android:layout_marginEnd="5dp"
                     android:text="Add more Food Items"
                     android:textAlignment="center"
+                    style="@style/button2"
                     />
             </FrameLayout>
 
@@ -338,7 +324,8 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="40dp"
-                android:text="@string/submit_button_title" />
+                android:text="@string/submit_button_title"
+                style="@style/button1"/>
 
         </RelativeLayout>
 

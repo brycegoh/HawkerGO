@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?colorPrimaryVariant">
 
     <LinearLayout
         android:id="@+id/toolbar_container"
@@ -37,11 +38,9 @@
                 android:id="@+id/stallNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Jalan Tua Kong Mee Pok"
-                android:contentDescription="stall name"
                 android:paddingTop="20dp"
                 android:gravity="center"
-                android:textSize="20dp"/>
+                style="@style/header2"/>
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPagerSlider"
@@ -67,8 +66,8 @@
                     android:paddingStart="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="4.5"
                     android:contentDescription="ratings"
+                    style="@style/header3"
                 />
 
             </LinearLayout>
@@ -89,7 +88,8 @@
                     android:paddingLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="location" />
+                    android:text="location"
+                    style="@style/header3"/>
             </LinearLayout>
             <LinearLayout
                 android:paddingStart="20dp"
@@ -107,7 +107,8 @@
                     android:paddingStart="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Opening Hours:" />
+                    android:text="Opening Hours:"
+                    style="@style/header3"/>
             </LinearLayout>
 
             <TextView
@@ -118,6 +119,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
+                style="@style/header2"
                 />
 
             <com.google.android.material.chip.ChipGroup
@@ -136,6 +138,7 @@
                 android:text="Signature Foods"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                style="@style/header2"
                 />
 
             <LinearLayout
@@ -157,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Reviews"
-                    android:textSize="20dp"
+                    style="@style/header2"
                     />
                 <Button
                     android:id="@+id/btnAddNewReview"

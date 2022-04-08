@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.RegisterActivity">
+    tools:context=".activities.RegisterActivity"
+    android:background="?colorPrimaryVariant">
 
     <LinearLayout
         android:id="@+id/toolbar_container"
@@ -132,7 +133,7 @@
             android:layout_marginTop="24dp"
             android:padding="10dp"
             android:text="Register"
-            app:backgroundTint="@color/teal_700" />
+            style="@style/button1" />
 
         <LinearLayout
             android:layout_width="match_parent"

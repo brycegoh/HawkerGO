@@ -12,6 +12,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
 public class HawkerGoApplication extends Application {
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -40,6 +41,7 @@ public class HawkerGoApplication extends Application {
 
             @Override
             public void onActivityDestroyed(@NonNull Activity activity) {}
+
         });
     }
 }

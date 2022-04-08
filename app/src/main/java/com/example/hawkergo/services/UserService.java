@@ -51,6 +51,7 @@ public class UserService {
                 if (task.isSuccessful()){
 
                     FirebaseUser user = getAuthenticatedUser();
+
                     user.updateProfile(profileUpdates)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

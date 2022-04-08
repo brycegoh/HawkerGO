@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?colorPrimaryVariant">
 
     <LinearLayout
         android:id="@+id/toolbar_container"
@@ -47,7 +48,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
-                android:text="@string/adding_hawker_centre_title" />
+                android:text="@string/adding_hawker_centre_title"
+                style="@style/boldHeader2"/>
 
             <EditText
                 android:id="@+id/name_field"
@@ -104,7 +106,8 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:text="@string/postal_s"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    style="@style/header2"/>
 
                 <EditText
                     android:id="@+id/postal_code_field"
@@ -131,7 +134,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="@string/opening_hours" />
+                    android:text="@string/opening_hours"
+                    style="@style/header2"/>
 
                 <TextView
                     android:id="@+id/opening_hours_error"
@@ -163,7 +167,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/opening_days_chip_grp_container"
                 android:layout_marginBottom="5dp"
-                android:text="@string/select_time" />
+                android:text="@string/select_time"
+                style="@style/header2"/>
 
             <LinearLayout
                 android:id="@+id/time_selection_container"
@@ -178,7 +183,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="@string/time_picker_button_title_opening_time" />
+                    android:text="@string/time_picker_button_title_opening_time"
+                    style="@style/button2"/>
 
                 <TextView
                     android:id="@+id/select_time_delimiter"
@@ -186,14 +192,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:text="@string/select_time_delimiter" />
+                    android:text="@string/select_time_delimiter"
+                    style="@style/header2"/>
 
                 <Button
                     android:id="@+id/closing_time_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="@string/time_picker_button_title_closing_time" />
+                    android:text="@string/time_picker_button_title_closing_time"
+                    style="@style/button2"/>
             </LinearLayout>
 
 
@@ -207,7 +215,8 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="40dp"
-                android:text="@string/submit_button_title" />
+                android:text="@string/submit_button_title"
+                style="@style/button1"/>
 
         </RelativeLayout>
 

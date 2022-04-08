@@ -27,7 +27,7 @@
         <item name="android:textAlignment"> center</item>
         <item name="android:checkable"> false</item>
 
-        <item name="chipBackgroundColor">@color/teal_700</item>
+        <item name="chipBackgroundColor">@color/green_5</item>
         <item name="android:textColor">@color/white</item>
         <item name="chipIcon">@drawable/ic_baseline_add_24</item>
         <item name="iconGravity"> start </item>
@@ -36,6 +36,7 @@
         <item name="rippleColor">@color/white_opacity10</item>
     </style>
 
+
     <style name = "roundimageview" parent ="">
         <item name = "cornerFamily">rounded</item>
         <item name="cornerSize">20dp</item>
@@ -43,7 +44,11 @@
     </style>
 
     <style name="button1" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/green_1</item>
+        <item name="backgroundTint">@color/green_4</item>
+    </style>
+
+    <style name="button2" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/green_5</item>
     </style>
 
     <style name="hawkerTextLogo" parent="Widget.MaterialComponents.TextView">
@@ -55,25 +60,44 @@
 
     <style name="header1" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+    <style name="header2" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">23sp</item>
+    </style>
+    <style name="header3" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="header4" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="boldHeader1" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/teal_700</item>
         <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <style name="boldHeader2" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/teal_700</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="boldHeader3" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="boldColoredHeader1" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/teal_700</item>
+        <item name="android:textColor">@color/green_4</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
     </style>
     <style name="boldColoredHeader2" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/teal_700</item>
+        <item name="android:textColor">@color/green_4</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
