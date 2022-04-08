@@ -260,7 +260,7 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
         String centreName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
 
         centreName = nameFieldController.getText().toString();
-        formattedAddress = streetNameFieldController.getText().toString() + " " + streetNameFieldController.getText().toString() + ", S" + postalCodeFieldController.getText().toString();
+        formattedAddress = streetNumberFieldController.getText().toString() + " " + streetNameFieldController.getText().toString() + ", S" + postalCodeFieldController.getText().toString();
         if (selectedOpeningDays.size() == openingDaysChipsOptions.length) {
             formattedOpeningDays = "Daily";
         } else {
