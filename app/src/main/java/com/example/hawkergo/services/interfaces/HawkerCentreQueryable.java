@@ -13,11 +13,7 @@ public interface HawkerCentreQueryable {
     static void getHawkerCentreByID(String hawkerCentreID, DbEventHandler<HawkerCentre> eventHandler){};
     static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler){};
     static void getAllHawkerCentres(DbEventHandler<List<HawkerCentre>> eventHandler){};
-//    static ListenerRegistration getAllHawkerCentresAndListenToChanges(QueryHawkerCentreEventHandler eventHandler){return null;};
-//
-//    static HawkerCentre deserializeData(DocumentSnapshot document){return null;};
-//
-//    static List<HawkerCentre> deserializeData(QuerySnapshot querySnap) {
-//        return null;
-//    }
 }
+
+
+
