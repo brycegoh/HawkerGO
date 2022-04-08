@@ -79,7 +79,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
-                android:name="com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment"/>
+                android:name="com.example.hawkergo.fragments.ImageSelectorFragment"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"

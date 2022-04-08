@@ -34,7 +34,7 @@
                     android:id="@+id/image_view_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:name="com.example.hawkergo.fragments.ImageViewWithImageSelectorFragment"/>
+                    android:name="com.example.hawkergo.fragments.ImageSelectorFragment"/>
 
 
             </LinearLayout>

@@ -25,11 +25,10 @@ import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.HawkerStallsService;
 import com.example.hawkergo.services.ReviewService;
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.adapters.IndividualStallAdapter;
+import com.example.hawkergo.adapters.ReviewsAdapter;
 import com.example.hawkergo.adapters.SliderViewPagerAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.rpc.context.AttributeContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,9 +211,9 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                             imagesURL.add(review.getProfilePicUrl());
                         }
                         //throws the card views and all into the activity main
-                        IndividualStallAdapter individualStallAdapter = new IndividualStallAdapter(getApplicationContext(), reviews, imagesURL);
+                        ReviewsAdapter reviewsAdapter = new ReviewsAdapter(getApplicationContext(), reviews, imagesURL);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        recyclerView.setAdapter(individualStallAdapter);
+                        recyclerView.setAdapter(reviewsAdapter);
                     }
 
                     @Override

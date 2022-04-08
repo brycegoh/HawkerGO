@@ -38,14 +38,14 @@ import java.util.Date;
 import java.util.Map;
 
 
-public class ImageViewWithImageSelectorFragment extends Fragment {
+public class ImageSelectorFragment extends Fragment {
 
     private ImageView imageViewController;
     private String currentPhotoPath;
     private ActivityResultLauncher<Intent> cameraActivityLauncher, galleryActivityLauncher;
 
 
-    public ImageViewWithImageSelectorFragment() {
+    public ImageSelectorFragment() {
     }
 
     @Override

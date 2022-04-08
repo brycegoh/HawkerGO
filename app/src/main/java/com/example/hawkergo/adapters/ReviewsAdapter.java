@@ -18,14 +18,14 @@ import com.example.hawkergo.utils.DownloadImageTask;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStallAdapter.MyViewHolder> {
+public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHolder> {
 
     List<Review> reviews;
     List<String> images;
     Context context;
 
 
-    public IndividualStallAdapter(Context ct, List<Review> reviewsList, List<String> img) {
+    public ReviewsAdapter(Context ct, List<Review> reviewsList, List<String> img) {
         context = ct;
         reviews = reviewsList;
         images = img;

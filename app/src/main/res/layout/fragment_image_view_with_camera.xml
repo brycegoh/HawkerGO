@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.ImageViewWithImageSelectorFragment">
+    tools:context=".fragments.ImageSelectorFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/image_view_container"
