@@ -1,4 +1,4 @@
-package com.example.hawkergo.utils;
+package com.example.hawkergo.activities.helpers;
 
 import android.content.Context;
 import android.view.GestureDetector;
@@ -6,6 +6,13 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ *
+ * Code was done with reference to the following stackoverflow post:
+ *      https://stackoverflow.com/questions/49969278/recyclerview-item-click-listener-the-right-way
+ *
+ */
 
 
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {

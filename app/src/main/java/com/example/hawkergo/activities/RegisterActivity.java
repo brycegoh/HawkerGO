@@ -138,7 +138,6 @@ public class RegisterActivity extends ToolbarActivity {
 
                             @Override
                             public void onFailure(Exception e) {
-                                System.out.println(e.getMessage().toString());
                                 Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }

@@ -23,7 +23,7 @@ import com.example.hawkergo.services.HawkerStallsService;
 import com.example.hawkergo.services.TagsService;
 import com.example.hawkergo.services.utils.FirebaseHelper;
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.utils.RecyclerItemClickListener;
+import com.example.hawkergo.activities.helpers.RecyclerItemClickListener;
 import com.example.hawkergo.adapters.HawkerStallAdapter;
 import com.example.hawkergo.utils.Debouncer;
 import com.google.android.material.chip.Chip;

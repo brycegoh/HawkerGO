@@ -40,11 +40,7 @@ public class HawkerCentresService implements HawkerCentreQueryable {
                     if (querySnapshot != null) {
                         List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
                         eventHandler.onSuccess(hawkerCentreList);
-                    } else {
-                        eventHandler.onSuccess(null);
                     }
-                } else {
-                    eventHandler.onFailure(task.getException());
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {

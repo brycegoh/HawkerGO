@@ -18,7 +18,7 @@ import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.utils.RecyclerItemClickListener;
+import com.example.hawkergo.activities.helpers.RecyclerItemClickListener;
 import com.example.hawkergo.adapters.HawkerCentreAdapter;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

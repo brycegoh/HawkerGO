@@ -12,6 +12,12 @@ import com.example.hawkergo.R;
 
 import java.io.InputStream;
 
+/**
+ * Code was done with reference to the following stackoverflow post
+ *          https://stackoverflow.com/questions/2471935/how-to-load-an-imageview-by-url-in-android
+ *
+ * */
+
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
     Context context;
