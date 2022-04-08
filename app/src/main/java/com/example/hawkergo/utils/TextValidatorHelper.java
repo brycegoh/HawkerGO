@@ -1,4 +1,4 @@
-package com.example.hawkergo.utils.textValidator;
+package com.example.hawkergo.utils;
 
 import android.text.TextUtils;
 import android.util.Patterns;

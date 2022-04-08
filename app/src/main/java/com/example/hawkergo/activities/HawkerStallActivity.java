@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
 import com.example.hawkergo.fragments.FilterDialogFragment;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.Tags;
@@ -23,13 +24,12 @@ import com.example.hawkergo.services.TagsService;
 import com.example.hawkergo.services.utils.FirebaseHelper;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
-import com.example.hawkergo.utils.adapters.HawkerStallAdapter;
-import com.example.hawkergo.utils.ui.Debouncer;
+import com.example.hawkergo.adapters.HawkerStallAdapter;
+import com.example.hawkergo.utils.Debouncer;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 

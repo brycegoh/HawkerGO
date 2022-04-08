@@ -12,8 +12,8 @@ import android.widget.Toast;
 import com.example.hawkergo.R;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.UserService;
-import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.example.hawkergo.utils.ui.Debouncer;
+import com.example.hawkergo.utils.TextValidatorHelper;
+import com.example.hawkergo.utils.Debouncer;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Arrays;

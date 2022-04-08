@@ -1,7 +1,6 @@
-package com.example.hawkergo.utils.adapters;
+package com.example.hawkergo.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,7 @@ public class HawkerStallAdapter extends RecyclerView.Adapter<HawkerStallAdapter.
         holder.stallRating.setText(avgRating != null && avgRating != 0.0 ? avgRating.toString() : "No Rating");
 
         if(stallItem.getImageUrls().size() > 0){
-            DownloadImageTask task = new DownloadImageTask(holder.stallImage);
+            DownloadImageTask task = new DownloadImageTask(holder.stallImage, mContext);
             for(String url : stallItem.getImageUrls()){
                 if(url != null && url.trim().length()>0){
                     task.execute(url);

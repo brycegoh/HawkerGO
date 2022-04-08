@@ -1,7 +1,6 @@
-package com.example.hawkergo.utils.adapters;
+package com.example.hawkergo.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +70,7 @@ public class HawkerCentreAdapter extends RecyclerView.Adapter<HawkerCentreAdapte
         holder.stallName.setText(centreItem.getName());
         holder.stallAddress.setText(centreItem.getAddress());
 
-        new DownloadImageTask(holder.stallImage).execute(centreItem.getImageUrl());
+        new DownloadImageTask(holder.stallImage, mContext).execute(centreItem.getImageUrl());
 
 
     }

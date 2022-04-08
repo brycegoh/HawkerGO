@@ -16,11 +16,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentResultListener;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
 import com.example.hawkergo.models.Review;
 import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.services.ReviewService;
@@ -28,7 +28,7 @@ import com.example.hawkergo.services.UserService;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.utils.ui.Debouncer;
+import com.example.hawkergo.utils.Debouncer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

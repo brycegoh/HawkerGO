@@ -12,15 +12,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 
 import com.example.hawkergo.MainActivity;
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.ToolbarActivity;
 import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.services.UserService;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
-import com.example.hawkergo.utils.ui.Debouncer;
+import com.example.hawkergo.utils.Debouncer;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
@@ -55,23 +55,40 @@ public class RegisterActivity extends ToolbarActivity {
         progressbar = findViewById(R.id.progressBar);
     }
 
+    private boolean validateFields(){
+        boolean isValid = true;
+        String name = etRegName.getText().toString();
+        String email = etRegEmail.getText().toString();
+        String password = etRegPassword.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            etRegEmail.setError("Email cannot be empty");
+            etRegEmail.requestFocus();
+            isValid = false;
+        }
+        if (TextUtils.isEmpty(password) || password.length() < 6) {
+            etRegPassword.setError("Password must be at least 6 characters");
+            etRegPassword.requestFocus();
+            isValid = false;
+        }
+        if (TextUtils.isEmpty(name)) {
+            etRegName.setError("Name cannot be empty");
+            etRegName.requestFocus();
+            isValid = false;
+        }
+        if (selectedImage == null) {
+            Toast.makeText(this, "Add a profile pic!", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        return isValid;
+    }
+
     private void attachOnClickListeners(){
         btnRegister.setOnClickListener(view -> {
-            String name = etRegName.getText().toString();
             String email = etRegEmail.getText().toString();
             String password = etRegPassword.getText().toString();
-            if (TextUtils.isEmpty(email)) {
-                etRegEmail.setError("Email cannot be empty");
-                etRegEmail.requestFocus();
-            } else if (TextUtils.isEmpty(password)) {
-                etRegPassword.setError("Password cannot be empty");
-                etRegPassword.requestFocus();
-            } else if (TextUtils.isEmpty(name)) {
-                etRegName.setError("Name cannot be empty");
-                etRegName.requestFocus();
-            } else if (selectedImage == null) {
-                Toast.makeText(this, "Add a profile pic!", Toast.LENGTH_SHORT).show();
-            } else {
+
+            boolean isValid = validateFields();
+            if(isValid){
                 debouncer.debounce(
                         view,
                         new Runnable() {
@@ -85,7 +102,7 @@ public class RegisterActivity extends ToolbarActivity {
         });
 
         tvLoginHere.setOnClickListener(view -> {
-            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
     }
 
@@ -116,11 +133,12 @@ public class RegisterActivity extends ToolbarActivity {
                             @Override
                             public void onSuccess(String o) {
                                 Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             }
 
                             @Override
                             public void onFailure(Exception e) {
+                                System.out.println(e.getMessage().toString());
                                 Toast.makeText(RegisterActivity.this, "Registration Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }

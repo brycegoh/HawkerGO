@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
@@ -30,15 +31,13 @@ import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.services.FirebaseStorageService;
 import com.example.hawkergo.services.TagsService;
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.example.hawkergo.utils.ui.Debouncer;
-import com.example.hawkergo.utils.ui.DynamicEditTextManager;
+import com.example.hawkergo.utils.TextValidatorHelper;
+import com.example.hawkergo.utils.Debouncer;
+import com.example.hawkergo.activities.helpers.DynamicEditTextManager;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,8 +50,8 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
     private HawkerCentre hawkerCentre;
 
     // default opening and closing time
-    private int openingHour = 8, openingMinute = 30;
-    private int closingHour = 21, closingMinute = 30;
+    private Integer openingHour = 8, openingMinute = 30;
+    private Integer closingHour = 21, closingMinute = 30;
 
     private Uri selectedImage;
 
@@ -111,7 +110,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
-        if(bar != null){
+        if (bar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         newCategories = new ArrayList<>();
@@ -271,6 +270,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                                                     addChipToCategory(text);
                                                     addMoreCategoryTextFieldController.setText(null);
                                                 }
+
                                                 @Override
                                                 public void onFailure(Exception e) {
                                                     Toast.makeText(AddHawkerStallActivity.this, "Adding of category failed, please try again", Toast.LENGTH_SHORT).show();
@@ -294,7 +294,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                 }
         );
         submitButtonController.setOnClickListener(
-                new View.OnClickListener () {
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         boolean isAllValid = validateOpeningHoursChips() &&
@@ -302,7 +302,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                                 validateUnitNumField() &&
                                 validateNameField() &&
                                 validateCategoriesChips();
-                        if(isAllValid){
+                        if (isAllValid) {
                             debouncer.debounce(
                                     view,
                                     new Runnable() {
@@ -456,74 +456,75 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
     }
 
     private void onClickSubmitButton() {
-            System.out.println("is valid");
-            // init fields needed to be saved to firestore
-            String stallName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
-            List<String> favouriteFoods = dynamicEditTextManager.getAllFavFoodItems();
+        System.out.println("is valid");
+        // init fields needed to be saved to firestore
+        String stallName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
+        List<String> favouriteFoods = dynamicEditTextManager.getAllFavFoodItems();
 
-            stallName = nameFieldController.getText().toString();
-            formattedAddress = "#" + floorFieldController.getText().toString() + "-" + unitNumFieldController.getText().toString();
-            if (selectedOpeningDays.size() == openingDaysChipsOptions.length) {
-                formattedOpeningDays = "Daily";
-            } else {
-                String lastElement = selectedOpeningDays.get(selectedOpeningDays.size() - 1);
-                StringBuilder formattedOpeningDaysBuilder = new StringBuilder("Opens every");
-                for (String i : selectedOpeningDays) {
-                    formattedOpeningDaysBuilder.append(" ").append(i);
-                    if (!i.equals(lastElement)) formattedOpeningDaysBuilder.append(",");
-                }
-                formattedOpeningDays = formattedOpeningDaysBuilder.toString();
+        stallName = nameFieldController.getText().toString();
+        formattedAddress = "#" + floorFieldController.getText().toString() + "-" + unitNumFieldController.getText().toString();
+        if (selectedOpeningDays.size() == openingDaysChipsOptions.length) {
+            formattedOpeningDays = "Daily";
+        } else {
+            String lastElement = selectedOpeningDays.get(selectedOpeningDays.size() - 1);
+            StringBuilder formattedOpeningDaysBuilder = new StringBuilder("Opens every");
+            for (String i : selectedOpeningDays) {
+                formattedOpeningDaysBuilder.append(" ").append(i);
+                if (!i.equals(lastElement)) formattedOpeningDaysBuilder.append(",");
             }
+            formattedOpeningDays = formattedOpeningDaysBuilder.toString();
+        }
 
-            formattedOpeningTime = Integer.toString(openingHour) + ":" + Integer.toString(openingMinute) +
-                    " - " +
-                    Integer.toString(closingHour) + ":" + Integer.toString(closingMinute);
+        String formattedOpeningMinute = openingMinute.equals(0) ? "00" : Integer.toString(openingMinute);
+        String formattedClosingMinute = closingMinute.equals(0) ? "00" : Integer.toString(closingMinute);
 
-            OpeningHours newOpeningHours = new OpeningHours(
-                    formattedOpeningDays,
-                    formattedOpeningTime
-            );
+        formattedOpeningTime = Integer.toString(openingHour) + ":" + formattedOpeningMinute +
+                " - " + Integer.toString(closingHour) + ":" + formattedClosingMinute;
 
-            FirebaseStorageService.uploadImage(getContentResolver(), selectedImage, true, 40,
-                    new DbEventHandler<String>() {
-                        @Override
-                        public void onSuccess(String downloadUrl) {
-                            List<String> imageUrls = new ArrayList<>();
-                            imageUrls.add(downloadUrl);
-                            HawkerStall newHawkerStall = new HawkerStall(
-                                    formattedAddress,
-                                    stallName,
-                                    newOpeningHours,
-                                    imageUrls,
-                                    favouriteFoods,
-                                    selectedCategories,
-                                    hawkerCentreId
-                            );
-                            HawkerCentresService.addStallIntoHawkerCentre(
-                                    hawkerCentreId,
-                                    newHawkerStall,
-                                    new DbEventHandler<String>() {
-                                        @Override
-                                        public void onSuccess(String o) {
-                                            Toast.makeText(AddHawkerStallActivity.this, "Successfully uploaded!", Toast.LENGTH_SHORT).show();
-                                            onBackPressed();
-                                        }
+        OpeningHours newOpeningHours = new OpeningHours(
+                formattedOpeningDays,
+                formattedOpeningTime
+        );
 
-                                        @Override
-                                        public void onFailure(Exception e) {
-                                            Toast.makeText(AddHawkerStallActivity.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
-                                        }
+        FirebaseStorageService.uploadImage(getContentResolver(), selectedImage, true, 40,
+                new DbEventHandler<String>() {
+                    @Override
+                    public void onSuccess(String downloadUrl) {
+                        List<String> imageUrls = new ArrayList<>();
+                        imageUrls.add(downloadUrl);
+                        HawkerStall newHawkerStall = new HawkerStall(
+                                formattedAddress,
+                                stallName,
+                                newOpeningHours,
+                                imageUrls,
+                                favouriteFoods,
+                                selectedCategories,
+                                hawkerCentreId
+                        );
+                        HawkerCentresService.addStallIntoHawkerCentre(
+                                hawkerCentreId,
+                                newHawkerStall,
+                                new DbEventHandler<String>() {
+                                    @Override
+                                    public void onSuccess(String o) {
+                                        Toast.makeText(AddHawkerStallActivity.this, "Successfully uploaded!", Toast.LENGTH_SHORT).show();
+                                        onBackPressed();
                                     }
-                            );
-                        }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            Toast.makeText(AddHawkerStallActivity.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
-                        }
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        Toast.makeText(AddHawkerStallActivity.this, "Failed to upload. Please try again", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                        );
                     }
-            );
 
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(AddHawkerStallActivity.this, "Error submitting, please try again?", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
 
     }

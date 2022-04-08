@@ -1,4 +1,4 @@
-package com.example.hawkergo.activities;
+package com.example.hawkergo.activities.baseActivities;
 
 import android.content.Intent;
 import android.view.Menu;

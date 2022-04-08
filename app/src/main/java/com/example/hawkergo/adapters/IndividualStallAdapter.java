@@ -1,4 +1,4 @@
-package com.example.hawkergo.utils.adapters;
+package com.example.hawkergo.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,7 +16,6 @@ import com.example.hawkergo.models.Review;
 import com.example.hawkergo.utils.DownloadImageTask;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStallAdapter.MyViewHolder> {
@@ -56,7 +55,8 @@ public class IndividualStallAdapter extends RecyclerView.Adapter<IndividualStall
             holder.reviewTxt.setText(reviews.get(position).getComment());
         }
         if(images != null && images.size() > 0){
-            DownloadImageTask task = new DownloadImageTask(holder.userImage);
+            DownloadImageTask task = new DownloadImageTask(holder.userImage, context);
+
             task.execute(images.get(position));
         }
         //set date format

@@ -1,8 +1,6 @@
 package com.example.hawkergo.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.TimePickerDialog;
@@ -18,18 +16,18 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.services.FirebaseStorageService;
-import com.example.hawkergo.utils.textValidator.TextValidatorHelper;
-import com.example.hawkergo.utils.ui.Debouncer;
+import com.example.hawkergo.utils.TextValidatorHelper;
+import com.example.hawkergo.utils.Debouncer;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,8 +35,8 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
     String[] openingDaysChipsOptions;
 
     // default opening and closing time
-    int openingHour = 8, openingMinute = 30;
-    int closingHour = 21, closingMinute = 30;
+    Integer openingHour = 8, openingMinute = 30;
+    Integer closingHour = 21, closingMinute = 30;
 
     Uri selectedImage;
 
@@ -262,7 +260,7 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
         String centreName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
 
         centreName = nameFieldController.getText().toString();
-        formattedAddress = streetNameFieldController.getText().toString() + " " + streetNameFieldController.getText().toString() + ", S" + postalCodeFieldController.getText().toString();
+        formattedAddress = streetNumberFieldController.getText().toString() + " " + streetNameFieldController.getText().toString() + ", S" + postalCodeFieldController.getText().toString();
         if (selectedOpeningDays.size() == openingDaysChipsOptions.length) {
             formattedOpeningDays = "Daily";
         } else {
@@ -275,9 +273,12 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
             formattedOpeningDays = formattedOpeningDaysBuilder.toString();
         }
 
-        formattedOpeningTime = Integer.toString(openingHour) + ":" + Integer.toString(openingMinute) +
+        String formattedOpeningMinute = openingMinute.equals(0) ? "00" : Integer.toString(openingMinute);
+        String formattedClosingMinute = closingMinute.equals(0) ? "00" : Integer.toString(closingMinute);
+
+        formattedOpeningTime = Integer.toString(openingHour) + ":" + formattedOpeningMinute +
                 " - " +
-                Integer.toString(closingHour) + ":" + Integer.toString(closingMinute);
+                Integer.toString(closingHour) + ":" + formattedClosingMinute;
 
         OpeningHours newOpeningHours = new OpeningHours(
                 formattedOpeningDays,

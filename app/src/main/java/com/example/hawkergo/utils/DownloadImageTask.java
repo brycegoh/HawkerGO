@@ -1,18 +1,24 @@
 package com.example.hawkergo.utils;
 
+import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.example.hawkergo.R;
+
 import java.io.InputStream;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
+    Context context;
 
-    public DownloadImageTask(ImageView bmImage) {
+    public DownloadImageTask(ImageView bmImage, Context context) {
         this.bmImage = bmImage;
+        this.context = context;
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -22,6 +28,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
             InputStream in = new java.net.URL(urldisplay).openStream();
             mIcon11 = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
+            mIcon11 = BitmapFactory.decodeResource(context.getResources(), R.drawable.error);
             Log.e("Error", e.getMessage());
             e.printStackTrace();
         }

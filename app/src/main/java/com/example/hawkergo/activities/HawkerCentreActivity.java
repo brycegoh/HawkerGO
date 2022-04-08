@@ -13,12 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hawkergo.R;
+import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.utils.RecyclerItemClickListener;
-import com.example.hawkergo.utils.adapters.HawkerCentreAdapter;
+import com.example.hawkergo.adapters.HawkerCentreAdapter;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
