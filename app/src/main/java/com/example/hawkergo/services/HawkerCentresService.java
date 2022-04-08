@@ -37,7 +37,7 @@ public class HawkerCentresService implements HawkerCentreQueryable {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {
@@ -65,7 +65,7 @@ public class HawkerCentresService implements HawkerCentreQueryable {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {
@@ -240,7 +240,7 @@ public class HawkerCentresService implements HawkerCentreQueryable {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         List<HawkerCentre> hawkerCentreList = querySnapshot.toObjects(HawkerCentre.class);
                         eventHandler.onSuccess(hawkerCentreList);
                     } else {

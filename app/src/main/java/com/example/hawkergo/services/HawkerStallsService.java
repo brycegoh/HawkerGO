@@ -128,7 +128,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         List<HawkerStall> hawkerStallsList = querySnapshot.toObjects(HawkerStall.class);
                         eventHandler.onSuccess(hawkerStallsList);
                     } else {
@@ -152,7 +152,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         List<HawkerStall> hawkerStallList = querySnapshot.toObjects(HawkerStall.class);
                         eventHandler.onSuccess(hawkerStallList);
                     } else {

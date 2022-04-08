@@ -37,7 +37,7 @@ public class ReviewService implements ReviewQueryable {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         List<Review> reviewsList = querySnapshot.toObjects(Review.class);
                         eventHandler.onSuccess(reviewsList);
                     } else {
