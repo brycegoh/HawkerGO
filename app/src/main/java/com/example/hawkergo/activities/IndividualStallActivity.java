@@ -129,7 +129,15 @@ public class IndividualStallActivity extends AuthenticatedActivity {
     }
 
 
-        @Override
+    @Override
+    protected void onPause() {
+        super.onPause();
+        tagsChipGrp.removeAllViews();
+        favFoodItems.removeAllViews();
+
+    }
+
+    @Override
         protected void onResume() {
             super.onResume();
             HawkerStallsService.getHawkerStallByID(
