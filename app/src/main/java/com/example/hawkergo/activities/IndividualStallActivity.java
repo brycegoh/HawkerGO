@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,8 @@ import com.example.hawkergo.services.ReviewService;
 import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.adapters.IndividualStallAdapter;
 import com.example.hawkergo.adapters.SliderViewPagerAdapter;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +35,14 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
     List<String> imagesURL = new ArrayList<>();
     List<String> stallImagesURL = new ArrayList<>();
-
+    ChipGroup tagsChipGrp;
     RecyclerView recyclerView;
-    TextView stallNameTV, ratingTV, locationTV, openingTV;
+    TextView stallNameTV, ratingTV, locationTV, openingTV, tagsHeader, sigFoodHeader;
     HawkerStall hawkerStall;
     Button btnAddReview;
     ViewPager sliderViewPager;
     SliderViewPagerAdapter sliderViewPagerAdapter;
+    LinearLayout favFoodItems;
     private String hawkerStallId, hawkerCentreId, hawkerCentreName;
 
     /**
@@ -103,6 +107,10 @@ public class IndividualStallActivity extends AuthenticatedActivity {
         openingTV = findViewById(R.id.openingHoursTextView);
         stallNameTV = findViewById(R.id.stallNameTextView);
         btnAddReview = findViewById(R.id.btnAddNewReview);
+        tagsChipGrp = findViewById(R.id.tags_chip_group);
+        favFoodItems = findViewById(R.id.fav_food_items);
+        tagsHeader = findViewById(R.id.tags_header);
+        sigFoodHeader = findViewById(R.id.sig_food_header);
         sliderViewPager = (ViewPager) findViewById(R.id.viewPagerSlider);
 
         btnAddReview.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +139,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                             stallNameTV.setText(o.getName());
                             locationTV.setText(o.getAddress());
                             openingTV.setText(formattedOpeningHours);
-                            if (o.getImageUrls().size() > 0) {
+                            if (hawkerStall.getImageUrls().size() > 0) {
                                 for (String url : o.getImageUrls()) {
                                     if (url != null && url.trim().length() > 0) {
                                         stallImagesURL.add(url);
@@ -139,6 +147,28 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                                 }
                                 sliderViewPagerAdapter = new SliderViewPagerAdapter(getApplicationContext(), stallImagesURL);
                                 sliderViewPager.setAdapter(sliderViewPagerAdapter);
+                            }
+                            if(hawkerStall.getTags() != null && hawkerStall.getTags().size() >0){
+                                for(String tag : hawkerStall.getTags()){
+                                    Chip chip = new Chip(IndividualStallActivity.this);
+                                    chip.setText(tag.substring(0,1).toUpperCase() + tag.substring(1).toLowerCase());
+                                    chip.setCheckable(false);
+                                    chip.setClickable(false);
+                                    chip.setId(View.generateViewId());
+                                    tagsChipGrp.addView(chip);
+                                }
+                            }else{
+                                tagsHeader.setVisibility(View.GONE);
+                            }
+                            if(hawkerStall.getPopularItems() != null && hawkerStall.getPopularItems().size() > 0){
+                                for(String item: hawkerStall.getPopularItems()){
+                                    TextView textView = new TextView(IndividualStallActivity.this);
+                                    textView.setText(item.substring(0,1).toUpperCase() + item.substring(1).toLowerCase());
+                                    textView.setId(View.generateViewId());
+                                    favFoodItems.addView(textView);
+                                }
+                            }else{
+                                sigFoodHeader.setVisibility(View.GONE);
                             }
 
                             IndividualStallActivity.this.getAllReviews();

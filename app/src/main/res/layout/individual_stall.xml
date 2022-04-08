@@ -110,6 +110,41 @@
                     android:text="Opening Hours:" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tags_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tags"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                />
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tags_chip_group"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
+
+            <TextView
+                android:id="@+id/sig_food_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Signature Foods"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fav_food_items"
+                android:orientation="vertical"
+                android:layout_margin="15dp"/>
+
             <LinearLayout
                 android:paddingTop="10dp"
                 android:paddingHorizontal="20dp"

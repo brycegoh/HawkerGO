@@ -35,8 +35,8 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
     String[] openingDaysChipsOptions;
 
     // default opening and closing time
-    int openingHour = 8, openingMinute = 30;
-    int closingHour = 21, closingMinute = 30;
+    Integer openingHour = 8, openingMinute = 30;
+    Integer closingHour = 21, closingMinute = 30;
 
     Uri selectedImage;
 
@@ -273,9 +273,12 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
             formattedOpeningDays = formattedOpeningDaysBuilder.toString();
         }
 
-        formattedOpeningTime = Integer.toString(openingHour) + ":" + Integer.toString(openingMinute) +
+        String formattedOpeningMinute = openingMinute.equals(0) ? "00" : Integer.toString(openingMinute);
+        String formattedClosingMinute = closingMinute.equals(0) ? "00" : Integer.toString(closingMinute);
+
+        formattedOpeningTime = Integer.toString(openingHour) + ":" + formattedOpeningMinute +
                 " - " +
-                Integer.toString(closingHour) + ":" + Integer.toString(closingMinute);
+                Integer.toString(closingHour) + ":" + formattedClosingMinute;
 
         OpeningHours newOpeningHours = new OpeningHours(
                 formattedOpeningDays,
