@@ -103,8 +103,4 @@ public class Review extends BaseDbFields {
         this.imageUrl = imageUrl;
     }
 
-//    @Override
-//    public String toString(){
-//        return "name: " + this.name;
-//    }
 }

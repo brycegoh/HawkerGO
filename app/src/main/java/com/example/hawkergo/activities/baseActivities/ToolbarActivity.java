@@ -30,7 +30,6 @@ public class ToolbarActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        System.out.println(item.getItemId());
         if(item.getItemId() == R.id.logout_button){
             UserService.logoutUser();
             startActivity(new Intent(this, MainActivity.class));
@@ -38,7 +37,10 @@ public class ToolbarActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void initToolbar(){
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
@@ -47,3 +49,6 @@ public class ToolbarActivity extends AppCompatActivity {
         }
     }
 }
+
+
+

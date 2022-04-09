@@ -50,15 +50,7 @@ public class ReviewSubmissionActivity extends AuthenticatedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.review_submission);
-
-        Toolbar toolbar = findViewById(R.id.action_bar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        if(bar != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         Intent intent = getIntent();
         hawkerStallID = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID);

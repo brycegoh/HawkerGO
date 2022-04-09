@@ -23,10 +23,8 @@ import java.util.concurrent.TimeUnit;
  * */
 
 public class Debouncer {
-
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private final HashMap<Integer, ScheduledFuture<?>> tracker = new HashMap<>();
-
     final long TIME_DELAY = 1000;
     final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
@@ -43,10 +41,6 @@ public class Debouncer {
                     try{
                         fn.run();
                     }
-                    catch(Exception e){
-                        System.out.println("======================");
-                        System.out.println(e.getMessage().toString());
-                    }
                     finally {
                         tracker.remove(key);
                     }
@@ -55,6 +49,7 @@ public class Debouncer {
         }
 
     }
-
-
 }
+
+
+

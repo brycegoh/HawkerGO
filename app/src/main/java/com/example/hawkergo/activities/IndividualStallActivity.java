@@ -93,16 +93,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_stall);
-
-        Toolbar toolbar = findViewById(R.id.action_bar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        if (bar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
         this.handleIntent();
-
         recyclerView = findViewById(R.id.individual_stall_recycler);
         ratingTV = findViewById(R.id.ratingTextView);
         locationTV = findViewById(R.id.locationTextView);

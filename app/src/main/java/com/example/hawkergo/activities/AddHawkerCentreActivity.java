@@ -55,7 +55,6 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hawker_centre);
-        super.initToolbar();
         this.initViews();
         this.inflateOpeningDaysChips();
         this.attachButtonEventListeners();
@@ -75,8 +74,6 @@ public class AddHawkerCentreActivity extends AuthenticatedActivity {
 
     private void initViews() {
         openingDaysChipGrpController = findViewById(R.id.opening_days_chip_group);
-//        categoriesChipGrpController = findViewById(R.id.categories_chip_group);
-//        addMoreCategoryChip = findViewById(R.id.add_more_category_chip);
         mainTitleController = findViewById(R.id.hawker_centre_title);
         nameFieldController = findViewById(R.id.name_field);
         streetNumberFieldController = findViewById(R.id.street_number_field);

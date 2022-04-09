@@ -66,14 +66,6 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
-
-        Toolbar toolbar = findViewById(R.id.action_bar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        if(bar != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
         this.initViews();
         this.handleIntentExtraData();
         this.attachOnClickListeners();
@@ -209,10 +201,6 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, currentHawkerStall.getId());
                                         startActivityForResult(intent, Constants.RequestCodes.HAWKER_STALL_LISTING_TO_ADD_STALL_FORM);
-                                    }
-
-                                    @Override
-                                    public void onLongItemClick(View view, int position) {
                                     }
                                 })
                         );

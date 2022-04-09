@@ -11,3 +11,6 @@ public interface ReviewQueryable {
     static void deleteReview(String hawkerStallID, String reviewID, DbEventHandler<String> eventHandler){};
     static void editReview(String hawkerStallID, String reviewID, Review review, DbEventHandler<String> eventHandler){};
 }
+
+
+

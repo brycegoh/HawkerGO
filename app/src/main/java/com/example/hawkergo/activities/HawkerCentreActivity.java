@@ -1,5 +1,6 @@
 package com.example.hawkergo.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,12 +42,6 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hawker_list);
-
-        Toolbar toolbar = findViewById(R.id.action_bar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-
-        // Remove FilterButton for now
         this.filterButton = findViewById(R.id.filter_button);
         this.header = findViewById(R.id.header);
         this.filterChipGroup = findViewById(R.id.chipGroup);
@@ -64,6 +60,20 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                     }
                 }
         );
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Closing App")
+                .setMessage("Are you sure?")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finishAffinity();
+                        finish();
+                    }
+                }).create().show();
     }
 
     @Override
@@ -94,10 +104,6 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID, centreId);
                                         intent.putExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME, hawkerCentreName);
                                         startActivity(intent);
-                                    }
-
-                                    @Override
-                                    public void onLongItemClick(View view, int position) {
                                     }
                                 })
                         );

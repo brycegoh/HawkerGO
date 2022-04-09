@@ -10,36 +10,27 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  *
  * Code was done with reference to the following stackoverflow post:
- *      https://stackoverflow.com/questions/49969278/recyclerview-item-click-listener-the-right-way
+ *      https://stackoverflow.com/questions/24471109/recyclerview-onclick
  *
  */
 
 
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     private OnItemClickListener mListener;
-
-    public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-
-        public void onLongItemClick(View view, int position);
-    }
-
     GestureDetector mGestureDetector;
 
+    // define a custom interface which will act as callback onClick event handler
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    // set custom OnItemClickListener
     public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
         mListener = listener;
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-                View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                if (child != null && mListener != null) {
-                    mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
-                }
             }
         });
     }

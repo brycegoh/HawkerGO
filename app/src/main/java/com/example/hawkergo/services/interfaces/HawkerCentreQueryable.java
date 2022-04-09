@@ -8,7 +8,6 @@ import java.util.Map;
 
 public interface HawkerCentreQueryable {
     static void addHawkerCentre(HawkerCentre hawkerCentre, DbEventHandler<String> eventHandler ){};
-    static void updateHawkerCentreById(String hawkerCentreID, Map<String, Object> fieldToUpdate, DbEventHandler<String> eventHandler){};
     static void deleteHawkerCentre(String hawkerCentreID,DbEventHandler<String> callBack){};
     static void getHawkerCentreByID(String hawkerCentreID, DbEventHandler<HawkerCentre> eventHandler){};
     static void addStallIntoHawkerCentre(String hawkerCentreID, HawkerStall newHawkerStall, DbEventHandler<String> eventHandler){};

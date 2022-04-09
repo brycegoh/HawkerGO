@@ -49,28 +49,6 @@ public class HawkerStallsService implements HawkerStallQueryable {
     };
 
     /**
-     * Update a hawker stall by its ID
-     * @param hawkerStallID     ID of the hawker stall document
-     * @param hawkerStallFields HawkerStall builder object that contains selected fields to update
-     * @param eventHandler      Callback to handle on success or failure events
-     */
-    public static void updateHawkerStallById(String hawkerStallID, HawkerStall hawkerStallFields, DbEventHandler<String> eventHandler){
-        DocumentReference documentReference = collectionRef.document(hawkerStallID);
-        Map<String, Object> fieldsToUpdate = hawkerStallFields.toMap();
-        documentReference.update(fieldsToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                eventHandler.onFailure(e);
-            }
-        });
-    };
-
-    /**
      * Delete a hawker stall
      * @param hawkerStallID ID of the hawker stall document
      * @param eventHandler  Callback to handle on success or failure events
