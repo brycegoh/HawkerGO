@@ -70,7 +70,7 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
     @Override
     public void onBackPressed() {
         // pam put code here
-        finish();
+
     }
 
     @Override

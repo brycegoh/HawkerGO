@@ -65,6 +65,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
