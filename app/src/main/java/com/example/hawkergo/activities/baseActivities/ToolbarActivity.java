@@ -45,7 +45,7 @@ public class ToolbarActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            bar.setDisplayHomeAsUpEnabled(true);
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.hawkergo.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -62,18 +63,23 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
         );
     }
 
+    /**
+     * Customize behaviour of toolbar back button
+     *
+     * */
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle("Closing App")
-                .setMessage("Are you sure?")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        finishAffinity();
-                        finish();
-                    }
-                }).create().show();
+        // pam put code here
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 
     @Override
