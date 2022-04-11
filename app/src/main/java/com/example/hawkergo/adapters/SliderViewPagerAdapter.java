@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.hawkergo.R;
 import com.example.hawkergo.utils.DownloadImageTask;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

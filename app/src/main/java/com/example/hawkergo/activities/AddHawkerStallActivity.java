@@ -1,10 +1,5 @@
 package com.example.hawkergo.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentResultListener;
-
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,20 +15,23 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentResultListener;
+
 import com.example.hawkergo.R;
 import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
+import com.example.hawkergo.activities.helpers.DynamicEditTextManager;
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.models.Tags;
-import com.example.hawkergo.services.interfaces.DbEventHandler;
-import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.services.FirebaseStorageService;
+import com.example.hawkergo.services.HawkerCentresService;
 import com.example.hawkergo.services.TagsService;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.utils.Constants;
-import com.example.hawkergo.utils.TextValidatorHelper;
 import com.example.hawkergo.utils.Debouncer;
-import com.example.hawkergo.activities.helpers.DynamicEditTextManager;
+import com.example.hawkergo.utils.TextValidatorHelper;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 

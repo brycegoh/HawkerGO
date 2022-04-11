@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentResultListener;
 
-import com.example.hawkergo.MainActivity;
 import com.example.hawkergo.R;
 import com.example.hawkergo.activities.baseActivities.ToolbarActivity;
 import com.example.hawkergo.services.FirebaseStorageService;
