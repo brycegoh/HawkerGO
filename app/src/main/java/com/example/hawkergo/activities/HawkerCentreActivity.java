@@ -1,5 +1,6 @@
 package com.example.hawkergo.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,7 +67,17 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
      * */
     @Override
     public void onBackPressed() {
-        // pam put code here
+        new AlertDialog.Builder(this)
+                .setTitle("Exit Application")
+                .setMessage("Do you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finishAffinity(); // clears the back stack of page history
+                        finish();
+                    }
+                }).create().show();
 
     }
 
