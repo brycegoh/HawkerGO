@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.hawkergo.models.Review;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.interfaces.ReviewQueryable;
-import com.example.hawkergo.services.utils.FirebaseHelper;
+import com.example.hawkergo.utils.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,8 +19,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 public class ReviewService implements ReviewQueryable {
-    private static final String collectionId = FirebaseHelper.CollectionIds.HAWKER_STALLS;
-    private static final CollectionReference collectionRef = FirebaseHelper.getCollectionReference(collectionId);
+    private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_STALLS;
+    private static final CollectionReference collectionRef = FirebaseConstants.getCollectionReference(collectionId);
 
     /**
      * Get all reviews for a hawker stall
@@ -30,7 +30,7 @@ public class ReviewService implements ReviewQueryable {
      */
     public static void getAllReviews(String hawkerStallID, DbEventHandler<List<Review>> eventHandler) {
         DocumentReference docRef = collectionRef.document(hawkerStallID);
-        CollectionReference colRef = docRef.collection("reviews");
+        CollectionReference colRef = docRef.collection(FirebaseConstants.CollectionIds.REVIEWS);
 
         colRef.orderBy("dateReviewed", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -64,7 +64,7 @@ public class ReviewService implements ReviewQueryable {
      */
     public static void getReviewByID(String hawkerStallID, String reviewID, DbEventHandler<Review> eventHandler){
         DocumentReference docRef = collectionRef.document(hawkerStallID);
-        DocumentReference reviewRef = docRef.collection("reviews").document(reviewID);
+        DocumentReference reviewRef = docRef.collection(FirebaseConstants.CollectionIds.REVIEWS).document(reviewID);
         reviewRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -95,7 +95,7 @@ public class ReviewService implements ReviewQueryable {
      */
     public static void addReview(String hawkerStallID, Review review, String selectedImage, DbEventHandler<String> eventHandler){
         DocumentReference docRef = collectionRef.document(hawkerStallID);
-        DocumentReference reviewRef = docRef.collection("reviews").document();
+        DocumentReference reviewRef = docRef.collection(FirebaseConstants.CollectionIds.REVIEWS).document();
         reviewRef
                 .set(review)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -108,7 +108,7 @@ public class ReviewService implements ReviewQueryable {
                                 new DbEventHandler<String>() {
                                     @Override
                                     public void onSuccess(String o) {
-                                        eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                                     }
 
                                     @Override
@@ -134,12 +134,12 @@ public class ReviewService implements ReviewQueryable {
      * @param eventHandler  Callback to handle on success or failure events
      */
     public static void deleteReview(String hawkerStallID, String reviewID, DbEventHandler<String> eventHandler){
-        DocumentReference reviewReference = collectionRef.document(hawkerStallID).collection("reviews").document(reviewID);
+        DocumentReference reviewReference = collectionRef.document(hawkerStallID).collection(FirebaseConstants.CollectionIds.REVIEWS).document(reviewID);
 
         reviewReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -157,11 +157,11 @@ public class ReviewService implements ReviewQueryable {
      * @param eventHandler  Callback to handle on success or failure events
      */
     public static void editReview(String hawkerStallID, String reviewID, Review newReview, DbEventHandler<String> eventHandler){
-        DocumentReference reviewReference = collectionRef.document(hawkerStallID).collection("reviews").document(reviewID);
+        DocumentReference reviewReference = collectionRef.document(hawkerStallID).collection(FirebaseConstants.CollectionIds.REVIEWS).document(reviewID);
         reviewReference.set(newReview).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

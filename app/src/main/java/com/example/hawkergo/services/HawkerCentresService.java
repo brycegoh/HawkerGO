@@ -6,7 +6,7 @@ import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.interfaces.HawkerCentreQueryable;
-import com.example.hawkergo.services.utils.FirebaseHelper;
+import com.example.hawkergo.utils.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,11 +20,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HawkerCentresService implements HawkerCentreQueryable {
-    private static final String collectionId = FirebaseHelper.CollectionIds.HAWKER_CENTRES;
-    private static final CollectionReference collectionRef = FirebaseHelper.getCollectionReference(collectionId);
+    private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_CENTRES;
+    private static final CollectionReference collectionRef = FirebaseConstants.getCollectionReference(collectionId);
 
     /**
      * Gets all hawker centres
@@ -120,7 +119,7 @@ public class HawkerCentresService implements HawkerCentreQueryable {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -158,7 +157,7 @@ public class HawkerCentresService implements HawkerCentreQueryable {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -189,7 +188,7 @@ public class HawkerCentresService implements HawkerCentreQueryable {
         documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

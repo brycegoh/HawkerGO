@@ -6,7 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.hawkergo.services.interfaces.DbEventHandler;
-import com.example.hawkergo.services.utils.FirebaseHelper;
+import com.example.hawkergo.utils.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -36,7 +36,7 @@ public class UserService {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     System.out.println("success");
-                    eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                    eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                 }else{
                     eventHandler.onFailure(task.getException());
                 }
@@ -62,7 +62,7 @@ public class UserService {
                                 }
                             });
 
-                    eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                    eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                 }else{
                     eventHandler.onFailure(task.getException());
                 }

@@ -45,6 +45,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
     ViewPager sliderViewPager;
     SliderViewPagerAdapter sliderViewPagerAdapter;
     LinearLayout favFoodItems;
+    private ReviewsAdapter reviewsAdapter;
     private String hawkerStallId, hawkerCentreId, hawkerCentreName;
 
     /**
@@ -125,12 +126,13 @@ public class IndividualStallActivity extends AuthenticatedActivity {
         super.onPause();
         tagsChipGrp.removeAllViews();
         favFoodItems.removeAllViews();
-
     }
 
     @Override
         protected void onResume() {
             super.onResume();
+            stallImagesURL.clear();
+            imagesURL.clear();
             HawkerStallsService.getHawkerStallByID(
                     hawkerStallId,
                     new DbEventHandler<HawkerStall>() {
@@ -203,7 +205,7 @@ public class IndividualStallActivity extends AuthenticatedActivity {
                             imagesURL.add(review.getProfilePicUrl());
                         }
                         //throws the card views and all into the activity main
-                        ReviewsAdapter reviewsAdapter = new ReviewsAdapter(getApplicationContext(), reviews, imagesURL);
+                        reviewsAdapter = new ReviewsAdapter(getApplicationContext(), reviews, imagesURL);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         recyclerView.setAdapter(reviewsAdapter);
                     }

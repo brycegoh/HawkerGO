@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.hawkergo.models.Tags;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
-import com.example.hawkergo.services.utils.FirebaseHelper;
+import com.example.hawkergo.utils.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,8 +15,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 
 public class TagsService {
-    private static final String collectionId = FirebaseHelper.CollectionIds.TAGS;
-    private static final CollectionReference collectionRef = FirebaseHelper.getCollectionReference(collectionId);
+    private static final String collectionId = FirebaseConstants.CollectionIds.TAGS;
+    private static final CollectionReference collectionRef = FirebaseConstants.getCollectionReference(collectionId);
     private static final String tagDocumentId = "PZQY0RGoRhiGvSSQsnFP";
 
     /**
@@ -51,7 +51,7 @@ public class TagsService {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

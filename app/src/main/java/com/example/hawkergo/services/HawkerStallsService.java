@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.interfaces.HawkerStallQueryable;
-import com.example.hawkergo.services.utils.FirebaseHelper;
+import com.example.hawkergo.utils.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HawkerStallsService implements HawkerStallQueryable {
-    private static final String collectionId = FirebaseHelper.CollectionIds.HAWKER_STALLS;
-    private static final CollectionReference collectionRef = FirebaseHelper.getCollectionReference(collectionId);
+    private static final String collectionId = FirebaseConstants.CollectionIds.HAWKER_STALLS;
+    private static final CollectionReference collectionRef = FirebaseConstants.getCollectionReference(collectionId);
 
     /**
      * Adds hawker stall into hawkerStall collection
@@ -59,7 +59,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
         documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -157,7 +157,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
                 new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        eventHandler.onSuccess(FirebaseHelper.DbResponse.SUCCESS);
+                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                     }
                 }
         ).addOnFailureListener(

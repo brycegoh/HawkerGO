@@ -1,15 +1,16 @@
-package com.example.hawkergo.services.utils;
+package com.example.hawkergo.utils;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class FirebaseHelper
+public class FirebaseConstants
 {
     public static class CollectionIds {
         public static String HAWKER_CENTRES = "hawkerCentres";
         public static String HAWKER_STALLS = "hawkerStalls";
         public static String TAGS = "tags";
+        public static String REVIEWS = "reviews";
     }
 
 
