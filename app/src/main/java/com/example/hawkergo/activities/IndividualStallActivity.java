@@ -1,12 +1,5 @@
 package com.example.hawkergo.activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -17,16 +10,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.example.hawkergo.R;
 import com.example.hawkergo.activities.baseActivities.AuthenticatedActivity;
-import com.example.hawkergo.models.HawkerStall;
-import com.example.hawkergo.models.Review;
-import com.example.hawkergo.services.interfaces.DbEventHandler;
-import com.example.hawkergo.services.HawkerStallsService;
-import com.example.hawkergo.services.ReviewService;
-import com.example.hawkergo.utils.Constants;
 import com.example.hawkergo.adapters.ReviewsAdapter;
 import com.example.hawkergo.adapters.SliderViewPagerAdapter;
+import com.example.hawkergo.models.HawkerStall;
+import com.example.hawkergo.models.Review;
+import com.example.hawkergo.services.HawkerStallsService;
+import com.example.hawkergo.services.ReviewService;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
+import com.example.hawkergo.utils.Constants;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 

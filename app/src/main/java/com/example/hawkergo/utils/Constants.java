@@ -9,7 +9,6 @@ public class Constants {
 
     public static class ResultCodes{
         public static final Integer TO_HAWKER_STALL_LISTING = 3;
-        public static final Integer ADD_STALL_FORM_TO_HAWKER_STALL_LISTING = 4;
         public static final Integer REVIEW_SUBMISSION_TO_HAWKER_STALL = 5;
     }
 

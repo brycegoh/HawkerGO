@@ -1,7 +1,5 @@
 package com.example.hawkergo.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,11 +7,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.hawkergo.R;
-import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.services.UserService;
-import com.example.hawkergo.utils.TextValidatorHelper;
+import com.example.hawkergo.services.interfaces.DbEventHandler;
 import com.example.hawkergo.utils.Debouncer;
+import com.example.hawkergo.utils.TextValidatorHelper;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Arrays;
