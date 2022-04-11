@@ -129,14 +129,15 @@ public class IndividualStallActivity extends AuthenticatedActivity {
     @Override
         protected void onResume() {
             super.onResume();
-            stallImagesURL.clear();
-            imagesURL.clear();
+
             HawkerStallsService.getHawkerStallByID(
                     hawkerStallId,
                     new DbEventHandler<HawkerStall>() {
                         @Override
                         public void onSuccess(HawkerStall o) {
                             hawkerStall = o;
+                            stallImagesURL.clear();
+                            imagesURL.clear();
                             String formattedOpeningHours = o.getOpeningHours().getDays() + ", " + o.getOpeningHours().getHours();
                             stallNameTV.setText(o.getName());
                             locationTV.setText(o.getAddress());
