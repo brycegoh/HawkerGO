@@ -15,16 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- */
+ *  This fragment defined a pop up modal that the user can select categories to filer from
+ * */
 public class FilterDialogFragment extends DialogFragment {
     public static final String TAG = "FilterDialogFragment";
     private String[] categoriesArray;
 
 
-    public FilterDialogFragment() {
-        // Required empty public constructor
-    }
+    public FilterDialogFragment() {}
 
     public FilterDialogFragment(String[] filters) {
         this.categoriesArray = filters;
@@ -50,35 +48,22 @@ public class FilterDialogFragment extends DialogFragment {
                                 } else {
                                     selectedItems.remove(categoriesArray[which]);
                                 }
-//                                if (isChecked) {
-//                                    // If the user checked the item, add it to the selected items
-//                                    selectedItems.add(categoriesArray[which]);
-//                                } else if (selectedItems.contains(which)) {
-//                                    // Else, if the item is already in the array, remove it
-//                                    selectedItems.remove(categoriesArray[which]);
-//                                }
                             }
                         })
                 // Set the action buttons
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // TODO: Implement backend filter functionality
+                        // pass back selectedItems
                         MyDialogListener activity = (MyDialogListener) getActivity();
                         activity.finish(selectedItems);
-
-
-
-
-                        // 1. Execute query
-                        // 2. Pass result back to HawkerStallActivity.java
 
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-
+                        // no action, just cancel
                     }
                 });
 

@@ -46,7 +46,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private List<String> filterList = new ArrayList<>();
     private String hawkerCentreName;
-    private final CollectionReference collectionRef =  db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS);
+    private final CollectionReference collectionRef = db.collection(FirebaseConstants.CollectionIds.HAWKER_STALLS);
 
 
     @Override
@@ -70,26 +70,29 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
         this.initViewsText();
     }
 
+    /**
+     * db query onResume so that when user press back to this activity, the data will reload.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         this.queryDbAndUpdateRecyclerView();
     }
 
-    private void initViews(){
+    private void initViews() {
         this.filterButton = findViewById(R.id.filter_button);
         this.header = findViewById(R.id.header);
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
         this.filterChipGroup = findViewById(R.id.chipGroup);
     }
 
-    private void handleIntentExtraData(){
+    private void handleIntentExtraData() {
         Intent intent = getIntent();
         hawkerCentreId = hawkerCentreId == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID) : hawkerCentreId;
         hawkerCentreName = hawkerCentreName == null ? intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME) : hawkerCentreName;
     }
 
-    private void attachOnClickListeners(){
+    private void attachOnClickListeners() {
         this.filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,15 +126,15 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
         );
     }
 
-    private void initViewsText(){
+    private void initViewsText() {
         if (hawkerCentreName != null) {
             this.header.setText(hawkerCentreName);
         }
     }
 
-    private void queryDbAndUpdateRecyclerView(){
-        Query stallColRef = collectionRef;
-        updateRecyclerView(stallColRef);
+    private void queryDbAndUpdateRecyclerView() {
+        Query query = collectionRef;
+        updateRecyclerView(query);
     }
 
     @Override
@@ -139,20 +142,22 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
         Chip chip = (Chip) view;
         filterChipGroup.removeView(chip);
         filterList.remove(chip.getText().toString());
-        Query filteredColRef;
+        Query query;
         if (filterList.size() > 0) {
-            filteredColRef = collectionRef.whereArrayContainsAny("tags", filterList);
+            query = collectionRef.whereArrayContainsAny("tags", filterList);
         } else {
             // If there are no filters, retrieve all hawker stalls
-            filteredColRef = collectionRef.whereEqualTo("hawkerCentreId", hawkerCentreId);
+            query = collectionRef.whereEqualTo("hawkerCentreId", hawkerCentreId);
         }
-        updateRecyclerView(filteredColRef);
+        updateRecyclerView(query);
     }
+
     final Debouncer debouncer = new Debouncer();
+
     @Override
     public void finish(List<String> result) {
         filterChipGroup.removeAllViews();
-        if(result != null && result.size() > 0){
+        if (result != null && result.size() > 0) {
             for (String el : result) {
                 filterList.add(el);
                 Chip chip = new Chip(this);
@@ -165,20 +170,20 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                 filterChipGroup.addView(chip);
             }
 
-            Query filteredColRef = collectionRef.whereArrayContainsAny("tags", result);
+            Query query = collectionRef.whereArrayContainsAny("tags", result);
 
-            updateRecyclerView(filteredColRef);
+            updateRecyclerView(query);
         }
     }
 
     private void updateRecyclerView(Query query) {
-        System.out.println(query.toString());
         HawkerStallsService.filterHawkerCentre(
+                // enforce same hawkerCentre
                 query.whereEqualTo("hawkerCentreId", hawkerCentreId),
                 new DbEventHandler<List<HawkerStall>>() {
                     @Override
                     public void onSuccess(List<HawkerStall> hawkerStallsFromDb) {
-                        if(hawkerStallList != null && hawkerStallList.size() > 0){
+                        if (hawkerStallList != null && hawkerStallList.size() > 0) {
                             hawkerStallList.clear();
                         }
                         hawkerStallList = hawkerStallsFromDb;
@@ -188,7 +193,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                         recyclerView.setAdapter(mHawkerStallAdapter);
 
                         recyclerView.addOnItemTouchListener(
-                                new RecyclerItemClickListener(getApplicationContext(), recyclerView,new RecyclerItemClickListener.OnItemClickListener() {
+                                new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
 
                                     @Override
                                     public void onItemClick(View view, int position) {
@@ -204,6 +209,7 @@ public class HawkerStallActivity extends AuthenticatedActivity implements Filter
                         );
 
                     }
+
                     @Override
                     public void onFailure(Exception e) {
                         Toast.makeText(HawkerStallActivity.this, "Error getting stalls", Toast.LENGTH_SHORT).show();

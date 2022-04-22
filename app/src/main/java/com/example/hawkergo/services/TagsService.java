@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FieldValue;
 public class TagsService {
     private static final String collectionId = FirebaseConstants.CollectionIds.TAGS;
     private static final CollectionReference collectionRef = FirebaseConstants.getCollectionReference(collectionId);
-    private static final String tagDocumentId = "PZQY0RGoRhiGvSSQsnFP";
+    private static final String TAG_DOCUMENT_ID = "PZQY0RGoRhiGvSSQsnFP";
 
     /**
      * Gets all tags
@@ -25,7 +25,7 @@ public class TagsService {
      * @param eventHandler Callback to handle on success or failure events
      */
     public static void getAllTags(DbEventHandler<Tags> eventHandler) {
-        DocumentReference docRef = collectionRef.document(tagDocumentId);
+        DocumentReference docRef = collectionRef.document(TAG_DOCUMENT_ID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -44,21 +44,26 @@ public class TagsService {
         });
     }
 
+    /**
+     * Add a new tag to DB
+     *
+     * @param eventHandler Callback to handle on success or failure events
+     */
     public static void addTag(String tag, DbEventHandler<String> eventHandler){
-        DocumentReference docRef = collectionRef.document(tagDocumentId);
+        DocumentReference docRef = collectionRef.document(TAG_DOCUMENT_ID);
         docRef
-                .update("categories", FieldValue.arrayUnion(tag))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        eventHandler.onFailure(e);
-                    }
-                });
+            .update("categories", FieldValue.arrayUnion(tag))
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    eventHandler.onFailure(e);
+                }
+            });
     }
 }

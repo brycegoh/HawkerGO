@@ -91,6 +91,10 @@ public class HawkerCentreActivity extends AuthenticatedActivity {
         return false;
     }
 
+
+    /**
+     *  db query onResume so that when user press back to this activity, the data will reload.
+     * */
     @Override
     protected void onResume() {
         super.onResume();

@@ -71,7 +71,6 @@ public class HawkerStall extends BaseDbFields {
     public HawkerStall() {};
 
     public HawkerStall(String address, String name, OpeningHours openingHours, List<String> imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreId) {
-
         this.address = address;
         this.name = name;
         this.imageUrls = imageUrl;
@@ -79,6 +78,18 @@ public class HawkerStall extends BaseDbFields {
         this.popularItems = popularItems;
         this.tags = tags;
         this.hawkerCentreId = hawkerCentreId;
+    }
+
+    public HawkerStall(String address, String name, OpeningHours openingHours, List<String> imageUrl, List<String> popularItems, List<String> tags, String hawkerCentreId, Integer reviewCount, Double totalRating) {
+        this.address = address;
+        this.name = name;
+        this.imageUrls = imageUrl;
+        this.openingHours = openingHours;
+        this.popularItems = popularItems;
+        this.tags = tags;
+        this.hawkerCentreId = hawkerCentreId;
+        this.reviewCount = reviewCount;
+        this.totalRating = totalRating;
     }
 
     public Double getAverageReview(){

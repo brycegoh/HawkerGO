@@ -4,6 +4,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ *  this class will define firebase helper functions as well as table names and standard db response
+ * */
 public class FirebaseConstants
 {
     public static class CollectionIds {

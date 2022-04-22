@@ -13,6 +13,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ *
+ *  DynamicEditTextManager abstracts out logic needed for the Favourite foods editText in the AddHawkerStallActivity form.
+ *
+ *  It contains logic that handles
+ *      1. multiple editText controllers
+ *      2. adding and deleting of editText views from the LinearLayout
+ *
+ *  Used in AddHawkerStallActivity.java
+ *
+ * */
+
 public class DynamicEditTextManager {
 
     private LinearLayout favouriteFoodsContainerController;

@@ -71,7 +71,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
 
     /**
      * Get a hawker stall by its ID
-     * @param hawkerStallID ID of the hawker centre document
+     * @param hawkerStallID ID of the hawker stall document
      * @param eventHandler  Callback to handle on success or failure events
      */
     public static void getHawkerStallByID(String hawkerStallID, DbEventHandler<HawkerStall> eventHandler){
@@ -124,6 +124,12 @@ public class HawkerStallsService implements HawkerStallQueryable {
         });
     };
 
+    /**
+     * Filter hawker stalls based on their categories
+     *
+     * @param query          Firebase Query
+     * @param eventHandler   Callback to handle on success or failure events
+     */
     public static void filterHawkerCentre(Query query , DbEventHandler<List<HawkerStall>> eventHandler) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -148,6 +154,15 @@ public class HawkerStallsService implements HawkerStallQueryable {
         });
     }
 
+    /**
+     * Increment reviewCount and totalRating and add photo to imageUrls.
+     * This method also handles for any potential race conditions using firebase inbuilt increment method
+     *
+     * @param hawkerStallId  Id of hawkerStall
+     * @param rating         New rating to add to hawker stall's total rating
+     * @param selectedImage  Image of stall to be added to imageUrls array
+     * @param eventHandler   Callback to handle on success or failure events
+     */
     public static void incrementReviewAndAddPhotoCount(String hawkerStallId, Double rating, String selectedImage, DbEventHandler<String> eventHandler){
         Map<String, Object> fieldToUpdate = new HashMap<>();
         fieldToUpdate.put("reviewCount", FieldValue.increment(1));

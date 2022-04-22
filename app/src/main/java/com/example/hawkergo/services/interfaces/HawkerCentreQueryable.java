@@ -6,6 +6,10 @@ import com.example.hawkergo.models.HawkerStall;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *  Queryable interfaces are used to declare what methods are required by activities
+ * */
+
 public interface HawkerCentreQueryable {
     static void addHawkerCentre(HawkerCentre hawkerCentre, DbEventHandler<String> eventHandler ){};
     static void deleteHawkerCentre(String hawkerCentreID,DbEventHandler<String> callBack){};

@@ -49,23 +49,58 @@ public class ReviewSubmissionActivity extends AuthenticatedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_submission);
 
-        Intent intent = getIntent();
-        hawkerStallID = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID);
-        hawkerCentreId = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
-        hawkerCentreName = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME);
+        this.handleIntent();
+        this.initViews();
+        this.getCurrentUser();
+        this.addOnClickHandlers();
+        this.addFragmentBundleListener();
+    }
 
-        ratingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
-        editText = (EditText) findViewById(R.id.edit_review);
-        submitButton = (Button) findViewById(R.id.review_submit_btn);
+    /**
+     * On back navigate handlers
+     *
+     * Add extra String data:
+     *  1. hawkerCentreId
+     *  2. hawkerCentreName
+     * */
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerStallID);
+        setResult(Constants.ResultCodes.REVIEW_SUBMISSION_TO_HAWKER_STALL, resultIntent);
+        finish();
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
+
+    private void getCurrentUser(){
         // get user's name <String>
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userDisplayName = user.getDisplayName();
         }
+    }
 
-        addOnClickHandlers();
-        addFragmentBundleListener();
+    private void initViews(){
+        ratingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
+        editText = (EditText) findViewById(R.id.edit_review);
+        submitButton = (Button) findViewById(R.id.review_submit_btn);
+    }
+
+    private void handleIntent(){
+        Intent intent = getIntent();
+        hawkerStallID = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID);
+        hawkerCentreId = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_ID);
+        hawkerCentreName = intent.getStringExtra(Constants.IntentExtraDataKeys.HAWKER_CENTRE_NAME);
+
     }
 
     private void addFragmentBundleListener(){
@@ -79,7 +114,6 @@ public class ReviewSubmissionActivity extends AuthenticatedActivity {
             }
         });
     }
-
 
     private void addOnClickHandlers(){
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -130,31 +164,4 @@ public class ReviewSubmissionActivity extends AuthenticatedActivity {
             }
         });
     }
-
-    /**
-     * On back navigate handlers
-     *
-     * Add extra String data:
-     *  1. hawkerCentreId
-     *  2. hawkerCentreName
-     * */
-    @Override
-    public void onBackPressed() {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(Constants.IntentExtraDataKeys.HAWKER_STALL_ID, hawkerStallID);
-        setResult(Constants.ResultCodes.REVIEW_SUBMISSION_TO_HAWKER_STALL, resultIntent);
-        finish();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return false;
-    }
-
-
 }

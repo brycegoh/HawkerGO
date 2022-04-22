@@ -65,6 +65,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
     private ArrayList<String> selectedOpeningDays = new ArrayList<>();
     private ArrayList<String> selectedCategories = new ArrayList<>();
 
+    // utils
     private final Debouncer debouncer = new Debouncer();
 
 
@@ -78,7 +79,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
 
     /**
      * On back navigate handlers
-     * <p>
+     *
      * Add extra String data:
      * 1. hawkerCentreId
      * 2. hawkerCentreName
@@ -116,6 +117,9 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
         this.addFragmentBundleListener();
     }
 
+    /**
+     * listen for image URI from camera/gallery
+     * */
     private void addFragmentBundleListener() {
         getSupportFragmentManager().setFragmentResultListener("selectedImageString", this, new FragmentResultListener() {
             @Override
@@ -174,6 +178,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
         addMoreCategoryButtonController = findViewById(R.id.add_more_categories_button);
         addMoreCategoryController = findViewById(R.id.add_more_categories);
         openingHoursErrorTextController.setText("");
+        // default hours and minutes
         if (openingHour != 0 && openingMinute != 0) {
             openingTimeButtonController.setText(String.format(Locale.getDefault(), "%02d:%02d", openingHour, openingMinute));
         }
@@ -182,6 +187,9 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
         }
     }
 
+    /**
+     *  dynamically inflate chips according to defined String array resource
+     * */
     private void inflateOpeningDaysChips() {
         openingDaysChipsOptions = getResources().getStringArray(R.array.chip_options);
         for (String openingDaysChipsOption : openingDaysChipsOptions) {
@@ -193,6 +201,9 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
         }
     }
 
+    /**
+     *  adding of chips on click listeners
+     * */
     private void addChipOnSelectListener(Chip chip, List<String> arr) {
         chip.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
@@ -209,6 +220,9 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
         );
     }
 
+    /**
+     *  Get all tags/categories from firebase then dynamically add them to view
+     * */
     private void getAllTagsAndInflateChips() {
         TagsService.getAllTags(
                 new DbEventHandler<Tags>() {
@@ -222,7 +236,7 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
 
                     @Override
                     public void onFailure(Exception e) {
-
+                        Toast.makeText(AddHawkerStallActivity.this, "Failed to get categories. Please reload", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -236,6 +250,9 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
         categoriesChipGrpController.addView(chip);
     }
 
+    /**
+     *  attach listeners to buttons
+     * */
     private void attachButtonEventListeners() {
         addMoreCategoryChip.setOnClickListener(
                 new View.OnClickListener() {
@@ -350,106 +367,64 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
     }
 
     private boolean validateFloorField() {
-        System.out.println("floor 1");
         boolean isValid = true;
-        System.out.println("floor 2");
         String text = floorFieldController.getText().toString();
-        System.out.println("floor 3");
         if (TextValidatorHelper.isNullOrEmpty(text)) {
-            System.out.println("floor 4");
             isValid = false;
-            System.out.println("floor 5");
             floorFieldController.setError("Please fill in the floor number");
-            System.out.println("floor 6");
         }
         if (!TextValidatorHelper.isNumeric(text)) {
-            System.out.println("floor 7");
             isValid = false;
-            System.out.println("floor 8");
             floorFieldController.setError("Please fill in only numeric values");
-            System.out.println("floor 9");
         }
-        System.out.println("floor 10");
         return isValid;
     }
 
     private boolean validateUnitNumField() {
-        System.out.println("num field 1");
         boolean isValid = true;
-        System.out.println("num field 2");
         String text = unitNumFieldController.getText().toString();
-        System.out.println("num field 3");
         if (TextValidatorHelper.isNullOrEmpty(text)) {
-            System.out.println("num field 4");
             isValid = false;
-            System.out.println("num field 5");
             unitNumFieldController.setError("Please fill in the unit number");
-            System.out.println("num field 6");
         }
         if (!TextValidatorHelper.isNumeric(text)) {
-            System.out.println("num field 7");
             isValid = false;
-            System.out.println("num field 8");
             unitNumFieldController.setError("Please fill in only numeric values");
-            System.out.println("num field 9");
         }
-        System.out.println("num field 10");
         return isValid;
     }
 
     private boolean validateNameField() {
-        System.out.println("name 1");
         boolean isValid = true;
-        System.out.println("name 2");
         String text = nameFieldController.getText().toString();
-        System.out.println("name 3");
         if (TextValidatorHelper.isNullOrEmpty(text)) {
-            System.out.println("name 4");
             isValid = false;
-            System.out.println("name 5");
             nameFieldController.setError("Please fill in the name");
-            System.out.println("name 6");
         }
-        System.out.println("name 7");
         return isValid;
     }
 
     private boolean validateOpeningHoursChips() {
-        System.out.println("open chips 1");
         boolean isValid = true;
-        System.out.println("open chips 2");
         List<Integer> x = openingHoursChipGrpController.getCheckedChipIds();
-        System.out.println("open chips 3");
         if (x.size() <= 0) {
-            System.out.println("open chips 6");
             isValid = false;
-            System.out.println("open chips 7");
             openingHoursErrorTextController.setText("Please select at least 1 day");
-            System.out.println("open chips 8");
         }
-        System.out.println("open chips 9");
         return isValid;
     }
 
     private boolean validateCategoriesChips() {
-        System.out.println("chips 1");
         boolean isValid = true;
-        System.out.println("chips 2");
         List<Integer> x = categoriesChipGrpController.getCheckedChipIds();
-        System.out.println("chips 3");
         if (x.size() <= 0) {
-            System.out.println("chips 5");
             isValid = false;
-            System.out.println("chips 6");
             selectCategoryErrorTextController.setText("Please select at least 1 category");
-            System.out.println("chips 7");
         }
-        System.out.println("chips 8");
         return isValid;
     }
 
     private void onClickSubmitButton() {
-        System.out.println("is valid");
         // init fields needed to be saved to firestore
         String stallName, formattedAddress, formattedOpeningDays, formattedOpeningTime;
         List<String> favouriteFoods = dynamicEditTextManager.getAllFavFoodItems();
@@ -479,10 +454,12 @@ public class AddHawkerStallActivity extends AuthenticatedActivity {
                 formattedOpeningTime
         );
 
+        // upload image
         FirebaseStorageService.uploadImage(getContentResolver(), selectedImage, true, 40,
                 new DbEventHandler<String>() {
                     @Override
                     public void onSuccess(String downloadUrl) {
+                        // store dowmloadUrl into obj
                         List<String> imageUrls = new ArrayList<>();
                         imageUrls.add(downloadUrl);
                         HawkerStall newHawkerStall = new HawkerStall(

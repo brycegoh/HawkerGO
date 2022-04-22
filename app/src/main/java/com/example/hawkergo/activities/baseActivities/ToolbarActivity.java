@@ -14,6 +14,12 @@ import com.example.hawkergo.MainActivity;
 import com.example.hawkergo.R;
 import com.example.hawkergo.services.UserService;
 
+/**
+ *
+ * Toolbar Activity abstracts out logic needed for screens that have the toolbar/action bar
+ *
+ * */
+
 public class ToolbarActivity extends AppCompatActivity {
 
     @Override

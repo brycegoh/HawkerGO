@@ -50,6 +50,12 @@ public class HawkerCentresService implements HawkerCentreQueryable {
         });
     }
 
+    /**
+     * Gets all hawker centres based on a search string
+     *
+     * @param searchTerm user inputted String to search through hawker centre based on name
+     * @param eventHandler Callback to handle on success or failure events
+     */
     public static void searchAllHawkerCentres(String searchTerm, DbEventHandler<List<HawkerCentre>> eventHandler) {
         collectionRef
                 .whereGreaterThanOrEqualTo("name", searchTerm)
@@ -198,14 +204,22 @@ public class HawkerCentresService implements HawkerCentreQueryable {
         });
     }
 
-    public void exampleAct(){
-        Query q = HawkerCentresService.getCollectionRef().whereEqualTo("field", "vegetarian").whereEqualTo("asdas", "adadsd");
-    }
-
+    /**
+     *  Get HawkerCentre collection Reference
+     *
+     * @return CollectionReference of HawkerCentre Collection
+     * */
     public static CollectionReference getCollectionRef() {
         return collectionRef;
     }
 
+
+    /**
+     * Filter hawker centres based on their categories
+     *
+     * @param query          Firebase Query
+     * @param eventHandler   Callback to handle on success or failure events
+     */
     public static void filterHawkerCentre(Query query , DbEventHandler<List<HawkerCentre>> eventHandler) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

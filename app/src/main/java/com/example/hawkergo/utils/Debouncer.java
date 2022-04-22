@@ -10,6 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
+ *
+ * Most Db interaction occur onclick so debouncer will assists in preventing multiple Db writes
+ *
  * Implementation had modifications but was done with reference from
  *  Stackoverflow user simon04 from the following link:
  *  https://stackoverflow.com/questions/4742210/implementing-debounce-in-java

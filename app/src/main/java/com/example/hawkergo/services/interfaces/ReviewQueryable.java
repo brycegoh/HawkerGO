@@ -4,6 +4,10 @@ import com.example.hawkergo.models.Review;
 
 import java.util.List;
 
+/**
+ *  Queryable interfaces are used to declare what methods are required by activities
+ * */
+
 public interface ReviewQueryable {
     static void getAllReviews(String hawkerStallID, DbEventHandler<List<Review>> eventHandler){};
     static void getReviewByID(String hawkerStallID, String reviewID, DbEventHandler<Review> eventHandler){};

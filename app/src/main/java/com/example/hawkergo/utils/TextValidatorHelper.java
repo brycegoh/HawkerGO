@@ -7,6 +7,12 @@ import android.widget.TextView;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ *
+ * This class will define common text/form validation needed throughout the app
+ *
+ * */
+
 public class TextValidatorHelper {
 
     public static boolean isNumeric(String string){

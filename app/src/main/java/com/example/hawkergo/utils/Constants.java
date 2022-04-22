@@ -1,5 +1,11 @@
 package com.example.hawkergo.utils;
 
+/**
+ *
+ * This class will define app-wide request codes, result codes and keys of data being passed via intents
+ *
+ * */
+
 public class Constants {
 
     public static class RequestCodes{
