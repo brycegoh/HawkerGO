@@ -5,17 +5,18 @@
 <b>This project requires a firebase google-services.json file to run. Please contact anyone in the group for the credentials file.</b>
 
 # Developers
-- Goh Ying Ming, Bryce    @brycegoh
+
+Goh Ying Ming, Bryce &nbsp;&nbsp; @brycegoh
 <br/>
-- Sean Chen Zhi En        @seancze
+Sean Chen Zhi En &nbsp;&nbsp; @seancze
 <br/>
-- Umang Sanjeev Gupta     @Usgupta
+Umang Sanjeev Gupta &nbsp;&nbsp; @Usgupta
 <br/>
-- Tee Zhi Zhang           @ZhiZhangT
+Tee Zhi Zhang &nbsp;&nbsp; @ZhiZhangT
 <br/>
-- Lim Shu Hui Pamela      @pamz23
+Lim Shu Hui Pamela &nbsp;&nbsp; @pamz23
 <br/>
-- Sim Shang Hong          @shanghongsim
+Sim Shang Hong &nbsp;&nbsp; @shanghongsim
 <br/>
 
 # Introduction
