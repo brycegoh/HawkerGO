@@ -22,7 +22,7 @@
 HawkerGo aims to be a single, centralised resource for users to view and review hawker stalls and hawkers centres in Singapore. We organise information on hawker centre stalls and present them in an easy to access manner (e.g. opening hours, stall number etc). We also help people locate suitable food stalls in each hawker centre and  populate our app with real and updated information from their own experiences. Ultimately, we also wish to build a vibrant community of hawker lovers on our platform, and keep the hawker culture in Singapore alive!
 
 # Video
-<video src='https://www.youtube.com/embed/dtdSYYcxvCk' width=180/>
+<iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/dtdSYYcxvCk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
 
 # Folder Structure
 Our app is split into different folders, each comprising of files that handle a specific part of our app. The folders are split as such:
