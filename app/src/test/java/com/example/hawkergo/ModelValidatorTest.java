@@ -1,38 +1,32 @@
 package com.example.hawkergo;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import com.example.hawkergo.models.HawkerCentre;
 import com.example.hawkergo.models.HawkerStall;
 import com.example.hawkergo.models.OpeningHours;
 import com.example.hawkergo.models.Review;
 import com.example.hawkergo.models.Tags;
-import com.example.hawkergo.services.HawkerCentresService;
-import com.example.hawkergo.services.interfaces.DbEventHandler;
-import com.example.hawkergo.utils.TextValidatorHelper;
-import com.google.firebase.FirebaseException;
+
+import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * @see <a href="httpo://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
+public class ModelValidatorTest {
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
 
     @Test
-    public void openingHoursTest(){
+    public void modelValidator_CorrectOpeningHoursFields_ReturnsTrue(){
         String days = "Monday to Friday";
         String hours = "8am to 8pm";
         OpeningHours openingHours = new OpeningHours(days, hours);
@@ -41,7 +35,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void hawkerCentreTest(){
+    public void modelValidator_CorrectHawkerCentreFields_ReturnsTrue(){
         String address = "55 Somapah Road";
         String name = "John Doe";
         String imageUrl = "test.com";
@@ -63,7 +57,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void hawkerStallTest(){
+    public void modelValidator_CorrectHawkerStallFields_ReturnsTrue(){
         String address = "55 Somapah Road";
         String name = "John Doe";
         String hawkerCentreId = "1000000";
@@ -107,7 +101,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void reviewTest1(){
+    public void modelValidator_CorrectReviewFieldsOne_ReturnsTrue(){
         String name = "John Doe";
         String comment = "Delicious";
         Double stars = 4.5;
@@ -128,7 +122,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void reviewTest2(){
+    public void modelValidator_CorrectReviewFieldsTwo_ReturnsTrue(){
         String name = "John Doe";
         String comment = "Delicious";
         Double stars = 4.5;
@@ -159,7 +153,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void tagTest(){
+    public void modelValidator_CorrectTagFields_ReturnsTrue(){
         List<String> categories = new ArrayList<>();
         categories.add("veg");
         categories.add("halal");
