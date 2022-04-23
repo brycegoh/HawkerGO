@@ -14,16 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="httpo://d.android.com/tools/testing">Testing documentation</a>
- */
 public class ModelValidatorTest {
-    @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
-    }
 
     @Test
     public void modelValidator_CorrectOpeningHoursFields_ReturnsTrue(){
