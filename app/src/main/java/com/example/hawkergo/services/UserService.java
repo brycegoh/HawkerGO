@@ -44,7 +44,6 @@ public class UserService {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    System.out.println("success");
                     eventHandler.onSuccess(FirebaseConstants.DbResponse.SUCCESS);
                 }else{
                     eventHandler.onFailure(task.getException());

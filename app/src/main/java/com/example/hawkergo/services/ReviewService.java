@@ -72,9 +72,6 @@ public class ReviewService implements ReviewQueryable {
 
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
-                        System.out.println("yes!");
-                        System.out.println(document.get("name"));
-                        System.out.println(document.get("stars"));
                         Review review = document.toObject(Review.class);
                         eventHandler.onSuccess(review);
                     } else {

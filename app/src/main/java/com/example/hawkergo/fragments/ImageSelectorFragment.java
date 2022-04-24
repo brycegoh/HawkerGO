@@ -128,10 +128,8 @@ public class ImageSelectorFragment extends Fragment {
     }
 
     private void galleryAddPic() {
-        System.out.println("adding to gallery");
         File f = new File(currentPhotoPath);
         Uri contentUri = Uri.fromFile(f);
-        System.out.println(contentUri);
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, contentUri);
         mediaScanIntent.setData(contentUri);
         getActivity().sendBroadcast(mediaScanIntent);
