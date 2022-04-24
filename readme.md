@@ -165,7 +165,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
 
 ## Guidelines to edit Activities
 1. Always use the globally defined colors and styles from `res/values/color.xml` and `res/values/styles.xml` respectively. Do add new styles into those folders as well.
-2. Our team follows a standard where procedures that happen `onCreate` are abstracted out into meaningful methods. This allows team members to easily understand what the code is for. 
+2. Our team follows a convention where procedures that happen `onCreate` are abstracted out into meaningful methods. This allows team members to easily understand what the code is for. 
 
     For example:
 ```java
@@ -231,4 +231,4 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 ## Guidelines to edit Models
 1. Always extend `BaseDbFields` as it contains document id 
 2. Always make the attributes private and selectively include setters to data that are mutable
-3. If you have business logic, it can be plaed in models as well
+3. If you have business logic, it can be placed in models as well
