@@ -87,10 +87,10 @@ app/src/main/java/com/example/hawkergo
 └─── utils                  # App-wide helper classes goes here
 │
 └─── res                    # App-wide resources goes here
-│   └─── color              # Globally defined colors in Hexcode
+│   └─── color              # Colors based on widget states
 │   └─── layout             # Layouts used in actitivies/Fragments
 │   └─── menu               # Menu and Action bar / toolbar layouts
-│   └─── values             # Globally defined styles and themes
+│   └─── values             # Globally defined colors, styles and themes
 │
 ```
 
