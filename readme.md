@@ -165,7 +165,9 @@ public class HawkerStallsService implements HawkerStallQueryable {
 
 ## Guidelines to edit Activities
 1. Always use the globally defined colors and styles from `res/values/color.xml` and `res/values/styles.xml` respectively. Do add new styles into those folders as well.
-2. Our team follows a standard where procedures that happen `onCreate` are abstracted out into meaningful methods. For example:
+2. Our team follows a standard where procedures that happen `onCreate` are abstracted out into meaningful methods. This allows team members to easily understand what the code is for. 
+
+    For example:
 ```java
  @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,7 +183,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
         this.addFragmentBundleListener(); // listen for fragment bundle
     }
 ```
-3. Any DB queries/writes are done via a Service and require you to define a `DbEventHandler`. For example:
+1. Any DB queries/writes are done via a Service and require you to define a `DbEventHandler`. For example:
 ```java
 TagsService.getAllTags(new DbEventHandler<Tags>() {
     @Override
