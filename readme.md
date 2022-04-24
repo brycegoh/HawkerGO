@@ -183,7 +183,7 @@ public class HawkerStallsService implements HawkerStallQueryable {
         this.addFragmentBundleListener(); // listen for fragment bundle
     }
 ```
-1. Any DB queries/writes are done via a Service and require you to define a `DbEventHandler`. For example:
+3. Any DB queries/writes are done via a Service and require you to define a `DbEventHandler`. For example:
 ```java
 TagsService.getAllTags(new DbEventHandler<Tags>() {
     @Override
@@ -226,6 +226,7 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 6. For any images that require downloading,please use `DownloadImageTask`
+7. If your activity requires the Authentication with a toolbar, add `extends AuthenticatedActivity`. If you just require the toolbar, use `extends ToolbarActivity`.
 
 ## Guidelines to edit Models
 1. Always extend `BaseDbFields` as it contains document id 
