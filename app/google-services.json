@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "123046056062",
+    "project_id": "hawkergo-cfe05",
+    "storage_bucket": "hawkergo-cfe05.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123046056062:android:590cc0994c5aad8c12882f",
+        "android_client_info": {
+          "package_name": "com.example.hawkergo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123046056062-usfaa737ghubmum4romfkil7vu6fg21a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hawkergo",
+            "certificate_hash": "3811f950d2b75348f7ee293832e6a4fee1068430"
+          }
+        },
+        {
+          "client_id": "123046056062-no3362autkenrjn899oanmheftk4cad1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVi-uaxdOZ0s4A9vseYETzwGLUohi586s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123046056062-no3362autkenrjn899oanmheftk4cad1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
