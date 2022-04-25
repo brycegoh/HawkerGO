@@ -1,9 +1,6 @@
 # HawkerGO (Team 5B)
 ![HawkerGo](./readme_resources/logo.jpg "HawkerGO")
 
-# ⚠️ NOTE ⚠️
-<b>This project requires a firebase google-services.json file to run. Please contact anyone in the group for the credentials file.</b>
-
 # Team members
 | Name        | Student Id  | Github
 | ----------- | ----------- | ----------- |
