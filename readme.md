@@ -29,38 +29,6 @@ HawkerGo aims to be a single, centralised resource for users to view and review 
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/dtdSYYcxvCk/0.jpg)](https://www.youtube.com/watch?v=dtdSYYcxvCk "HawkerGo Demo")
 
-
-# Folder Structure
-Our app is split into different folders, each comprising of files that handle a specific part of our app. The folders are split as such:
-```
-Folders:
-
-app/src/main/java/com/example/hawkergo
-|
-└─── activities             
-│   └─── baseActivities
-│   └─── helpers
-│ 
-└─── adapters
-│ 
-└─── fragments
-│ 
-└─── models
-│ 
-└─── services
-│   └─── interfaces
-│   └─── utils
-│
-└─── utils
-│
-└─── res
-│   └─── color
-│   └─── layout
-│   └─── menu
-│   └─── values
-│
-```
-
 # Guidelines to contribute or modify code
 #### Please stick to the folder structure where each folder will contain code responsible for different aspects of the app.
 ```
