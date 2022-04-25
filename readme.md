@@ -11,6 +11,15 @@
 | Lim Shu Hui Pamela   | 1005647        | @pamz23
 | Sim Shang Hong  | 1005500        | @shanghongsim
 
+# ⚠️ NOTE ⚠️
+For submission purposes, API keys has been included in the repo. API keys will be disabled after grading to avoid incurring any charges.
+
+For in-app authentication, you can either create an account or use an existing one which is as follows:
+
+**username: umangg@gmail.com**
+
+**password: umangg**
+
 # Introduction
 HawkerGo aims to be a single, centralised resource for users to view and review hawker stalls and hawkers centres in Singapore. We organise information on hawker centre stalls and present them in an easy to access manner (e.g. opening hours, stall number etc). We also help people locate suitable food stalls in each hawker centre and  populate our app with real and updated information from their own experiences. Ultimately, we also wish to build a vibrant community of hawker lovers on our platform, and keep the hawker culture in Singapore alive!
 
